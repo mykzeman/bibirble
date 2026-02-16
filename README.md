@@ -152,17 +152,6 @@ The game requires a `bible_sections.json` file in the same directory as the exec
   - Gray: Incorrect
 - **Share Results**: Copy your game results to clipboard
 
-## Migration Notes
-
-This project was upgraded from Qt to wxWidgets. Key changes:
-
-- **Framework**: Qt → wxWidgets
-- **String Types**: `QString` → `std::string`
-- **Collections**: `QVector`/`QList` → `std::vector`
-- **JSON**: `QJsonDocument` → `nlohmann::json`
-- **UI Components**: Qt widgets → wx widgets
-- **Build System**: qmake → CMake
-
 ## Troubleshooting
 
 ### CMake can't find wxWidgets
@@ -179,11 +168,19 @@ This project was upgraded from Qt to wxWidgets. Key changes:
 
 ## Contributing
 
-Feel free to extend this project with:
+Feel free to fix and extend this project with:
 - More game modes
 - Statistics tracking
 - Difficulty settings
 - Custom verse sets
+
+### Known Issues 
+- Some character encoding issues with certain Bible verses (check `bible_sections.json` for anomalies)
+- False warning on data load even the file is there 
+- Loading bar doesn't update at all (closing the dialog gets you into the game)
+- No main menu or settings yet 
+- Text is not vertically or horizontally centered
+- No sound effects or animations 
 
 # Important Infomation
 
@@ -198,7 +195,7 @@ The data for this game was sourced from TehShrike's programmatic version of the 
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+     [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,

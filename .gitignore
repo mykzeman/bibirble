@@ -66,3 +66,6 @@ build/
 # Backup files
 *.bak
 *.tmp
+
+# AI files 
+.github/
