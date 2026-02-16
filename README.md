@@ -185,7 +185,7 @@ Feel free to extend this project with:
 - Difficulty settings
 - Custom verse sets
 
-# Imortant Infomation
+# Important Infomation
 
 The data for this game was sourced from TehShrike's programmatic version of the World English Bible, which is available on GitHub:
 [Repo](https://github.com/TehShrike/world-english-bible)
