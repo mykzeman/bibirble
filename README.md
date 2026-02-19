@@ -81,124 +81,92 @@ cmake --build . --config Release
 
 **Windows (MinGW):**
 1. Download wxWidgets from https://www.wxwidgets.org/downloads/
-2. Extract and follow the MinGW build instructions in `docs/msw/install.txt`
-3. Install nlohmann/json:
-   - Download from https://github.com/nlohmann/json/releases
-   - Extract to a known location
+# Bibirble
 
-**Linux (Ubuntu/Debian):**
-```bash
-sudo apt update
-sudo apt install libwxgtk3.2-dev nlohmann-json3-dev cmake build-essential
-```
+Bibirble is a small Bible-verse guessing game written in modern C++ using wxWidgets.
 
-**macOS:**
-```bash
-brew install wxwidgets nlohmann-json cmake
-```
+- Players see a partially revealed verse and must guess the book, chapter, and verse.
+- Progressive reveal, color-coded feedback, and a small local verse dataset.
 
-### Step 2: Configure Build Environment
+**Quick links**
+- Source: https://github.com/mykzeman/bibirble
+- Data pipeline: `tools/sort.py` → `bible_sections.json`
 
-**Windows (MinGW):** Add wxWidgets and nlohmann_json paths to CMake:
-```powershell
-# Edit CMakeLists.txt or use environment variables
-$env:wxWidgets_DIR = "C:\path\to\wxWidgets"
-$env:nlohmann_json_DIR = "C:\path\to\nlohmann_json"
-```
+## Quickstart (Linux / macOS)
 
-### Step 3: Build Project
+Prerequisites:
+- wxWidgets 3.2+ (system package or Homebrew)
+- nlohmann/json (packaged or header-only)
+- CMake 3.16+ and a C++17 toolchain
+
+Build and run:
 
 ```bash
-mkdir build && cd build
+mkdir -p build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build .
+./Bibirble
+```
+
+## Quickstart (Windows, MinGW)
+
+Install wxWidgets and make sure `wx-config` or `wxWidgets_DIR` is available to CMake.
+
+```powershell
+# from project root
+mkdir build
+cd build
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ..
 cmake --build . --config Release
+# run the produced executable
+.\Bibirble.exe
 ```
 
-### Step 4: Run Application
+## Project layout
 
-The executable will be in `build/Release/` or `build/` depending on platform.
+- `src/` - application source (UI, game logic, data loader)
+- `tools/sort.py` - helper to convert raw book JSON into `bible_sections.json`
+- `bible_sections.json` - compiled verse data used at runtime
 
-```bash
-./Release/Bibirble  # Windows
-./Bibirble         # Linux/macOS
-```
+## Data format
 
-## Game Data
-
-The game requires a `bible_sections.json` file in the same directory as the executable. This file should contain an array of Bible verse objects with the following structure:
+The game expects `bible_sections.json` next to the executable. Each verse entry should look like:
 
 ```json
-[
-  {
-    "testament": "Old Testament",
-    "area": "Torah",
-    "book": "Genesis",
-    "chapter": 1,
-    "verse": 1,
-    "text": "In the beginning God created the heavens and the earth."
-  },
-  ...
-]
+{
+  "testament": "Old Testament",
+  "area": "Torah",
+  "book": "Genesis",
+  "chapter": 1,
+  "verse": 1,
+  "text": "In the beginning God created the heavens and the earth."
+}
 ```
 
-## Key Features
+If you have the original per-book JSON files in `tools/`, run:
 
-- **Interactive Gameplay**: Guess Bible verses by book, chapter, and verse number
-- **7 Attempts**: Get 7 guesses to find the correct answer
-- **Progressive Revelation**: More of the verse text reveals with each incorrect guess
-- **Color-Coded Feedback**: 
-  - Green: Correct guess
-  - Yellow: Correct book region/digit in wrong position
-  - Gray: Incorrect
-- **Share Results**: Copy your game results to clipboard
+```bash
+python3 tools/sort.py
+# this generates or updates bible_sections.json
+```
 
-## Troubleshooting
+## Notes and known issues
 
-### CMake can't find wxWidgets
-- Set `wxWidgets_CONFIG_EXECUTABLE` to the path of `wx-config` script
-- On Windows, set `wxWidgets_DIR` to your wxWidgets installation directory
-
-### JSON parsing errors
-- Ensure `nlohmann/json.hpp` is in your include path
-- Verify `bible_sections.json` format is valid JSON
-
-### Compilation errors on Windows
-- Use the same build system (MinGW) for both wxWidgets and your project
-- Ensure Unicode mode is enabled in wxWidgets configuration
+- The loading dialog and progress UI are minimal; the loader may appear to hang briefly while parsing.
+- Book area mappings are defined in both `tools/sort.py` and `src/BibleData.cpp::getBookArea()`; keep them in sync when changing categories.
 
 ## Contributing
 
-Feel free to fix and extend this project with:
-- More game modes
-- Statistics tracking
-- Difficulty settings
-- Custom verse sets
+Contributions welcome. Suggested improvements:
+- Add a proper main menu and settings
+- Improve loading UX and progress reporting
+- Add story mode or verse-of-the-day features
 
-### Known Issues 
-- Some character encoding issues with certain Bible verses (check `bible_sections.json` for anomalies)
-- False warning on data load even the file is there 
-- Loading bar doesn't update at all (closing the dialog gets you into the game)
-- No main menu or settings yet 
-- Text is not vertically or horizontally centered
-- No sound effects or animations 
+## License & Credits
 
-# Important Infomation
+This project includes or references the World English Bible dataset. See `LICENSE` for project licensing.
 
-The data for this game was sourced from TehShrike's programmatic version of the World English Bible, which is available on GitHub:
-[Repo](https://github.com/TehShrike/world-english-bible)
+Data source reference: https://github.com/TehShrike/world-english-bible
 
-
-
-   Copyright 2026 Mykal Mayne
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-     [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+---
+Updated README to provide a concise quickstart, data notes, and contribution ideas.
