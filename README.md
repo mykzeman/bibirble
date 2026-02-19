@@ -1,4 +1,4 @@
-# Bibirble - wxWidgets Edition
+# Bibirble++
 
 A Bible verse guessing game built with C++ and wxWidgets.
 
