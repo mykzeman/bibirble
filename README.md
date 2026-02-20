@@ -167,6 +167,3 @@ Contributions welcome. Suggested improvements:
 This project includes or references the World English Bible dataset. See `LICENSE` for project licensing.
 
 Data source reference: https://github.com/TehShrike/world-english-bible
-
----
-Updated README to provide a concise quickstart, data notes, and contribution ideas.
