@@ -2,6 +2,18 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <sstream>
+
+namespace {
+const char* EmojiFor(GuessColor color) {
+    switch (color) {
+        case GuessColor::Green:  return "\xF0\x9F\x9F\xA9";  // 🟩
+        case GuessColor::Yellow: return "\xF0\x9F\x9F\xA8";  // 🟨
+        case GuessColor::Gray:
+        default:                 return "\xE2\xAC\x9B";      // ⬛
+    }
+}
+}  // namespace
 
 void GameState::Reset(GameMode newMode, int64_t newSeed, bool newHardMode, const Verse& verse) {
     mode = newMode;
@@ -63,4 +75,20 @@ std::string GameState::CheckHardModeViolation(const std::string& bookGuess,
     }
 
     return "";
+}
+
+std::string GameState::BuildShareText() const {
+    std::ostringstream out;
+    out << "Could you beat this score in Bibirble?\n\n";
+    out << "- " << targetVerse.book << " " << targetVerse.chapter << ":" << targetVerse.verse << "\n\n";
+
+    for (const auto& record : history) {
+        out << EmojiFor(record.bookColor);
+        for (GuessColor color : record.digitColors) {
+            out << EmojiFor(color);
+        }
+        out << "\n";
+    }
+
+    return out.str();
 }

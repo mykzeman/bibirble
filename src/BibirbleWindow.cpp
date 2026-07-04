@@ -563,9 +563,7 @@ void BibirbleWindow::FocusPrev() {
 }
 
 void BibirbleWindow::OnShare(wxCommandEvent& event) {
-    wxString shareText = wxString::Format(
-        "Could you beat this score in Bibirble?\n\n- %s %d:%d\n\n(Result grid copied to clipboard)",
-        m_state.targetVerse.book, m_state.targetVerse.chapter, m_state.targetVerse.verse);
+    wxString shareText = wxString::FromUTF8(m_state.BuildShareText().c_str());
 
     if (wxTheClipboard->Open()) {
         wxTheClipboard->SetData(new wxTextDataObject(shareText));

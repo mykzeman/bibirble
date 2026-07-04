@@ -38,4 +38,11 @@ public:
     std::string CheckHardModeViolation(const std::string& bookGuess,
                                         const std::vector<std::string>& digitGuesses,
                                         const BibleData& data) const;
+
+    // Wordle-style emoji grid (🟩/🟨/⬛) built straight from history, plus the
+    // citation line. Only rows actually played get a line -- unlike the web
+    // version, which pads blank lines for unplayed rows on an early win.
+    // Immune to the web's gray/grey emoji-key mismatch since there is only
+    // ever one GuessColor.
+    std::string BuildShareText() const;
 };
