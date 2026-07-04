@@ -33,6 +33,9 @@ set(SOURCES
     src/BibleData.h
     src/SeededRandom.cpp
     src/SeededRandom.h
+    src/GameState.cpp
+    src/GameState.h
+    src/GuessColor.h
     src/loading_dialog.h
     src/wx_callafter_compat.h
 )

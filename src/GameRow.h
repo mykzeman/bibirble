@@ -4,19 +4,21 @@
 #include <vector>
 #include <string>
 
+#include "GuessColor.h"
+
 class GameRow : public wxPanel {
 public:
     explicit GameRow(wxWindow* parent, const wxArrayString& books);
-    
+
     void setDisabled(bool disabled);
     bool isComplete() const;
-    
+
     std::string getBook() const;
     std::vector<std::string> getDigits() const;
     std::vector<wxTextCtrl*> GetDigitCtrls();
-    
-    void setBookColor(const std::string& color);
-    void setDigitColors(const std::vector<std::string>& colors);
+
+    void setBookColor(GuessColor color);
+    void setDigitColors(const std::vector<GuessColor>& colors);
     void lockSubmitted();
 
 private:

@@ -1,0 +1,33 @@
+#pragma once
+
+#include <cstdint>
+#include <string>
+#include <vector>
+
+#include "BibleData.h"
+#include "GuessColor.h"
+
+enum class GameMode { Daily, Random };
+
+struct GuessRecord {
+    std::string bookGuess;
+    GuessColor bookColor = GuessColor::Gray;
+    std::vector<std::string> digitGuesses;  // c1, c2, v1, v2
+    std::vector<GuessColor> digitColors;    // c1, c2, v1, v2
+};
+
+// Single source of truth for an in-progress or finished game. Replaces the
+// scattered m_targetVerse/m_currentStage/m_gameOver members that used to live
+// directly on BibirbleWindow.
+class GameState {
+public:
+    void Reset(GameMode newMode, int64_t newSeed, bool newHardMode, const Verse& verse);
+
+    GameMode mode = GameMode::Daily;
+    int64_t seed = 0;
+    bool hardMode = false;
+    int currentStage = 0;
+    bool gameOver = false;
+    Verse targetVerse;
+    std::vector<GuessRecord> history;
+};

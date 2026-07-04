@@ -95,47 +95,42 @@ std::vector<std::string> GameRow::getDigits() const {
     };
 }
 
-void GameRow::setBookColor(const std::string& color) {
+namespace {
+void ApplyGuessColor(wxWindow* ctrl, GuessColor color) {
     wxColour bgColor;
     wxColour fgColor(*wxBLACK);
-    
-    if (color == "green") {
-        bgColor = *wxGREEN;
-        fgColor = *wxWHITE;
-    } else if (color == "yellow") {
-        bgColor = *wxYELLOW;
-        fgColor = *wxBLACK;
-    } else {
-        bgColor = *wxLIGHT_GREY;
-        fgColor = *wxBLACK;
-    }
-    
-    m_bookSelect->SetBackgroundColour(bgColor);
-    m_bookSelect->SetForegroundColour(fgColor);
-    m_bookSelect->Refresh();
-}
 
-void GameRow::setDigitColors(const std::vector<std::string>& colors) {
-    std::vector<wxTextCtrl*> edits = {m_c1, m_c2, m_v1, m_v2};
-    
-    for (size_t i = 0; i < colors.size() && i < edits.size(); ++i) {
-        wxColour bgColor;
-        wxColour fgColor(*wxBLACK);
-        
-        if (colors[i] == "green") {
+    switch (color) {
+        case GuessColor::Green:
             bgColor = *wxGREEN;
             fgColor = *wxWHITE;
-        } else if (colors[i] == "yellow") {
+            break;
+        case GuessColor::Yellow:
             bgColor = *wxYELLOW;
             fgColor = *wxBLACK;
-        } else {
+            break;
+        case GuessColor::Gray:
+        default:
             bgColor = *wxLIGHT_GREY;
             fgColor = *wxBLACK;
-        }
-        
-        edits[i]->SetBackgroundColour(bgColor);
-        edits[i]->SetForegroundColour(fgColor);
-        edits[i]->Refresh();
+            break;
+    }
+
+    ctrl->SetBackgroundColour(bgColor);
+    ctrl->SetForegroundColour(fgColor);
+    ctrl->Refresh();
+}
+}  // namespace
+
+void GameRow::setBookColor(GuessColor color) {
+    ApplyGuessColor(m_bookSelect, color);
+}
+
+void GameRow::setDigitColors(const std::vector<GuessColor>& colors) {
+    std::vector<wxTextCtrl*> edits = {m_c1, m_c2, m_v1, m_v2};
+
+    for (size_t i = 0; i < colors.size() && i < edits.size(); ++i) {
+        ApplyGuessColor(edits[i], colors[i]);
     }
 }
 

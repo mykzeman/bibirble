@@ -3,11 +3,12 @@
 #include <wx/wx.h>
 #include "BibleData.h"
 #include "GameRow.h"
+#include "GameState.h"
 
 class BibirbleWindow : public wxFrame {
 public:
     explicit BibirbleWindow(wxWindow* parent, const std::string& dataPath = "");
-    
+
 private:
     void SetupUi();
     void SetupKeyboard(wxBoxSizer* mainLayout);
@@ -17,16 +18,14 @@ private:
     void FocusNext();
     void FocusPrev();
     int ProcessTurn();
-    
+
     void OnVirtualKeyClicked(wxCommandEvent& event);
     void OnSubmit(wxCommandEvent& event);
     void OnShare(wxCommandEvent& event);
-    
+
     BibleData m_data;
-    Verse m_targetVerse;
-    int m_currentStage = 0;
-    bool m_gameOver = false;
-    
+    GameState m_state;
+
     wxPanel* m_centralPanel;
     wxStaticText* m_revealPanel;
     wxPanel* m_rowsPanel;

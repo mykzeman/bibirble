@@ -154,11 +154,10 @@ void BibirbleWindow::StartNewGame() {
         return;
     }
     
-    m_targetVerse = m_data.getRandomVerse();
-    wxLogMessage("Target: %s %d:%d", m_targetVerse.book, m_targetVerse.chapter, m_targetVerse.verse);
-    
-    m_currentStage = 0;
-    m_gameOver = false;
+    Verse verse = m_data.getRandomVerse();
+    m_state.Reset(GameMode::Random, 0, false, verse);
+    wxLogMessage("Target: %s %d:%d", m_state.targetVerse.book, m_state.targetVerse.chapter, m_state.targetVerse.verse);
+
     m_submitBtn->SetLabel("Submit Answer");
     m_submitBtn->Enable(true);
     
@@ -175,12 +174,12 @@ void BibirbleWindow::StartNewGame() {
 
 void BibirbleWindow::UpdateRevealText() {
     wxString text;
-    if (m_gameOver && m_currentStage == -1) {
+    if (m_state.gameOver && m_state.currentStage == -1) {
         text = wxString::Format("%s\n\n- %s %d:%d",
-                               m_data.getRevealedText(m_targetVerse, 7),
-                               m_targetVerse.book, m_targetVerse.chapter, m_targetVerse.verse);
+                               m_data.getRevealedText(m_state.targetVerse, 7),
+                               m_state.targetVerse.book, m_state.targetVerse.chapter, m_state.targetVerse.verse);
     } else {
-        text = m_data.getRevealedText(m_targetVerse, m_currentStage);
+        text = m_data.getRevealedText(m_state.targetVerse, m_state.currentStage);
     }
     m_revealPanel->SetLabel(text);
     m_revealPanel->Wrap(400);
@@ -200,8 +199,8 @@ void BibirbleWindow::HandleKeyPress(const wxString& key) {
 
     // If nothing focused, pick the first editable digit in the current active row
     if (!focused) {
-        if (m_currentStage >= 0 && m_currentStage < (int)m_rows.size()) {
-            auto ctrls = m_rows[m_currentStage]->GetDigitCtrls();
+        if (m_state.currentStage >= 0 && m_state.currentStage < (int)m_rows.size()) {
+            auto ctrls = m_rows[m_state.currentStage]->GetDigitCtrls();
             for (auto* c : ctrls) {
                 if (isEditableDigit(c)) { focused = c; break; }
             }
@@ -251,107 +250,114 @@ void BibirbleWindow::OnVirtualKeyClicked(wxCommandEvent& event) {
 }
 
 void BibirbleWindow::OnSubmit(wxCommandEvent& event) {
-    if (m_gameOver) return;
-    
-    if (m_currentStage >= (int)m_rows.size()) return;
-    
-    GameRow* activeRow = m_rows[m_currentStage];
+    if (m_state.gameOver) return;
+
+    if (m_state.currentStage >= (int)m_rows.size()) return;
+
+    GameRow* activeRow = m_rows[m_state.currentStage];
     if (!activeRow->isComplete()) {
         wxMessageBox("Please complete all fields in the current row before submitting.",
                     "Bibirble", wxOK | wxICON_WARNING);
         return;
     }
-    
+
     int result = ProcessTurn();
     if (result == -1) {
-        m_gameOver = true;
-        m_currentStage = -1;
+        m_state.gameOver = true;
+        m_state.currentStage = -1;
         UpdateRevealText();
         m_submitBtn->SetLabel("Share");
         Unbind(wxEVT_BUTTON, &BibirbleWindow::OnSubmit, this, wxID_OK);
         Bind(wxEVT_BUTTON, &BibirbleWindow::OnShare, this, wxID_OK);
     } else {
-        m_currentStage = result;
+        m_state.currentStage = result;
         UpdateRevealText();
     }
 }
 
 
 int BibirbleWindow::ProcessTurn() {
-    GameRow* activeRow = m_rows[m_currentStage];
-    
+    GameRow* activeRow = m_rows[m_state.currentStage];
+
     std::string bookGuess = activeRow->getBook();
     std::vector<std::string> inputs = activeRow->getDigits();
-    
+
     int correctCount = 0;
-    
+
     // Check Book
-    if (bookGuess == m_targetVerse.book) {
-        activeRow->setBookColor("green");
+    GuessColor bookColor;
+    if (bookGuess == m_state.targetVerse.book) {
+        bookColor = GuessColor::Green;
         correctCount++;
-    } else if (m_data.getBookArea(bookGuess) == m_targetVerse.area) {
-        activeRow->setBookColor("yellow");
+    } else if (m_data.getBookArea(bookGuess) == m_state.targetVerse.area) {
+        bookColor = GuessColor::Yellow;
     } else {
-        activeRow->setBookColor("gray");
+        bookColor = GuessColor::Gray;
     }
-    
+    activeRow->setBookColor(bookColor);
+
     // Check Digits
     char chStr[3], vStr[3];
-    snprintf(chStr, sizeof(chStr), "%02d", m_targetVerse.chapter);
-    snprintf(vStr, sizeof(vStr), "%02d", m_targetVerse.verse);
+    snprintf(chStr, sizeof(chStr), "%02d", m_state.targetVerse.chapter);
+    snprintf(vStr, sizeof(vStr), "%02d", m_state.targetVerse.verse);
     std::vector<std::string> answerDigits = {
         std::string(1, chStr[0]), std::string(1, chStr[1]),
         std::string(1, vStr[0]), std::string(1, vStr[1])
     };
-    
-    std::vector<std::string> results(4, "gray");
+
+    std::vector<GuessColor> results(4, GuessColor::Gray);
     std::vector<std::string> answerPool = answerDigits;
-    
+
     // Pass 1: Green
     for (int i = 0; i < 4; ++i) {
         if (inputs[i] == answerPool[i]) {
-            results[i] = "green";
+            results[i] = GuessColor::Green;
             answerPool[i] = "";
             correctCount++;
         }
     }
-    
+
     // Pass 2: Yellow
     for (int i = 0; i < 4; ++i) {
-        if (results[i] != "green") {
-            bool found = false;
+        if (results[i] != GuessColor::Green) {
             for (int j = 0; j < 4; ++j) {
                 if (inputs[i] == answerPool[j] && !answerPool[j].empty()) {
-                    results[i] = "yellow";
+                    results[i] = GuessColor::Yellow;
                     answerPool[j] = "";
-                    found = true;
                     break;
                 }
             }
         }
     }
-    
+
     activeRow->setDigitColors(results);
     activeRow->lockSubmitted();
-    
+
+    GuessRecord record;
+    record.bookGuess = bookGuess;
+    record.bookColor = bookColor;
+    record.digitGuesses = inputs;
+    record.digitColors = results;
+    m_state.history.push_back(record);
+
     if (correctCount == 5) {
         wxMessageBox("You got it correct!", "Winner", wxOK | wxICON_INFORMATION);
         return -1;
-    } else if (m_currentStage + 1 >= (int)m_rows.size()) {
+    } else if (m_state.currentStage + 1 >= (int)m_rows.size()) {
         wxString msg = wxString::Format(
             "You ran out of guesses. The correct answer was %s %d:%d. "
             "Maybe you should read your Bible to reflect on what you got wrong!",
-            m_targetVerse.book, m_targetVerse.chapter, m_targetVerse.verse);
+            m_state.targetVerse.book, m_state.targetVerse.chapter, m_state.targetVerse.verse);
         wxMessageBox(msg, "Game Over", wxOK | wxICON_INFORMATION);
         return -1;
     }
 
     // Enable next only after this row is locked with visible colors.
-    if (m_currentStage + 1 < (int)m_rows.size()) {
-        m_rows[m_currentStage + 1]->setDisabled(false);
+    if (m_state.currentStage + 1 < (int)m_rows.size()) {
+        m_rows[m_state.currentStage + 1]->setDisabled(false);
     }
-    
-    return m_currentStage + 1;
+
+    return m_state.currentStage + 1;
 }
 
 
@@ -366,7 +372,7 @@ void BibirbleWindow::FocusPrev() {
 void BibirbleWindow::OnShare(wxCommandEvent& event) {
     wxString shareText = wxString::Format(
         "Could you beat this score in Bibirble?\n\n- %s %d:%d\n\n(Result grid copied to clipboard)",
-        m_targetVerse.book, m_targetVerse.chapter, m_targetVerse.verse);
+        m_state.targetVerse.book, m_state.targetVerse.chapter, m_state.targetVerse.verse);
     
     if (wxTheClipboard->Open()) {
         wxTheClipboard->SetData(new wxTextDataObject(shareText));
