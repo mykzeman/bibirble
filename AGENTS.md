@@ -9,14 +9,20 @@
 ### Core Data Flow
 1. **Bible Data Pipeline**: `tools/sort.py` pre-processes raw Bible JSON files (from `tools/*.json`) into grouped verses, outputting `bible_sections.json`
 2. **Game Loader**: `BibleData::loadData()` parses `bible_sections.json` at startup, populating verse objects with `{testament, area, book, chapter, verse, text}`
-3. **Game Loop**: `BibirbleWindow` manages UI state, calls `BibleData::getRandomVerse()` for new rounds, and uses `getRevealedText()` with difficulty stages
+3. **Mode/seed selection**: `StartScreen`/`SettingsScreen` pick Daily vs. Random, a seed, and Hard Mode; `SeededRandom` resolves that into a verse index (`GetDailySeed()` for Daily, `HashStringToInt()`/`GenerateRandomSeed()` for Random) via `BibleData::getVerseAtIndex()`
+4. **Game Loop**: `BibirbleWindow` owns a `GameState` (single source of truth for mode/seed/stage/history), processes turns, and uses `getRevealedText()` with difficulty stages
 
 ### Component Responsibilities
 
-- **BibirbleWindow** (`src/BibirbleWindow.h/cpp`): Main wxWidgets frame. Handles UI layout, keyboard events, game state (m_currentStage, m_gameOver), and turn processing
-- **GameRow** (`src/GameRow.h/cpp`): Input component for one guess (book dropdown + 4 digit TextCtrls for chapter/verse). Provides color feedback validation
+- **BibirbleWindow** (`src/BibirbleWindow.h/cpp`): Main wxWidgets frame. Swaps between StartScreen/SettingsScreen/game panel, handles keyboard events and turn processing
+- **StartScreen** / **SettingsScreen** (`src/StartScreen.h/cpp`, `src/SettingsScreen.h/cpp`): Mode-select landing screen and Hard Mode/seed configuration, as `wxPanel`s swapped within `BibirbleWindow` rather than separate top-level frames
+- **GameRow** (`src/GameRow.h/cpp`): Input component for one guess (book dropdown + 4 digit TextCtrls for chapter/verse). Provides color feedback validation (`GuessColor`) and a `Reset()` for replayable games
+- **GameState** (`src/GameState.h/cpp`): Single source of truth for mode, seed, Hard Mode, current stage, game-over, target verse, and guess history (`GuessRecord` list). Also owns Hard Mode constraint checking and the emoji share-text builder
+- **GuessColor** (`src/GuessColor.h`): The one canonical Gray/Yellow/Green enum, shared by GameRow (rendering) and GameState (domain model)
 - **BibleData** (`src/BibleData.h/cpp`): Verse storage + utility functions. Book areas hardcoded in `getBookArea()` map (must match `tools/sort.py` AREAS definition)
-- **main.cpp**: wxApp bootstrapper that creates BibirbleWindow on startup
+- **SeededRandom** (`src/SeededRandom.h/cpp`): Bit-for-bit port of the web version's `data.js` hash/seed algorithm (`HashStringToInt`, xorshift32 `SeededRandom`, `PickIndexFromSeed`, `GetDailySeed`), so Daily puzzles match the web version exactly
+- **PersistenceManager** (`src/PersistenceManager.h/cpp`): Small JSON file under `wxStandardPaths`' per-user data dir, standing in for the web version's `localStorage` (daily lockout date, last seed)
+- **main.cpp**: wxApp bootstrapper that shows `LoadingDialog` then creates `BibirbleWindow` on startup
 
 ### Data Structure Consistency
 
@@ -72,10 +78,13 @@ wxWidgets event pattern throughout:
 - Example: `OnVirtualKeyClicked()` processes virtual keyboard presses
 
 ### Memory Management
-wxWidgets uses parent-child ownership (constructor parameter `wxWindow* parent`). Avoid manual `delete`; destruction cascades automatically when parent destroyed. See [wx_callafter_compat.h](src/wx_callafter_compat.h) for platform-specific async call helpers.
+wxWidgets uses parent-child ownership (constructor parameter `wxWindow* parent`). Avoid manual `delete`; destruction cascades automatically when parent destroyed.
+
+### Async calls from background threads
+`LoadingDialog` (`src/loading_dialog.h`) runs its JSON parse on a background `std::thread` and needs to touch the gauge/end the modal from the main thread. Use the real `wxEvtHandler::CallAfter()` **member function** (e.g. `this->CallAfter([this]{...})`), not a free `wxCallAfter(fn)` -- this wx 3.2 packaging has no `<wx/callafter.h>`, and a handler-less shim that queues onto `wxTheApp` will never be dispatched while the dialog is shown via `ShowModal()` from inside `wxApp::OnInit()` (before the main loop starts drains `wxTheApp`'s pending events). `CallAfter()` on the dialog itself queues onto the dialog's own pending-event list, which the nested modal loop does drain correctly.
 
 ### Color Feedback
-`GameRow::setDigitColors()` and `setBookColor()` apply validation feedback. Colors passed as strings ("green", "yellow", "red" etc). Integration with game logic in `BibirbleWindow::ProcessTurn()`.
+`GameRow::setDigitColors()` and `setBookColor()` apply validation feedback, taking a `GuessColor` (Gray/Yellow/Green -- see `src/GuessColor.h`), not string literals. Integration with game logic in `BibirbleWindow::ProcessTurn()`, which also records a `GuessRecord` onto `GameState::history`.
 
 
 ## Testing Notes
@@ -85,17 +94,19 @@ No automated test framework currently visible. Manual testing workflow:
 2. Ensure `bible_sections.json` is accessible
 3. Run executable and manually test game flow
 4. Verify color feedback and verse reveal progression
-## Project History 
-Originally I worked on it a year ago but stopped . Recently I made AI recreate the project from scratch with improved code quality and modern C++ practices. Because of this , some files are useless and not implemented properly . 
+## Project History
+Originally I worked on it a year ago but stopped . Recently I made AI recreate the project from scratch with improved code quality and modern C++ practices. Because of this , some files are useless and not implemented properly .
 
-### Files not needed 
-1. `src/menu_wireframe.h` - Not used in the project
-2. `src/bibirble.cpp` - Placeholder file , not used
-3. ``menu_wireframe.cpp` - Not used in the project
-4. `src/vc140.pdb` - Debug symbols file , not needed for development
+### Files not needed
+1. `src/bibirble.cpp` - Placeholder file, not used
+2. `src/vc140.pdb` - Debug symbols file, not needed for development
 
-### files that need to be implemented properly
-1. `src/loading_dialog.h/cpp` - Placeholder for loading screen dialog, not fully implemented, should be where the game loads `bible_sections.json` and shows progress and enter point.
+`src/menu_wireframe.h/cpp` was removed (was never wired into the app) when the real Start/Settings screens were built.
 
-### what i need you to do
-manage  and see if ther are any files that are not inculed within the main loop and needed for delevopment. Fully intergrate the files so that they are unafided togeather and is ready for development. Update `CHANGES.md` with the changes you made and the files you integrated.
+### Feature parity with the web version (`Bibirble-web`)
+The C++ port now matches the web version's front end: Daily vs. Random mode selection, a seeded/shareable-puzzle
+system (bit-for-bit identical daily verse via `SeededRandom`), Hard Mode, a Settings screen, daily-lockout
+persistence (`PersistenceManager`), and a Wordle-style emoji share grid (`GameState::BuildShareText()`). See
+`CHANGES.md` for the detailed commit-by-commit history of that work, including three bug fixes made along the
+way: Nehemiah was miscategorized as a minor prophet, `getRevealedText()` could only ever reveal the first
+occurrence of a repeated word, and the loading screen could hang forever (see the CallAfter note above).

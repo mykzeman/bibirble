@@ -7,12 +7,16 @@ A Bible verse guessing game built with C++ and wxWidgets.
 ```
 src/
 ├── main.cpp                 # Application entry point
-├── BibirbleWindow.h/cpp     # Main game window (wxWidgets)
+├── BibirbleWindow.h/cpp     # Main frame: screen switching, turn processing, keyboard
+├── StartScreen.h/cpp        # Mode-select landing screen (Daily/Random/Settings)
+├── SettingsScreen.h/cpp     # Hard Mode toggle, seed entry/randomize/readout
 ├── GameRow.h/cpp            # Bible verse input row component
+├── GameState.h/cpp          # Single source of truth: mode, seed, stage, history, Hard Mode, share text
+├── GuessColor.h             # Canonical Gray/Yellow/Green result enum
 ├── BibleData.h/cpp          # Bible data loading and logic
+├── SeededRandom.h/cpp       # Daily hash + seeded RNG, bit-for-bit port of data.js
+├── PersistenceManager.h/cpp # Daily lockout + last-seed persistence (JSON file)
 ├── loading_dialog.h         # Loading dialog for data import
-├── menu_wireframe.h         # Menu wireframe (optional)
-├── wx_callafter_compat.h    # wxWidgets compatibility helper
 └── bibirble.cpp             # Placeholder for future features
 
 tools/
@@ -150,15 +154,23 @@ python3 tools/sort.py
 # this generates or updates bible_sections.json
 ```
 
+## Features
+
+- **Daily mode**: a seeded puzzle that's the same for everyone on a given UTC day, and matches the web
+  version's verse exactly (bit-for-bit port of its hash/seed algorithm).
+- **Random mode**: pick any seed (or generate one) for a shareable, replayable puzzle.
+- **Hard Mode**: guesses must respect previously confirmed book/area and revealed digits, and must
+  reference a verse that actually exists in the dataset.
+- **Persistence**: once-a-day lockout for Daily mode and last-used seed are remembered between launches.
+- **Share**: a Wordle-style emoji grid (🟩/🟨/⬛) plus citation, copied to the clipboard.
+
 ## Notes and known issues
 
-- The loading dialog and progress UI are minimal; the loader may appear to hang briefly while parsing.
 - Book area mappings are defined in both `tools/sort.py` and `src/BibleData.cpp::getBookArea()`; keep them in sync when changing categories.
 
 ## Contributing
 
 Contributions welcome. Suggested improvements:
-- Add a proper main menu and settings
 - Improve loading UX and progress reporting
 - Add story mode or verse-of-the-day features
 

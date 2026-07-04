@@ -79,3 +79,56 @@ Files modified for these fixes:
 - `src/BibirbleWindow.cpp`
 
 Next step: run a build and smoke-test the UI to confirm focus and loader behavior.
+
+---
+
+Feature parity pass with Bibirble-web (Daily/Random modes, Hard Mode, Settings, persistence, share grid):
+
+Summary:
+- Removed the dead `menu_wireframe.h/cpp` stub (never wired into the app) and built real Start/Settings
+  screens in its place.
+- Ported the web version's daily-hash/seeded-RNG algorithm bit-for-bit (`src/SeededRandom.h/cpp`), verified
+  against the actual JS via node for a range of inputs including today's UTC date.
+- Fixed three real bugs while porting rather than replicating them:
+  - Nehemiah was miscategorized under "Prophets Minor" instead of "Historical" in both
+    `BibleData::getBookArea()` and `tools/sort.py`'s AREAS dict; regenerated `bible_sections.json` so the
+    shipped data's area field agrees (confirmed the diff is scoped to exactly the 330 Nehemiah entries).
+  - `getRevealedText()` used to re-find each chunk's words by value via `std::find`, so a repeated word in a
+    verse would only ever reveal its first occurrence. Reworked `sliceList` into `sliceIndices`, which tracks
+    contiguous index ranges directly instead of searching by value.
+  - The loading screen could hang forever: `wx_callafter_compat.h` (used because this wxWidgets 3.2 packaging
+    has no standalone `<wx/callafter.h>`) queued its callback onto `wxTheApp`, whose pending-event queue is
+    only drained by the *main* event loop -- which never starts while `LoadingDialog` is blocked inside
+    `ShowModal()` from `OnInit()`. Switched to the real `wxEvtHandler::CallAfter()` member function (queues on
+    the dialog itself, which the nested modal loop does drain); `wx_callafter_compat.h` is now deleted as
+    unused.
+- Introduced `GameState` (mode, seed, Hard Mode, stage, game-over, target verse, guess history) as the single
+  source of truth, replacing `BibirbleWindow`'s scattered `m_targetVerse`/`m_currentStage`/`m_gameOver`
+  members, and a single canonical `GuessColor` enum shared by `GameRow` and `GameState`.
+- Added Hard Mode (`GameState::CheckHardModeViolation`): guesses must respect the previously confirmed
+  book/area and revealed digits, and must reference a verse that exists in the dataset.
+- Added `PersistenceManager`: a small JSON file under `wxStandardPaths`' per-user data dir remembers the
+  daily lockout date and last-used seed, standing in for the web version's `localStorage`.
+- Added `StartScreen` (Daily/Random/Settings, an info card, and a live countdown to next UTC midnight) and
+  `SettingsScreen` (Hard Mode toggle, seed entry/randomize/readout), swapped in as `wxPanel`s within the
+  existing `BibirbleWindow` frame. Games are now replayable (`GameRow::Reset()`), and post-game controls
+  (Main Menu / Play Random / View-Set-Seed) are wired inline.
+- Reworked Share to build a real Wordle-style emoji grid (`GameState::BuildShareText()`) from guess history,
+  instead of a fixed templated sentence.
+
+Files added:
+- `src/SeededRandom.h/cpp`, `src/GameState.h/cpp`, `src/GuessColor.h`, `src/PersistenceManager.h/cpp`,
+  `src/StartScreen.h/cpp`, `src/SettingsScreen.h/cpp`
+
+Files removed:
+- `src/menu_wireframe.h/cpp`, `src/wx_callafter_compat.h`
+
+Testing guidance:
+1. Build cleanly via `./build.sh` (or the CMake commands in the README).
+2. Start screen shows Start Daily / Start Random / Settings, the info card, and a ticking countdown.
+3. Settings: toggle Hard Mode, enter/randomize a seed, Back returns to the correct screen.
+4. Start a Daily game, then relaunch and confirm the "already played today" lockout; a Random game with a
+   blank seed generates one, persists it, and prefills Settings on next launch.
+5. Deliberately violate a Hard Mode constraint and confirm the guess is rejected without being consumed.
+6. Finish a game, Share, and confirm the clipboard has the correct emoji grid (only played rows) + citation.
+7. Guess "Nehemiah" against a different Historical-area target verse and confirm yellow, not gray.
