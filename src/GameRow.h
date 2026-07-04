@@ -4,20 +4,26 @@
 #include <vector>
 #include <string>
 
+#include "GuessColor.h"
+
 class GameRow : public wxPanel {
 public:
     explicit GameRow(wxWindow* parent, const wxArrayString& books);
-    
+
     void setDisabled(bool disabled);
     bool isComplete() const;
-    
+
     std::string getBook() const;
     std::vector<std::string> getDigits() const;
     std::vector<wxTextCtrl*> GetDigitCtrls();
-    
-    void setBookColor(const std::string& color);
-    void setDigitColors(const std::vector<std::string>& colors);
+
+    void setBookColor(GuessColor color);
+    void setDigitColors(const std::vector<GuessColor>& colors);
     void lockSubmitted();
+
+    // Clears the row back to its pre-game state (empty book/digits, default
+    // colors, unlocked, disabled) so a finished game can be replayed.
+    void Reset();
 
 private:
     wxComboBox* m_bookSelect;

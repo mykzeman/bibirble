@@ -31,9 +31,18 @@ set(SOURCES
     src/GameRow.h
     src/BibleData.cpp
     src/BibleData.h
+    src/SeededRandom.cpp
+    src/SeededRandom.h
+    src/GameState.cpp
+    src/GameState.h
+    src/GuessColor.h
+    src/PersistenceManager.cpp
+    src/PersistenceManager.h
+    src/StartScreen.cpp
+    src/StartScreen.h
+    src/SettingsScreen.cpp
+    src/SettingsScreen.h
     src/loading_dialog.h
-    src/menu_wireframe.h
-    src/wx_callafter_compat.h
 )
 
 # Create executable

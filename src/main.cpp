@@ -5,6 +5,8 @@
 class BibirbleApp : public wxApp {
 public:
     bool OnInit() override {
+        SetAppName("Bibirble");
+
         const std::string dataPath = BibleData::ResolveDataFilePath("bible_sections.json");
 
         // Show a small loading dialog that verifies the presence of bible_sections.json

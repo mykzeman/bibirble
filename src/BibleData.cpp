@@ -94,6 +94,20 @@ Verse BibleData::getRandomVerse() const {
     return m_verses[dis(gen)];
 }
 
+Verse BibleData::getVerseAtIndex(int index) const {
+    if (index < 0 || index >= (int)m_verses.size()) return Verse();
+    return m_verses[index];
+}
+
+bool BibleData::verseExists(const std::string& book, int chapter, int verse) const {
+    for (const auto& v : m_verses) {
+        if (v.book == book && v.chapter == chapter && v.verse == verse) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::vector<std::string> BibleData::getAllBooks() const {
     std::vector<std::string> books;
     for (const auto& v : m_verses) {
@@ -107,11 +121,11 @@ std::vector<std::string> BibleData::getAllBooks() const {
 std::string BibleData::getBookArea(const std::string& bookName) const {
     static const std::map<std::string, std::vector<std::string>> AREAS = {
         {"Torah", {"genesis", "exodus", "leviticus", "numbers", "deuteronomy"}},
-        {"Historical", {"joshua", "judges", "1samuel", "2samuel", "1kings", "2kings", "1chronicles", "2chronicles"}},
+        {"Historical", {"joshua", "judges", "1samuel", "2samuel", "1kings", "2kings", "1chronicles", "2chronicles", "nehemiah"}},
         {"Poems", {"psalms", "proverbs", "ecclesiastes", "songofsolomon", "lamentations"}},
         {"Small stories", {"job", "esther", "jonah", "ruth", "ezra"}},
         {"Prophets Major", {"isaiah", "jeremiah", "ezekiel", "daniel"}},
-        {"Prophets Minor", {"hosea", "joel", "amos", "obadiah", "micah", "nahum", "habakkuk", "zephaniah", "haggai", "zechariah", "malachi", "nehemiah"}},
+        {"Prophets Minor", {"hosea", "joel", "amos", "obadiah", "micah", "nahum", "habakkuk", "zephaniah", "haggai", "zechariah", "malachi"}},
         {"Gospel", {"matthew", "mark", "luke", "john"}},
         {"Acts from Hebrews", {"acts", "hebrews"}},
         {"Pauls letters", {"romans", "1corinthians", "2corinthians", "galatians", "ephesians", "philippians", "colossians", "1thessalonians", "2thessalonians", "1timothy", "2timothy", "titus", "philemon"}},
@@ -138,17 +152,15 @@ int BibleData::calculateSliceSteps(int listLength, int chunkSize) {
     return  std::ceil(listLength / size);
 }
 
-std::vector<std::vector<std::string>> BibleData::sliceList(const std::vector<std::string>& list, int chunkSize) {
-    int len = list.size();
+std::vector<std::pair<int, int>> BibleData::sliceIndices(int listLength, int chunkSize) {
     int size = std::max(1, chunkSize);
-    int steps = calculateSliceSteps(len, size);
-    std::vector<std::vector<std::string>> chunks;
-    
+    int steps = calculateSliceSteps(listLength, size);
+    std::vector<std::pair<int, int>> chunks;
+
     int start = 0;
     for (int i = 0; i < steps; i++) {
-        int end = std::min(start + size, len);
-        std::vector<std::string> chunk(list.begin() + start, list.begin() + end);
-        chunks.push_back(chunk);
+        int end = std::min(start + size, listLength);
+        chunks.emplace_back(start, end);
         start = end;
     }
     return chunks;
@@ -169,29 +181,25 @@ std::string BibleData::getRevealedText(const Verse& verse, int stage) {
 
     // Logic from revealVerse in data.js
     int slices = std::floor(words.size() / 7);
-    std::vector<std::vector<std::string>> chunks = sliceList(words, slices);
-    
+    std::vector<std::pair<int, int>> chunks = sliceIndices(words.size(), slices);
+
     std::set<int> visibleIndices;
-    
+
+    auto revealChunk = [&](const std::pair<int, int>& range) {
+        for (int i = range.first; i < range.second; ++i) {
+            visibleIndices.insert(i);
+        }
+    };
+
     // Always show start chunk
     if (!chunks.empty()) {
-        for (const auto& w : chunks[0]) {
-            auto it = std::find(words.begin(), words.end(), w);
-            if (it != words.end()) {
-                visibleIndices.insert(std::distance(words.begin(), it));
-            }
-        }
+        revealChunk(chunks[0]);
     }
 
     // Show chunks up to stage
     for (int i = 1; i <= stage; i++) {
         if (i >= (int)chunks.size()) break;
-        for (const auto& w : chunks[i]) {
-            auto it = std::find(words.begin(), words.end(), w);
-            if (it != words.end()) {
-                visibleIndices.insert(std::distance(words.begin(), it));
-            }
-        }
+        revealChunk(chunks[i]);
     }
 
     // Build masked verse

@@ -9,18 +9,18 @@
 #include <string>
 #include <nlohmann/json.hpp>
 #include "BibleData.h"
-#if defined(__has_include)
-#  if __has_include(<wx/callafter.h>)
-#    include <wx/callafter.h>
-#  else
-#    include "wx_callafter_compat.h"
-#  endif
-#else
-#  include <wx/callafter.h>
-#endif
 
 // A loader that reads a local JSON array of objects and extracts the "text" fields using nlohmann::json.
-// It runs on a background thread, animates the gauge via wxCallAfter, and stores the selected text.
+// It runs on a background thread, animates the gauge via wxEvtHandler::CallAfter(), and stores the
+// selected text.
+//
+// This dialog is shown via ShowModal() from inside wxApp::OnInit(), before the app's main event loop
+// has started. That matters: the free-function wxCallAfter(fn) (and this project's old
+// wx_callafter_compat.h shim) queue the call onto wxTheApp, which is only drained by the *main* event
+// loop's idle processing -- so it would never run while blocked inside a nested ShowModal() loop that
+// starts before that main loop does, and EndModal() would never fire. Calling CallAfter() as a member
+// function on `this` (the dialog itself) queues it on the dialog's own pending-event list instead,
+// which the nested modal loop does drain, so it works correctly here.
 class LoadingDialog : public wxDialog
 {
 public:
@@ -36,7 +36,7 @@ public:
         SetSizerAndFit(s);
 
         // Launch background worker after the modal loop starts so the gauge is visible.
-        wxCallAfter([this]() {
+        this->CallAfter([this]() {
             std::thread([this]() { LoadInBackground(); }).detach();
         });
     }
@@ -84,7 +84,7 @@ private:
 
         // Animate progress with a guaranteed minimum visible duration.
         for (int v = 0; v <= 90; v += 5) {
-            wxCallAfter([this, v]() { m_gauge->SetValue(v); });
+            this->CallAfter([this, v]() { m_gauge->SetValue(v); });
             std::this_thread::sleep_for(std::chrono::milliseconds(55));
         }
 
@@ -98,7 +98,7 @@ private:
         }
 
         for (int v = 90; v <= 100; v += 2) {
-            wxCallAfter([this, v]() { m_gauge->SetValue(v); });
+            this->CallAfter([this, v]() { m_gauge->SetValue(v); });
             std::this_thread::sleep_for(std::chrono::milliseconds(35));
         }
 
@@ -107,7 +107,7 @@ private:
             std::this_thread::sleep_for(kMinLoadVisible - elapsed);
         }
 
-        wxCallAfter([this]() { EndModal(wxID_OK); });
+        this->CallAfter([this]() { EndModal(wxID_OK); });
     }
 
     wxGauge* m_gauge;
