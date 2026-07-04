@@ -1,5 +1,14 @@
 #include "SettingsScreen.h"
 
+namespace {
+void StyleButton(wxButton* btn) {
+    btn->SetBackgroundColour(wxColour(200, 100, 50));
+    btn->SetForegroundColour(wxColour(235, 230, 157));
+    wxFont btnFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+    btn->SetFont(btnFont);
+}
+}  // namespace
+
 SettingsScreen::SettingsScreen(wxWindow* parent) : wxPanel(parent) {
     SetupUi();
 }
@@ -12,6 +21,7 @@ void SettingsScreen::SetupUi() {
 
     wxBoxSizer* header = new wxBoxSizer(wxHORIZONTAL);
     wxButton* backBtn = new wxButton(this, wxID_ANY, "Back");
+    StyleButton(backBtn);
     backBtn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
         if (m_onBack) m_onBack();
     });
@@ -47,6 +57,7 @@ void SettingsScreen::SetupUi() {
     cardLayout->Add(currentSeedRow, 0, wxEXPAND);
 
     wxButton* randomizeBtn = new wxButton(card, wxID_ANY, "Randomize Seed");
+    StyleButton(randomizeBtn);
     randomizeBtn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
         if (m_onRandomizeSeed) m_onRandomizeSeed();
     });

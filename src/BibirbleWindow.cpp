@@ -146,6 +146,13 @@ void BibirbleWindow::SetupPostGameControls(wxBoxSizer* parentLayout) {
     wxButton* playRandomBtn = new wxButton(m_postGameControls, wxID_ANY, "Play Random");
     wxButton* viewSeedBtn = new wxButton(m_postGameControls, wxID_ANY, "View / Set Seed");
 
+    wxFont postGameBtnFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+    for (wxButton* btn : {mainMenuBtn, playRandomBtn, viewSeedBtn}) {
+        btn->SetBackgroundColour(wxColour(200, 100, 50));
+        btn->SetForegroundColour(wxColour(235, 230, 157));
+        btn->SetFont(postGameBtnFont);
+    }
+
     mainMenuBtn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { OnMainMenu(); });
     playRandomBtn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { OnPlayRandom(); });
     viewSeedBtn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { OnViewSetSeed(); });
@@ -308,8 +315,6 @@ void BibirbleWindow::StartNewGame(GameMode mode, bool hardMode, const wxString& 
     int idx = PickIndexFromSeed(seed, m_data.getVerseCount());
     Verse verse = m_data.getVerseAtIndex(idx);
     m_state.Reset(mode, seed, hardMode, verse);
-
-    wxLogMessage("Target: %s %d:%d (seed=%lld)", verse.book, verse.chapter, verse.verse, (long long)seed);
 
     if (mode == GameMode::Random) {
         wxString seedStr = wxString::Format("%lld", (long long)seed);

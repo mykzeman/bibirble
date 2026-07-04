@@ -46,6 +46,10 @@ void StartScreen::SetupUi() {
     wxBoxSizer* actions = new wxBoxSizer(wxHORIZONTAL);
     auto makeButton = [&](const wxString& label) {
         wxButton* btn = new wxButton(this, wxID_ANY, label);
+        btn->SetBackgroundColour(wxColour(200, 100, 50));
+        btn->SetForegroundColour(wxColour(235, 230, 157));
+        wxFont btnFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+        btn->SetFont(btnFont);
         btn->SetMinSize(wxSize(-1, 40));
         return btn;
     };
