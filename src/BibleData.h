@@ -33,5 +33,9 @@ public:
 private:
     std::vector<Verse> m_verses;
     int calculateSliceSteps(int listLength, int chunkSize);
-    std::vector<std::vector<std::string>> sliceList(const std::vector<std::string>& list, int chunkSize);
+    // Contiguous [start, end) index ranges a list of the given length would be
+    // chunked into. Working with index ranges (rather than re-finding words by
+    // value) is what lets getRevealedText() reveal the correct occurrence of a
+    // word that appears more than once in a verse.
+    std::vector<std::pair<int, int>> sliceIndices(int listLength, int chunkSize);
 };
