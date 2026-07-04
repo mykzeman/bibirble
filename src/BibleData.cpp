@@ -94,6 +94,20 @@ Verse BibleData::getRandomVerse() const {
     return m_verses[dis(gen)];
 }
 
+Verse BibleData::getVerseAtIndex(int index) const {
+    if (index < 0 || index >= (int)m_verses.size()) return Verse();
+    return m_verses[index];
+}
+
+bool BibleData::verseExists(const std::string& book, int chapter, int verse) const {
+    for (const auto& v : m_verses) {
+        if (v.book == book && v.chapter == chapter && v.verse == verse) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::vector<std::string> BibleData::getAllBooks() const {
     std::vector<std::string> books;
     for (const auto& v : m_verses) {

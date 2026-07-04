@@ -31,6 +31,8 @@ set(SOURCES
     src/GameRow.h
     src/BibleData.cpp
     src/BibleData.h
+    src/SeededRandom.cpp
+    src/SeededRandom.h
     src/loading_dialog.h
     src/wx_callafter_compat.h
 )
