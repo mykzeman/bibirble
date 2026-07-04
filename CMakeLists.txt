@@ -38,6 +38,10 @@ set(SOURCES
     src/GuessColor.h
     src/PersistenceManager.cpp
     src/PersistenceManager.h
+    src/StartScreen.cpp
+    src/StartScreen.h
+    src/SettingsScreen.cpp
+    src/SettingsScreen.h
     src/loading_dialog.h
 )
 

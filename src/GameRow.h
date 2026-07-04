@@ -21,6 +21,10 @@ public:
     void setDigitColors(const std::vector<GuessColor>& colors);
     void lockSubmitted();
 
+    // Clears the row back to its pre-game state (empty book/digits, default
+    // colors, unlocked, disabled) so a finished game can be replayed.
+    void Reset();
+
 private:
     wxComboBox* m_bookSelect;
     wxTextCtrl* m_c1;

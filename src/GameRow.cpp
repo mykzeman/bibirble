@@ -138,6 +138,28 @@ std::vector<wxTextCtrl*> GameRow::GetDigitCtrls() {
     return { m_c1, m_c2, m_v1, m_v2 };
 }
 
+void GameRow::Reset() {
+    m_isBookLocked = false;
+    m_lockedBookSelection.Clear();
+
+    m_bookSelect->SetSelection(wxNOT_FOUND);
+    m_c1->Clear();
+    m_c2->Clear();
+    m_v1->Clear();
+    m_v2->Clear();
+
+    m_bookSelect->SetBackgroundColour(wxNullColour);
+    m_bookSelect->SetForegroundColour(wxNullColour);
+    m_bookSelect->Refresh();
+    for (auto* ctrl : {m_c1, m_c2, m_v1, m_v2}) {
+        ctrl->SetBackgroundColour(wxNullColour);
+        ctrl->SetForegroundColour(wxNullColour);
+        ctrl->Refresh();
+    }
+
+    setDisabled(true);
+}
+
 void GameRow::lockSubmitted() {
     m_isBookLocked = true;
     m_lockedBookSelection = m_bookSelect->GetStringSelection();
