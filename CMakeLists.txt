@@ -39,7 +39,6 @@ set(SOURCES
     src/PersistenceManager.cpp
     src/PersistenceManager.h
     src/loading_dialog.h
-    src/wx_callafter_compat.h
 )
 
 # Create executable
