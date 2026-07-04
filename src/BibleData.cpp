@@ -121,11 +121,11 @@ std::vector<std::string> BibleData::getAllBooks() const {
 std::string BibleData::getBookArea(const std::string& bookName) const {
     static const std::map<std::string, std::vector<std::string>> AREAS = {
         {"Torah", {"genesis", "exodus", "leviticus", "numbers", "deuteronomy"}},
-        {"Historical", {"joshua", "judges", "1samuel", "2samuel", "1kings", "2kings", "1chronicles", "2chronicles"}},
+        {"Historical", {"joshua", "judges", "1samuel", "2samuel", "1kings", "2kings", "1chronicles", "2chronicles", "nehemiah"}},
         {"Poems", {"psalms", "proverbs", "ecclesiastes", "songofsolomon", "lamentations"}},
         {"Small stories", {"job", "esther", "jonah", "ruth", "ezra"}},
         {"Prophets Major", {"isaiah", "jeremiah", "ezekiel", "daniel"}},
-        {"Prophets Minor", {"hosea", "joel", "amos", "obadiah", "micah", "nahum", "habakkuk", "zephaniah", "haggai", "zechariah", "malachi", "nehemiah"}},
+        {"Prophets Minor", {"hosea", "joel", "amos", "obadiah", "micah", "nahum", "habakkuk", "zephaniah", "haggai", "zechariah", "malachi"}},
         {"Gospel", {"matthew", "mark", "luke", "john"}},
         {"Acts from Hebrews", {"acts", "hebrews"}},
         {"Pauls letters", {"romans", "1corinthians", "2corinthians", "galatians", "ephesians", "philippians", "colossians", "1thessalonians", "2thessalonians", "1timothy", "2timothy", "titus", "philemon"}},
