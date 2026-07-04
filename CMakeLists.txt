@@ -36,6 +36,8 @@ set(SOURCES
     src/GameState.cpp
     src/GameState.h
     src/GuessColor.h
+    src/PersistenceManager.cpp
+    src/PersistenceManager.h
     src/loading_dialog.h
     src/wx_callafter_compat.h
 )
