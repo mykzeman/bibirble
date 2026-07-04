@@ -261,6 +261,15 @@ void BibirbleWindow::OnSubmit(wxCommandEvent& event) {
         return;
     }
 
+    if (m_state.hardMode) {
+        std::string violation = m_state.CheckHardModeViolation(
+            activeRow->getBook(), activeRow->getDigits(), m_data);
+        if (!violation.empty()) {
+            wxMessageBox(violation, "Bibirble", wxOK | wxICON_WARNING);
+            return;
+        }
+    }
+
     int result = ProcessTurn();
     if (result == -1) {
         m_state.gameOver = true;

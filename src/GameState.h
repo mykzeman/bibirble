@@ -30,4 +30,12 @@ public:
     bool gameOver = false;
     Verse targetVerse;
     std::vector<GuessRecord> history;
+
+    // Ports submit.js's hard-mode enforcement: checks a pending guess against
+    // clues already given by earlier rows in history, plus dataset existence.
+    // Returns a user-facing violation message, or an empty string if the
+    // guess is allowed.
+    std::string CheckHardModeViolation(const std::string& bookGuess,
+                                        const std::vector<std::string>& digitGuesses,
+                                        const BibleData& data) const;
 };
