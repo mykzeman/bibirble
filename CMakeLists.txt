@@ -32,7 +32,6 @@ set(SOURCES
     src/BibleData.cpp
     src/BibleData.h
     src/loading_dialog.h
-    src/menu_wireframe.h
     src/wx_callafter_compat.h
 )
 
