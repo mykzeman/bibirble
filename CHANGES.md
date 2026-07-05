@@ -1,3 +1,47 @@
+Story Mode:
+
+Summary:
+- Added a separate "Story Mode" reachable from the start screen: 10 curated sections following the
+  Bible's narrative arc, each broken into chapters of 10 verses played with the existing guess-the-reference
+  mechanic (same GameState/GameRow/reveal-panel/keyboard UI, just fed a curated verse sequence instead of a
+  single random/daily verse). Section 1 (Creation, Genesis 1-11) is fully authored with 6 chapters plus a
+  bonus "prophecy" chapter that unlocks once every chapter in the section has been aced (won outright, no
+  lost rounds); Sections 2-10 are data stubs (title/subtitle/description only) marked "Coming Soon".
+- Content lives in `story_sections.json` (curated `{book, chapter, verse}` references, resolved against
+  `bible_sections.json` at play time via a new `BibleData::getVerse()` lookup).
+- Story progress (per-chapter completion + perfect-run flag, section-aced state, bonus completion) persists
+  to `bibirble_story_progress.json` in the same per-user data directory as `PersistenceManager`.
+- New screens: `StoryMapScreen` (section select), `StorySectionScreen` (chapter select + bonus tile),
+  `StoryInterstitialScreen` (reusable chapter-intro/chapter-complete "story beat" screen), and
+  `IllustrationPanel` (draws a real image from `assets/story/...` if present, else a placeholder gradient
+  card) -- so the whole flow works end-to-end before any art assets exist.
+- Bug fix found while authoring Section 1's bonus prophecy chapter: `tools/sort.py` silently dropped any
+  verse rendered as poetic "line text" (e.g. Genesis 3:15) and any verse under 7 words (e.g. "Jesus wept.").
+  Fixed the parser and regenerated `bible_sections.json` (23,621 -> 31,098 verses, zero duplicates).
+
+Files added:
+- `src/StoryData.h/cpp`, `src/StoryProgress.h/cpp`, `src/IllustrationPanel.h/cpp`,
+  `src/StoryMapScreen.h/cpp`, `src/StorySectionScreen.h/cpp`, `src/StoryInterstitialScreen.h/cpp`,
+  `story_sections.json`
+
+Files changed:
+- `src/BibleData.h/cpp` (added `getVerse()`), `src/GameState.h` (added `GameMode::Story`),
+  `src/StartScreen.h/cpp` (added the Story Mode button), `src/BibirbleWindow.h/cpp` (screen switching
+  generalized into `ShowOnly()`, Story Mode session state and handlers), `CMakeLists.txt`,
+  `tools/sort.py`, `bible_sections.json`, `README.md`, `AGENTS.md`
+
+Testing guidance:
+1. Build cleanly, run, click "Story Mode" from the start screen.
+2. Section 1 ("Creation") should be [Available]; Sections 2-10 should be [Locked]/[Coming Soon].
+3. Open Section 1, start Chapter 1, and play through -- confirm the header shows "Verse N of 10", the
+   Continue button appears after each round, and the chapter-complete screen shows the correct score.
+4. Confirm the bonus "Whispers of the Promise" chapter is locked until Chapter 1-6 are all won without a
+   single loss (a section is "aced" only when every chapter is both completed and perfect).
+5. Exit mid-chapter via the "Exit" button and confirm progress on that chapter is not saved.
+6. Confirm Daily/Random mode still work exactly as before (no Story Mode UI bleeds into classic play).
+
+---
+
 CHANGES for recent integration work
 
 Summary:

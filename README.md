@@ -17,6 +17,12 @@ src/
 ├── SeededRandom.h/cpp       # Daily hash + seeded RNG, bit-for-bit port of data.js
 ├── PersistenceManager.h/cpp # Daily lockout + last-seed persistence (JSON file)
 ├── loading_dialog.h         # Loading dialog for data import
+├── StoryData.h/cpp          # Loads story_sections.json (Story Mode sections/chapters/verse refs)
+├── StoryProgress.h/cpp      # Story Mode chapter/section/bonus completion persistence (JSON file)
+├── IllustrationPanel.h/cpp  # Renders a Story Mode illustration, or a placeholder card if none exists
+├── StoryMapScreen.h/cpp     # Story Mode section-select screen
+├── StorySectionScreen.h/cpp # Story Mode chapter-select screen for one section
+├── StoryInterstitialScreen.h/cpp # Reusable "story beat" screen (chapter intro / chapter complete)
 └── bibirble.cpp             # Placeholder for future features
 
 tools/
@@ -163,6 +169,38 @@ python3 tools/sort.py
   reference a verse that actually exists in the dataset.
 - **Persistence**: once-a-day lockout for Daily mode and last-used seed are remembered between launches.
 - **Share**: a Wordle-style emoji grid (🟩/🟨/⬛) plus citation, copied to the clipboard.
+- **Story Mode**: a separate, curated mode that walks through the Bible's narrative arc in 10 sections
+  (Creation, Promises, Wilderness, ...). Each section is broken into chapters of 10 curated verses, played
+  with the same guess-the-reference mechanic as the main game. Acing every chapter in a section (winning
+  every verse, no losses) unlocks a bonus prophecy chapter for that section. See "Story Mode" below.
+
+## Story Mode
+
+Story Mode is reached from the "Story Mode" button on the start screen. Content lives in
+`story_sections.json` (same directory as `bible_sections.json`) and only references verses that exist in
+the loaded dataset. Currently only Section 1 (**Creation**, Genesis 1-11) has authored chapters; the
+remaining 9 sections are present as "Coming Soon" placeholders with title/subtitle/description filled in,
+ready for their chapters to be authored the same way.
+
+Progress (which chapters are completed, whether a section has been aced, whether its bonus chapter is
+done) is saved to `bibirble_story_progress.json` under the same per-user data directory PersistenceManager
+uses, so progress persists between launches independent of Daily/Random state.
+
+### Illustrations / assets
+
+Story Mode screens (map, section, chapter intro/complete) each display a "cinematic illustration". Real
+artwork can be dropped into an `assets/story/` folder next to the executable with no code changes required:
+
+```
+assets/story/map.png                        # world-map banner
+assets/story/section_01.png                 # section 1's card art
+assets/story/section_01/chapter_01.png       # section 1, chapter 1's art
+assets/story/section_01/bonus.png            # section 1's bonus prophecy chapter art
+```
+
+`IllustrationPanel` resolves these paths the same way `BibleData`/`StoryData` resolve their JSON files
+(checking a handful of candidate working directories); if a file isn't found, a placeholder gradient card
+with the chapter/section title is drawn instead, so the flow is fully navigable before any art exists.
 
 ## Notes and known issues
 

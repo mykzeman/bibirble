@@ -2,8 +2,7 @@ from pathlib import Path
 import json
 dir_path = Path("tools/")
 file_list = list(dir_path.glob("*.json"))
-big_list=[]
-i=0
+big_list = []
 OLD_TESTIMENT=["genesis","exodus","leviticus","numbers","deuteronomy","joshua","judges","ruth","1samuel","2samuel","1kings","2kings","1chronicles","2chronicles","ezra","nehemiah","esther","job","psalms","proverbs","ecclesiastes","songofsolomon","isaiah","jeremiah","lamentations","ezekiel","daniel","hosea","joel","amos","obadiah","jonah","micah","nahum","habakkuk","zephaniah","haggai","zechariah","malachi"]
 AREAS={
     "Torah":OLD_TESTIMENT[0:5],
@@ -19,55 +18,57 @@ AREAS={
     "James and Jude":["james","jude"],
     "John Letters and Visions":["1john","2john","3john","revelation"]
 }
+
+# Element types that carry verse text. "line text" covers poetic passages
+# (prophecies, blessings, curses, psalms) which the source renders as verse
+# lines rather than paragraph prose -- some verses (e.g. Genesis 3:15) are
+# made up entirely of "line text" elements with no "paragraph text" at all.
+TEXT_TYPES = {"paragraph text", "line text"}
+
 for file_path in file_list:
     with open(file_path, 'r', encoding='utf-8') as f:
-        book=file_path.stem
+        book = file_path.stem
         data = json.load(f)
-        sectionNumbers=[]
-        text=""
+        testament = "Old Testament" if book in OLD_TESTIMENT else "New Testament"
+        book_area = ""
+        for area, books in AREAS.items():
+            if book in books:
+                book_area = area
+                break
+
+        current_key = None
+        current_words = []
+
+        def flush():
+            if current_key is None or not current_words:
+                return
+            chapter, verse = current_key
+            big_list.append({
+                "testament": testament,
+                "area": book_area,
+                "book": book,
+                "chapter": chapter,
+                "verse": verse,
+                "text": " ".join(current_words).strip(),
+            })
+
         for element in data:
-            if element["type"]!="paragraph text":
+            if element["type"] not in TEXT_TYPES:
                 continue
-            chapter=element["chapterNumber"]
-            verse=element["verseNumber"]
-            testament="Old Testament" if book in OLD_TESTIMENT else "New Testament"
-            for area, books in AREAS.items():
-                if book in books:
-                    book_area=area
-                    break
-       
-            if element["sectionNumber"] ==1:
-                if sectionNumbers==[]:
-                    sectionNumbers.append(1)
-                    text=element["value"]
-                else:
-                    sectionNumbers=[]
-                    text=""
-            else:
-                sectionNumbers.append(element["sectionNumber"])
-                text+= " " + element["value"]
-            words_in_text = text.strip().split(" ")
-            allowed=False
-            if len(sectionNumbers)>=1 and len(words_in_text)>=7:
-                if chapter<99 or verse<99:
-                            allowed=True
-                            
-                            
-                if allowed:              
-                    big_list.append({
-                    "testament": testament,
-                    "area": book_area,
-                    "book": book,
-                    "chapter": chapter,
-                    "verse": verse, 
-                    "text": text.strip(),})
-                    sectionNumbers=[]
-                    text=""
-                    
-                
-                    i+=1
-big_list=sorted(big_list, key=lambda x: (x["book"], x["chapter"], x["verse"]))
+
+            key = (element["chapterNumber"], element["verseNumber"])
+            if key != current_key:
+                flush()
+                current_key = key
+                current_words = []
+
+            value = element["value"].strip()
+            if value:
+                current_words.append(value)
+
+        flush()
+
+big_list = sorted(big_list, key=lambda x: (x["book"], x["chapter"], x["verse"]))
 with open("bible_sections.json", 'w', encoding='utf-8') as f:
     json.dump(big_list, f, ensure_ascii=False, indent=4)
 print(f"Total sections saved: {len(big_list)}")
-# exec(open("stats.py").read()) # Commented out as stats.py is not provided

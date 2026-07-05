@@ -23,6 +23,20 @@
 - **SeededRandom** (`src/SeededRandom.h/cpp`): Bit-for-bit port of the web version's `data.js` hash/seed algorithm (`HashStringToInt`, xorshift32 `SeededRandom`, `PickIndexFromSeed`, `GetDailySeed`), so Daily puzzles match the web version exactly
 - **PersistenceManager** (`src/PersistenceManager.h/cpp`): Small JSON file under `wxStandardPaths`' per-user data dir, standing in for the web version's `localStorage` (daily lockout date, last seed)
 - **main.cpp**: wxApp bootstrapper that shows `LoadingDialog` then creates `BibirbleWindow` on startup
+- **StoryData** (`src/StoryData.h/cpp`): Loads `story_sections.json` into `StorySection`/`StoryChapter`/`StoryVerseRef`. Verse refs are just `{book, chapter, verse}`; `BibleData::getVerse()` resolves them to full text at play time
+- **StoryProgress** (`src/StoryProgress.h/cpp`): Small JSON file (`bibirble_story_progress.json`, same per-user data dir as `PersistenceManager`) tracking, per section, which chapters are completed and whether each was a "perfect" run (no lost verse rounds). A section is "aced" once every chapter is completed *and* perfect, which unlocks its bonus prophecy chapter
+- **IllustrationPanel** (`src/IllustrationPanel.h/cpp`): Resolves and draws a Story Mode image from `assets/story/...`, or a placeholder gradient card with a caption if the file isn't present yet
+- **StoryMapScreen** / **StorySectionScreen** / **StoryInterstitialScreen** (`src/Story*.h/cpp`): Story Mode screens -- section-select, chapter-select within a section, and a reusable "story beat" screen (chapter intro with a "Begin" button, chapter-complete summary with a "Continue" button)
+
+### Story Mode gameplay
+
+Story Mode reuses the *same* `GameState`/`GameRow`/reveal-panel/keyboard UI as Daily/Random -- a story
+"chapter" is just 10 curated verses (from `StoryChapter::verses`) played back-to-back as individual
+verse-guessing rounds (`GameMode::Story`, hard mode off). `BibirbleWindow` tracks the active session
+(`m_storySectionId`, `m_storyChapterIndex` -- `-1` for the bonus chapter --, `m_storyVerseIndex`,
+`m_storyCorrectCount`, `m_storyChapterPerfect`) and drives it through `StartStoryVerse()` ->
+`HandleStoryRoundFinished()` -> either the next verse or `FinishStoryChapter()`, which records the result
+in `StoryProgress` and shows the chapter-complete interstitial.
 
 ### Data Structure Consistency
 
@@ -110,3 +124,15 @@ persistence (`PersistenceManager`), and a Wordle-style emoji share grid (`GameSt
 `CHANGES.md` for the detailed commit-by-commit history of that work, including three bug fixes made along the
 way: Nehemiah was miscategorized as a minor prophet, `getRevealedText()` could only ever reveal the first
 occurrence of a repeated word, and the loading screen could hang forever (see the CallAfter note above).
+
+### Story Mode (added on top of the above)
+
+A fourth bug was found and fixed while building Story Mode's curated content: `tools/sort.py` only ever
+read `"paragraph text"` elements from the raw per-book JSON and required 7+ accumulated words before
+flushing a verse, so it silently dropped (a) any verse rendered entirely as poetic `"line text"` (e.g.
+Genesis 3:15, the Genesis 9:26-27 blessing -- exactly the kind of passage Story Mode's bonus prophecy
+chapters need) and (b) any short verse that never reached 7 words (e.g. "Jesus wept.", John 11:35).
+`sort.py` now accumulates both `"paragraph text"` and `"line text"` per `(chapter, verse)` and flushes on
+every verse-number change, with no minimum word count. Regenerating `bible_sections.json` with the fix
+went from 23,621 to 31,098 verses; a duplicate check found zero duplicate references, and spot-checked
+entries (Psalm 23, Genesis 1, the previously-missing verses above) read correctly.

@@ -1,0 +1,205 @@
+{
+  "sections": [
+    {
+      "id": 1,
+      "key": "creation",
+      "title": "Creation",
+      "subtitle": "Genesis 1-11",
+      "description": "In the beginning: the six days of creation, the Garden of Eden, the fall of man, Cain and Abel, Noah's Ark, and the Tower of Babel.",
+      "mapPosition": { "x": 0.08, "y": 0.90 },
+      "chapters": [
+        {
+          "title": "Let There Be Light",
+          "verses": [
+            { "book": "genesis", "chapter": 1, "verse": 1 },
+            { "book": "genesis", "chapter": 1, "verse": 3 },
+            { "book": "genesis", "chapter": 1, "verse": 6 },
+            { "book": "genesis", "chapter": 1, "verse": 9 },
+            { "book": "genesis", "chapter": 1, "verse": 11 },
+            { "book": "genesis", "chapter": 1, "verse": 14 },
+            { "book": "genesis", "chapter": 1, "verse": 20 },
+            { "book": "genesis", "chapter": 1, "verse": 24 },
+            { "book": "genesis", "chapter": 1, "verse": 26 },
+            { "book": "genesis", "chapter": 1, "verse": 31 }
+          ]
+        },
+        {
+          "title": "The Garden of Eden",
+          "verses": [
+            { "book": "genesis", "chapter": 2, "verse": 7 },
+            { "book": "genesis", "chapter": 2, "verse": 8 },
+            { "book": "genesis", "chapter": 2, "verse": 9 },
+            { "book": "genesis", "chapter": 2, "verse": 15 },
+            { "book": "genesis", "chapter": 2, "verse": 16 },
+            { "book": "genesis", "chapter": 2, "verse": 17 },
+            { "book": "genesis", "chapter": 2, "verse": 18 },
+            { "book": "genesis", "chapter": 2, "verse": 21 },
+            { "book": "genesis", "chapter": 2, "verse": 22 },
+            { "book": "genesis", "chapter": 2, "verse": 24 }
+          ]
+        },
+        {
+          "title": "The Fall",
+          "verses": [
+            { "book": "genesis", "chapter": 3, "verse": 1 },
+            { "book": "genesis", "chapter": 3, "verse": 4 },
+            { "book": "genesis", "chapter": 3, "verse": 5 },
+            { "book": "genesis", "chapter": 3, "verse": 6 },
+            { "book": "genesis", "chapter": 3, "verse": 9 },
+            { "book": "genesis", "chapter": 3, "verse": 12 },
+            { "book": "genesis", "chapter": 3, "verse": 13 },
+            { "book": "genesis", "chapter": 3, "verse": 17 },
+            { "book": "genesis", "chapter": 3, "verse": 19 },
+            { "book": "genesis", "chapter": 3, "verse": 24 }
+          ]
+        },
+        {
+          "title": "Cain and Abel",
+          "verses": [
+            { "book": "genesis", "chapter": 4, "verse": 2 },
+            { "book": "genesis", "chapter": 4, "verse": 3 },
+            { "book": "genesis", "chapter": 4, "verse": 4 },
+            { "book": "genesis", "chapter": 4, "verse": 5 },
+            { "book": "genesis", "chapter": 4, "verse": 8 },
+            { "book": "genesis", "chapter": 4, "verse": 9 },
+            { "book": "genesis", "chapter": 4, "verse": 10 },
+            { "book": "genesis", "chapter": 4, "verse": 11 },
+            { "book": "genesis", "chapter": 4, "verse": 12 },
+            { "book": "genesis", "chapter": 4, "verse": 16 }
+          ]
+        },
+        {
+          "title": "Noah and the Flood",
+          "verses": [
+            { "book": "genesis", "chapter": 6, "verse": 5 },
+            { "book": "genesis", "chapter": 6, "verse": 8 },
+            { "book": "genesis", "chapter": 6, "verse": 13 },
+            { "book": "genesis", "chapter": 6, "verse": 14 },
+            { "book": "genesis", "chapter": 7, "verse": 1 },
+            { "book": "genesis", "chapter": 7, "verse": 11 },
+            { "book": "genesis", "chapter": 7, "verse": 17 },
+            { "book": "genesis", "chapter": 8, "verse": 1 },
+            { "book": "genesis", "chapter": 8, "verse": 11 },
+            { "book": "genesis", "chapter": 9, "verse": 13 }
+          ]
+        },
+        {
+          "title": "Babel and New Beginnings",
+          "verses": [
+            { "book": "genesis", "chapter": 10, "verse": 1 },
+            { "book": "genesis", "chapter": 11, "verse": 1 },
+            { "book": "genesis", "chapter": 11, "verse": 3 },
+            { "book": "genesis", "chapter": 11, "verse": 4 },
+            { "book": "genesis", "chapter": 11, "verse": 5 },
+            { "book": "genesis", "chapter": 11, "verse": 6 },
+            { "book": "genesis", "chapter": 11, "verse": 7 },
+            { "book": "genesis", "chapter": 11, "verse": 8 },
+            { "book": "genesis", "chapter": 11, "verse": 9 },
+            { "book": "genesis", "chapter": 11, "verse": 31 }
+          ]
+        }
+      ],
+      "bonusChapter": {
+        "title": "Whispers of the Promise",
+        "verses": [
+          { "book": "genesis", "chapter": 3, "verse": 15 },
+          { "book": "genesis", "chapter": 5, "verse": 24 },
+          { "book": "genesis", "chapter": 8, "verse": 21 },
+          { "book": "genesis", "chapter": 8, "verse": 22 },
+          { "book": "genesis", "chapter": 9, "verse": 15 },
+          { "book": "genesis", "chapter": 9, "verse": 26 }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "key": "promises",
+      "title": "Promises",
+      "subtitle": "Genesis 12-50, Job, Exodus 1-15",
+      "description": "The patriarchs Abraham, Isaac, Jacob, and Joseph; God's covenant promises; Job's trials; and the Exodus from Egypt.",
+      "mapPosition": { "x": 0.22, "y": 0.78 },
+      "chapters": [],
+      "bonusChapter": null
+    },
+    {
+      "id": 3,
+      "key": "wilderness",
+      "title": "Wilderness",
+      "subtitle": "Exodus 16-40, Numbers 1-36",
+      "description": "The Israelites' journey through the wilderness: the Ten Commandments, the Tabernacle, and the desert years.",
+      "mapPosition": { "x": 0.15, "y": 0.62 },
+      "chapters": [],
+      "bonusChapter": null
+    },
+    {
+      "id": 4,
+      "key": "judged",
+      "title": "Judged",
+      "subtitle": "Leviticus, Deuteronomy, Joshua, Judges, Ruth",
+      "description": "The conquest of Canaan, cycles of sin and redemption, and the loyalty of Ruth.",
+      "mapPosition": { "x": 0.32, "y": 0.52 },
+      "chapters": [],
+      "bonusChapter": null
+    },
+    {
+      "id": 5,
+      "key": "kings",
+      "title": "Kings",
+      "subtitle": "1-2 Samuel, 1-2 Kings, 1 Chronicles",
+      "description": "The rise and fall of the Israelite monarchy: Saul, David, Solomon, and the divided kingdom.",
+      "mapPosition": { "x": 0.50, "y": 0.60 },
+      "chapters": [],
+      "bonusChapter": null
+    },
+    {
+      "id": 6,
+      "key": "enslaved",
+      "title": "Enslaved",
+      "subtitle": "2 Chronicles, Ezra, Nehemiah, Esther, the Major/Minor Prophets",
+      "description": "Exile, the rebuilding of Jerusalem and the temple, and messages of hope and restoration from the prophets.",
+      "mapPosition": { "x": 0.62, "y": 0.45 },
+      "chapters": [],
+      "bonusChapter": null
+    },
+    {
+      "id": 7,
+      "key": "messiah",
+      "title": "Messiah",
+      "subtitle": "Matthew, Mark, Luke, John",
+      "description": "The life, teachings, miracles, death, and resurrection of Jesus Christ, the promised Messiah.",
+      "mapPosition": { "x": 0.55, "y": 0.28 },
+      "chapters": [],
+      "bonusChapter": null
+    },
+    {
+      "id": 8,
+      "key": "acts",
+      "title": "Acts",
+      "subtitle": "Acts",
+      "description": "The early Christian church, the spread of the gospel, and the missionary journeys of Paul.",
+      "mapPosition": { "x": 0.70, "y": 0.20 },
+      "chapters": [],
+      "bonusChapter": null
+    },
+    {
+      "id": 9,
+      "key": "encouragement",
+      "title": "Encouragement",
+      "subtitle": "Letters of Paul, Peter, James, John, and Jude",
+      "description": "Guidance for believers on love, unity, perseverance, and living a Christ-centered life.",
+      "mapPosition": { "x": 0.85, "y": 0.30 },
+      "chapters": [],
+      "bonusChapter": null
+    },
+    {
+      "id": 10,
+      "key": "revelation",
+      "title": "Revelation",
+      "subtitle": "Revelation",
+      "description": "Apocalyptic visions and prophecies of the end times, the return of Christ, and the ultimate victory of good over evil.",
+      "mapPosition": { "x": 0.92, "y": 0.10 },
+      "chapters": [],
+      "bonusChapter": null
+    }
+  ]
+}

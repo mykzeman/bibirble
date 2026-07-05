@@ -17,6 +17,9 @@ BibirbleWindow::BibirbleWindow(wxWindow* parent, const std::string& dataPath)
         : dataPath;
     m_data.loadData(resolvedPath);
 
+    m_storyData.loadData(StoryData::ResolveDataFilePath());
+    m_storyProgress.Load();
+
     m_persistence.Load();
 
     SetupUi();
@@ -54,6 +57,7 @@ void BibirbleWindow::SetupUi() {
     m_startScreen->SetOnStartDaily([this]() { OnStartDaily(); });
     m_startScreen->SetOnStartRandom([this]() { OnStartRandom(); });
     m_startScreen->SetOnOpenSettings([this]() { OnOpenSettings(); });
+    m_startScreen->SetOnOpenStoryMode([this]() { OnOpenStoryMode(); });
     m_mainLayout->Add(m_startScreen, 1, wxEXPAND | wxALL, 5);
 
     // Settings screen
@@ -61,6 +65,20 @@ void BibirbleWindow::SetupUi() {
     m_settingsScreen->SetOnBack([this]() { OnSettingsBack(); });
     m_settingsScreen->SetOnRandomizeSeed([this]() { OnRandomizeSeed(); });
     m_mainLayout->Add(m_settingsScreen, 1, wxEXPAND | wxALL, 5);
+
+    // Story Mode screens
+    m_storyMapScreen = new StoryMapScreen(m_centralPanel);
+    m_storyMapScreen->SetOnSectionSelected([this](int sectionId) { OnStorySectionSelected(sectionId); });
+    m_storyMapScreen->SetOnBack([this]() { OnStoryMapBack(); });
+    m_mainLayout->Add(m_storyMapScreen, 1, wxEXPAND | wxALL, 5);
+
+    m_storySectionScreen = new StorySectionScreen(m_centralPanel);
+    m_storySectionScreen->SetOnChapterSelected([this](int chapterIndex) { OnStoryChapterSelected(chapterIndex); });
+    m_storySectionScreen->SetOnBack([this]() { OnStorySectionBack(); });
+    m_mainLayout->Add(m_storySectionScreen, 1, wxEXPAND | wxALL, 5);
+
+    m_storyInterstitialScreen = new StoryInterstitialScreen(m_centralPanel);
+    m_mainLayout->Add(m_storyInterstitialScreen, 1, wxEXPAND | wxALL, 5);
 
     // Game panel (reveal text, post-game controls, rows, keyboard)
     SetupGamePanel(m_mainLayout);
@@ -75,6 +93,23 @@ void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
 
     wxBoxSizer* gameLayout = new wxBoxSizer(wxVERTICAL);
 
+    // Story Mode header (chapter/verse progress + exit), hidden outside Story Mode
+    m_storyHeaderPanel = new wxPanel(m_gamePanel);
+    m_storyHeaderPanel->SetBackgroundColour(wxColour(200, 100, 50));
+    wxBoxSizer* storyHeaderLayout = new wxBoxSizer(wxHORIZONTAL);
+
+    m_storyHeaderText = new wxStaticText(m_storyHeaderPanel, wxID_ANY, "");
+    m_storyHeaderText->SetForegroundColour(wxColour(235, 230, 157));
+    storyHeaderLayout->Add(m_storyHeaderText, 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
+
+    wxButton* storyExitBtn = new wxButton(m_storyHeaderPanel, wxID_ANY, "Exit");
+    storyExitBtn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { OnStoryExitChapter(); });
+    storyHeaderLayout->Add(storyExitBtn, 0, wxALL, 4);
+
+    m_storyHeaderPanel->SetSizer(storyHeaderLayout);
+    gameLayout->Add(m_storyHeaderPanel, 0, wxEXPAND);
+    gameLayout->Show(m_storyHeaderPanel, false);
+
     // Reveal Panel
     m_revealPanel = new wxStaticText(m_gamePanel, wxID_ANY, "");
     m_revealPanel->SetBackgroundColour(*wxWHITE);
@@ -83,6 +118,7 @@ void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
     gameLayout->Add(m_revealPanel, 0, wxALL | wxEXPAND, 10);
 
     SetupPostGameControls(gameLayout);
+    SetupStoryPostGameControls(gameLayout);
 
     // Scroll Area for Game Rows
     wxScrolledWindow* scrollArea = new wxScrolledWindow(m_gamePanel);
@@ -167,6 +203,26 @@ void BibirbleWindow::SetupPostGameControls(wxBoxSizer* parentLayout) {
 }
 
 
+void BibirbleWindow::SetupStoryPostGameControls(wxBoxSizer* parentLayout) {
+    m_storyPostGameControls = new wxPanel(m_gamePanel);
+    wxBoxSizer* layout = new wxBoxSizer(wxHORIZONTAL);
+
+    m_storyContinueBtn = new wxButton(m_storyPostGameControls, wxID_ANY, "Continue");
+    m_storyContinueBtn->SetBackgroundColour(wxColour(200, 100, 50));
+    m_storyContinueBtn->SetForegroundColour(wxColour(235, 230, 157));
+    wxFont btnFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+    m_storyContinueBtn->SetFont(btnFont);
+    m_storyContinueBtn->SetMinSize(wxSize(-1, 50));
+    m_storyContinueBtn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { OnStoryContinueClicked(); });
+
+    layout->Add(m_storyContinueBtn, 1, wxEXPAND | wxALL, 4);
+
+    m_storyPostGameControls->SetSizer(layout);
+    parentLayout->Add(m_storyPostGameControls, 0, wxEXPAND | wxALL, 5);
+    parentLayout->Show(m_storyPostGameControls, false);
+}
+
+
 void BibirbleWindow::SetupKeyboard(wxBoxSizer* parentLayout) {
     wxPanel* kbPanel = new wxPanel(m_gamePanel);
     kbPanel->SetBackgroundColour(wxColour(200, 100, 50));
@@ -215,25 +271,38 @@ void BibirbleWindow::SetupKeyboard(wxBoxSizer* parentLayout) {
 }
 
 
-void BibirbleWindow::ShowStartScreen() {
-    m_mainLayout->Show(m_startScreen, true);
-    m_mainLayout->Show(m_settingsScreen, false);
-    m_mainLayout->Show(m_gamePanel, false);
+void BibirbleWindow::ShowOnly(wxWindow* target) {
+    for (wxWindow* w : {static_cast<wxWindow*>(m_startScreen), static_cast<wxWindow*>(m_settingsScreen),
+                        static_cast<wxWindow*>(m_gamePanel), static_cast<wxWindow*>(m_storyMapScreen),
+                        static_cast<wxWindow*>(m_storySectionScreen),
+                        static_cast<wxWindow*>(m_storyInterstitialScreen)}) {
+        m_mainLayout->Show(w, w == target);
+    }
     m_centralPanel->Layout();
+}
+
+void BibirbleWindow::ShowStartScreen() {
+    ShowOnly(m_startScreen);
 }
 
 void BibirbleWindow::ShowSettingsScreen() {
-    m_mainLayout->Show(m_startScreen, false);
-    m_mainLayout->Show(m_settingsScreen, true);
-    m_mainLayout->Show(m_gamePanel, false);
-    m_centralPanel->Layout();
+    ShowOnly(m_settingsScreen);
 }
 
 void BibirbleWindow::ShowGamePanel() {
-    m_mainLayout->Show(m_startScreen, false);
-    m_mainLayout->Show(m_settingsScreen, false);
-    m_mainLayout->Show(m_gamePanel, true);
-    m_centralPanel->Layout();
+    ShowOnly(m_gamePanel);
+}
+
+void BibirbleWindow::ShowStoryMapScreen() {
+    ShowOnly(m_storyMapScreen);
+}
+
+void BibirbleWindow::ShowStorySectionScreen() {
+    ShowOnly(m_storySectionScreen);
+}
+
+void BibirbleWindow::ShowStoryInterstitialScreen() {
+    ShowOnly(m_storyInterstitialScreen);
 }
 
 
@@ -296,6 +365,8 @@ void BibirbleWindow::OnViewSetSeed() {
 
 
 void BibirbleWindow::StartNewGame(GameMode mode, bool hardMode, const wxString& seedText) {
+    m_isStoryMode = false;
+
     if (!m_data.isLoaded()) {
         m_revealPanel->SetLabel("Failed to load data. Please ensure bible_sections.json is in the directory.");
         m_submitBtn->Enable(false);
@@ -347,6 +418,12 @@ void BibirbleWindow::ResetGameUi() {
 
     if (m_postGameControls && m_postGameControls->GetContainingSizer()) {
         m_postGameControls->GetContainingSizer()->Show(m_postGameControls, false);
+    }
+    if (m_storyPostGameControls && m_storyPostGameControls->GetContainingSizer()) {
+        m_storyPostGameControls->GetContainingSizer()->Show(m_storyPostGameControls, false);
+    }
+    if (m_storyHeaderPanel && m_storyHeaderPanel->GetContainingSizer()) {
+        m_storyHeaderPanel->GetContainingSizer()->Show(m_storyHeaderPanel, m_isStoryMode);
     }
     if (m_gamePanel) m_gamePanel->Layout();
 }
@@ -455,6 +532,12 @@ void BibirbleWindow::OnSubmit(wxCommandEvent& event) {
         m_state.gameOver = true;
         m_state.currentStage = -1;
         UpdateRevealText();
+
+        if (m_isStoryMode) {
+            HandleStoryRoundFinished();
+            return;
+        }
+
         m_submitBtn->SetLabel("Share");
         Unbind(wxEVT_BUTTON, &BibirbleWindow::OnSubmit, this, wxID_OK);
         Bind(wxEVT_BUTTON, &BibirbleWindow::OnShare, this, wxID_OK);
@@ -540,6 +623,7 @@ int BibirbleWindow::ProcessTurn() {
 
     if (correctCount == 5) {
         wxMessageBox("You got it correct!", "Winner", wxOK | wxICON_INFORMATION);
+        m_lastRoundWon = true;
         return -1;
     } else if (m_state.currentStage + 1 >= (int)m_rows.size()) {
         wxString msg = wxString::Format(
@@ -547,6 +631,7 @@ int BibirbleWindow::ProcessTurn() {
             "Maybe you should read your Bible to reflect on what you got wrong!",
             m_state.targetVerse.book, m_state.targetVerse.chapter, m_state.targetVerse.verse);
         wxMessageBox(msg, "Game Over", wxOK | wxICON_INFORMATION);
+        m_lastRoundWon = false;
         return -1;
     }
 
@@ -576,4 +661,169 @@ void BibirbleWindow::OnShare(wxCommandEvent& event) {
     }
 
     m_submitBtn->SetLabel("Copied to Clipboard");
+}
+
+
+// --- Story Mode ---
+
+const StoryChapter& BibirbleWindow::CurrentStoryChapter(const StorySection& section) const {
+    return (m_storyChapterIndex >= 0) ? section.chapters[m_storyChapterIndex] : section.bonusChapter;
+}
+
+void BibirbleWindow::OnOpenStoryMode() {
+    if (!m_storyData.isLoaded()) {
+        wxMessageBox("Story Mode data could not be loaded. Please ensure story_sections.json is in the directory.",
+                     "Bibirble", wxOK | wxICON_WARNING);
+        return;
+    }
+    m_storyMapScreen->RefreshSections(m_storyData, m_storyProgress);
+    ShowStoryMapScreen();
+}
+
+void BibirbleWindow::OnStoryMapBack() {
+    ShowStartScreen();
+}
+
+void BibirbleWindow::OnStorySectionSelected(int sectionId) {
+    const StorySection* section = m_storyData.findSection(sectionId);
+    if (!section) return;
+
+    m_storySectionId = sectionId;
+    m_storySectionScreen->ShowSection(*section, m_storyProgress);
+    ShowStorySectionScreen();
+}
+
+void BibirbleWindow::OnStorySectionBack() {
+    m_storyMapScreen->RefreshSections(m_storyData, m_storyProgress);
+    ShowStoryMapScreen();
+}
+
+void BibirbleWindow::OnStoryChapterSelected(int chapterIndex) {
+    const StorySection* section = m_storyData.findSection(m_storySectionId);
+    if (!section) return;
+
+    if (chapterIndex >= 0 && chapterIndex >= (int)section->chapters.size()) return;
+    if (chapterIndex < 0 && !section->hasBonusChapter) return;
+    if (chapterIndex < 0 && !m_storyProgress.IsSectionAced(section->id, (int)section->chapters.size())) return;
+
+    m_storyChapterIndex = chapterIndex;
+    m_storyVerseIndex = 0;
+    m_storyCorrectCount = 0;
+    m_storyChapterPerfect = true;
+
+    const StoryChapter& chapter = CurrentStoryChapter(*section);
+
+    wxString illustrationPath = (chapterIndex >= 0)
+        ? wxString::Format("section_%02d/chapter_%02d.png", section->id, chapterIndex + 1)
+        : wxString::Format("section_%02d/bonus.png", section->id);
+
+    wxString title = (chapterIndex >= 0)
+        ? wxString::Format("Chapter %d: %s", chapterIndex + 1, chapter.title)
+        : wxString::Format("Bonus Prophecy: %s", chapter.title);
+
+    wxString message = wxString::Format(
+        "Guess the book, chapter, and verse for %d passages from %s.\n\n"
+        "Green means exact, yellow means close, gray means wrong -- just like the main game.",
+        (int)chapter.verses.size(), section->title);
+
+    m_storyInterstitialScreen->SetOnContinue([this]() { BeginStoryChapterPlay(); });
+    m_storyInterstitialScreen->SetOnBack([this]() { OnStorySectionSelected(m_storySectionId); });
+    m_storyInterstitialScreen->Present(illustrationPath, title, message, "Begin", true);
+    ShowStoryInterstitialScreen();
+}
+
+void BibirbleWindow::BeginStoryChapterPlay() {
+    m_isStoryMode = true;
+    StartStoryVerse();
+}
+
+void BibirbleWindow::StartStoryVerse() {
+    const StorySection* section = m_storyData.findSection(m_storySectionId);
+    if (!section) return;
+
+    const StoryChapter& chapter = CurrentStoryChapter(*section);
+    const StoryVerseRef& ref = chapter.verses[m_storyVerseIndex];
+    Verse verse = m_data.getVerse(ref.book, ref.chapter, ref.verse);
+
+    m_state.Reset(GameMode::Story, 0, false, verse);
+    ResetGameUi();
+
+    wxString chapterLabel = (m_storyChapterIndex >= 0)
+        ? wxString::Format("Chapter %d: %s", m_storyChapterIndex + 1, chapter.title)
+        : wxString::Format("Bonus: %s", chapter.title);
+    m_storyHeaderText->SetLabel(wxString::Format("%s -- Verse %d of %d", chapterLabel,
+                                                  m_storyVerseIndex + 1, (int)chapter.verses.size()));
+
+    UpdateRevealText();
+    ShowGamePanel();
+}
+
+void BibirbleWindow::HandleStoryRoundFinished() {
+    if (m_lastRoundWon) {
+        m_storyCorrectCount++;
+    } else {
+        m_storyChapterPerfect = false;
+    }
+
+    const StorySection* section = m_storyData.findSection(m_storySectionId);
+    if (!section) return;
+    const StoryChapter& chapter = CurrentStoryChapter(*section);
+
+    m_storyVerseIndex++;
+    m_storyChapterJustFinished = m_storyVerseIndex >= (int)chapter.verses.size();
+
+    m_submitBtn->Enable(false);
+    m_storyContinueBtn->SetLabel(m_storyChapterJustFinished
+        ? "See Results"
+        : wxString::Format("Continue (%d/%d)", m_storyVerseIndex, (int)chapter.verses.size()));
+
+    if (m_storyPostGameControls && m_storyPostGameControls->GetContainingSizer()) {
+        m_storyPostGameControls->GetContainingSizer()->Show(m_storyPostGameControls, true);
+    }
+    m_gamePanel->Layout();
+}
+
+void BibirbleWindow::OnStoryContinueClicked() {
+    if (m_storyChapterJustFinished) {
+        FinishStoryChapter();
+    } else {
+        StartStoryVerse();
+    }
+}
+
+void BibirbleWindow::FinishStoryChapter() {
+    const StorySection* section = m_storyData.findSection(m_storySectionId);
+    if (!section) return;
+
+    int totalVerses = (int)CurrentStoryChapter(*section).verses.size();
+
+    if (m_storyChapterIndex >= 0) {
+        m_storyProgress.RecordChapterResult(m_storySectionId, m_storyChapterIndex,
+                                             (int)section->chapters.size(), m_storyChapterPerfect);
+    } else {
+        m_storyProgress.MarkBonusCompleted(m_storySectionId);
+    }
+
+    m_isStoryMode = false;
+
+    wxString title = (m_storyChapterIndex >= 0) ? "Chapter Complete!" : "Prophecy Revealed!";
+    wxString illustrationPath = (m_storyChapterIndex >= 0)
+        ? wxString::Format("section_%02d/chapter_%02d.png", section->id, m_storyChapterIndex + 1)
+        : wxString::Format("section_%02d/bonus.png", section->id);
+    wxString message = wxString::Format("You correctly identified %d of %d verses.%s",
+        m_storyCorrectCount, totalVerses, m_storyChapterPerfect ? "\n\nPerfect run!" : "");
+
+    m_storyInterstitialScreen->SetOnContinue([this]() { OnStorySectionSelected(m_storySectionId); });
+    m_storyInterstitialScreen->SetOnBack(nullptr);
+    m_storyInterstitialScreen->Present(illustrationPath, title, message, "Continue", false);
+    ShowStoryInterstitialScreen();
+}
+
+void BibirbleWindow::OnStoryExitChapter() {
+    int result = wxMessageBox("Exit this chapter? Progress on the current chapter will not be saved.",
+                               "Bibirble", wxYES_NO | wxICON_QUESTION);
+    if (result != wxYES) return;
+
+    m_isStoryMode = false;
+    OnStorySectionSelected(m_storySectionId);
 }

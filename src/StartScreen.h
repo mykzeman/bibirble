@@ -14,6 +14,7 @@ public:
     void SetOnStartDaily(Callback cb) { m_onStartDaily = std::move(cb); }
     void SetOnStartRandom(Callback cb) { m_onStartRandom = std::move(cb); }
     void SetOnOpenSettings(Callback cb) { m_onOpenSettings = std::move(cb); }
+    void SetOnOpenStoryMode(Callback cb) { m_onOpenStoryMode = std::move(cb); }
 
 private:
     void SetupUi();
@@ -25,4 +26,5 @@ private:
     Callback m_onStartDaily;
     Callback m_onStartRandom;
     Callback m_onOpenSettings;
+    Callback m_onOpenStoryMode;
 };

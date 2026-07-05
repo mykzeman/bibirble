@@ -73,6 +73,12 @@ void StartScreen::SetupUi() {
     actions->Add(settingsBtn, 1, wxEXPAND | wxALL, 5);
     layout->Add(actions, 0, wxEXPAND | wxALL, 10);
 
+    wxButton* storyModeBtn = makeButton("Story Mode");
+    storyModeBtn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+        if (m_onOpenStoryMode) m_onOpenStoryMode();
+    });
+    layout->Add(storyModeBtn, 0, wxEXPAND | wxALL, 10);
+
     wxPanel* infoCard = new wxPanel(this);
     infoCard->SetBackgroundColour(*wxWHITE);
     wxBoxSizer* infoLayout = new wxBoxSizer(wxVERTICAL);

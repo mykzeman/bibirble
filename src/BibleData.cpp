@@ -108,6 +108,15 @@ bool BibleData::verseExists(const std::string& book, int chapter, int verse) con
     return false;
 }
 
+Verse BibleData::getVerse(const std::string& book, int chapter, int verse) const {
+    for (const auto& v : m_verses) {
+        if (v.book == book && v.chapter == chapter && v.verse == verse) {
+            return v;
+        }
+    }
+    return Verse();
+}
+
 std::vector<std::string> BibleData::getAllBooks() const {
     std::vector<std::string> books;
     for (const auto& v : m_verses) {

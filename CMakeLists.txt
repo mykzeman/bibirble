@@ -43,6 +43,18 @@ set(SOURCES
     src/SettingsScreen.cpp
     src/SettingsScreen.h
     src/loading_dialog.h
+    src/StoryData.cpp
+    src/StoryData.h
+    src/StoryProgress.cpp
+    src/StoryProgress.h
+    src/IllustrationPanel.cpp
+    src/IllustrationPanel.h
+    src/StoryMapScreen.cpp
+    src/StoryMapScreen.h
+    src/StorySectionScreen.cpp
+    src/StorySectionScreen.h
+    src/StoryInterstitialScreen.cpp
+    src/StoryInterstitialScreen.h
 )
 
 # Create executable

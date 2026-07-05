@@ -25,6 +25,9 @@ public:
     Verse getVerseAtIndex(int index) const;
     int getVerseCount() const { return static_cast<int>(m_verses.size()); }
     bool verseExists(const std::string& book, int chapter, int verse) const;
+    // Looks up the full Verse (with text) for a specific reference. Returns a
+    // default-constructed Verse (empty book/text) if the reference isn't found.
+    Verse getVerse(const std::string& book, int chapter, int verse) const;
     std::vector<std::string> getAllBooks() const;
     std::string getRevealedText(const Verse& verse, int stage);
     std::string getBookArea(const std::string& bookName) const;
