@@ -1,3 +1,15 @@
+Story Mode follow-up: restore the 7-word verse minimum
+
+The line-text fix below (see "Story Mode" entry) also removed the original 7-word-per-verse minimum
+entirely, so very short verses like "Jesus wept." (John 11:35) started appearing in the main game's verse
+pool. Restored the minimum, but applied it *after* accumulating a verse's full text (paragraph text + all
+poetic line text), not before -- so short verses are excluded again without reintroducing the original bug
+where a long poetic verse got cut off because its first line alone was under 7 words. Regenerated
+`bible_sections.json` (30,697 verses); re-verified all 66 Story Mode Section 1 verse references still
+resolve, and there are still no duplicate references.
+
+---
+
 Story Mode:
 
 Summary:

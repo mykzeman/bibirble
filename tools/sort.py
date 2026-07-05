@@ -42,6 +42,13 @@ for file_path in file_list:
         def flush():
             if current_key is None or not current_words:
                 return
+            text = " ".join(current_words).strip()
+            # Require 7+ words in the fully-assembled verse (paragraph text
+            # plus any poetic line text), not just the first chunk -- so a
+            # short opening line like "He said," doesn't cause a multi-line
+            # poetic verse to be dropped before its later lines are counted.
+            if len(text.split()) < 7:
+                return
             chapter, verse = current_key
             big_list.append({
                 "testament": testament,
@@ -49,7 +56,7 @@ for file_path in file_list:
                 "book": book,
                 "chapter": chapter,
                 "verse": verse,
-                "text": " ".join(current_words).strip(),
+                "text": text,
             })
 
         for element in data:

@@ -128,11 +128,14 @@ occurrence of a repeated word, and the loading screen could hang forever (see th
 ### Story Mode (added on top of the above)
 
 A fourth bug was found and fixed while building Story Mode's curated content: `tools/sort.py` only ever
-read `"paragraph text"` elements from the raw per-book JSON and required 7+ accumulated words before
-flushing a verse, so it silently dropped (a) any verse rendered entirely as poetic `"line text"` (e.g.
-Genesis 3:15, the Genesis 9:26-27 blessing -- exactly the kind of passage Story Mode's bonus prophecy
-chapters need) and (b) any short verse that never reached 7 words (e.g. "Jesus wept.", John 11:35).
-`sort.py` now accumulates both `"paragraph text"` and `"line text"` per `(chapter, verse)` and flushes on
-every verse-number change, with no minimum word count. Regenerating `bible_sections.json` with the fix
-went from 23,621 to 31,098 verses; a duplicate check found zero duplicate references, and spot-checked
-entries (Psalm 23, Genesis 1, the previously-missing verses above) read correctly.
+read `"paragraph text"` elements from the raw per-book JSON, so it silently dropped any verse rendered
+entirely as poetic `"line text"` (e.g. Genesis 3:15, the Genesis 9:26-27 blessing -- exactly the kind of
+passage Story Mode's bonus prophecy chapters need). It also applied its 7-word minimum *before* a verse's
+later "line text" lines were counted, so a short opening line like "He said," could cause a genuinely long
+poetic verse to be dropped early. `sort.py` now accumulates both `"paragraph text"` and `"line text"` per
+`(chapter, verse)`, flushes on every verse-number change, and only *then* applies the 7-word-minimum gate
+to the fully assembled text -- so the main game's verse pool still excludes very short verses (e.g. "Jesus
+wept.", John 11:35, stays out) but no longer drops long poetic verses that were merely *formatted* as
+multiple lines. Regenerating `bible_sections.json` with the fix went from 23,621 to 30,697 verses; a
+duplicate check found zero duplicate references, and spot-checked entries (Psalm 23, Genesis 1, Genesis
+3:15) read correctly and completely.

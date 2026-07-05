@@ -4,38 +4,6 @@
         "area": "Historical",
         "book": "1chronicles",
         "chapter": 1,
-        "verse": 1,
-        "text": "Adam, Seth, Enosh,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
-        "verse": 2,
-        "text": "Kenan, Mahalalel, Jared,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
-        "verse": 3,
-        "text": "Enoch, Methuselah, Lamech,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
-        "verse": 4,
-        "text": "Noah, Shem, Ham, and Japheth."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
         "verse": 5,
         "text": "The sons of Japheth: Gomer, Magog, Madai, Javan, Tubal, Meshech, and Tiras."
     },
@@ -116,14 +84,6 @@
         "area": "Historical",
         "book": "1chronicles",
         "chapter": 1,
-        "verse": 15,
-        "text": "the Hivite, the Arkite, the Sinite,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
         "verse": 16,
         "text": "the Arvadite, the Zemarite, and the Hamathite."
     },
@@ -164,56 +124,8 @@
         "area": "Historical",
         "book": "1chronicles",
         "chapter": 1,
-        "verse": 21,
-        "text": "Hadoram, Uzal, Diklah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
-        "verse": 22,
-        "text": "Ebal, Abimael, Sheba,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
         "verse": 23,
         "text": "Ophir, Havilah, and Jobab. All these were the sons of Joktan."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
-        "verse": 24,
-        "text": "Shem, Arpachshad, Shelah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
-        "verse": 25,
-        "text": "Eber, Peleg, Reu,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
-        "verse": 26,
-        "text": "Serug, Nahor, Terah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
-        "verse": 27,
-        "text": "Abram (also called Abraham)."
     },
     {
         "testament": "Old Testament",
@@ -230,14 +142,6 @@
         "chapter": 1,
         "verse": 29,
         "text": "These are their generations: the firstborn of Ishmael, Nebaioth; then Kedar, Adbeel, Mibsam,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
-        "verse": 30,
-        "text": "Mishma, Dumah, Massa, Hadad, Tema,"
     },
     {
         "testament": "Old Testament",
@@ -412,22 +316,6 @@
         "area": "Historical",
         "book": "1chronicles",
         "chapter": 1,
-        "verse": 52,
-        "text": "chief Oholibamah, chief Elah, chief Pinon,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
-        "verse": 53,
-        "text": "chief Kenaz, chief Teman, chief Mibzar,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 1,
         "verse": 54,
         "text": "chief Magdiel, and chief Iram. These are the chiefs of Edom."
     },
@@ -492,14 +380,6 @@
         "area": "Historical",
         "book": "1chronicles",
         "chapter": 2,
-        "verse": 8,
-        "text": "The son of Ethan: Azariah."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 2,
         "verse": 9,
         "text": "The sons also of Hezron, who were born to him: Jerahmeel, Ram, and Chelubai."
     },
@@ -534,22 +414,6 @@
         "chapter": 2,
         "verse": 13,
         "text": "and Jesse became the father of his firstborn Eliab, and Abinadab the second, and Shimea the third,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 2,
-        "verse": 14,
-        "text": "Nethanel the fourth, Raddai the fifth,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 2,
-        "verse": 15,
-        "text": "Ozem the sixth, David the seventh;"
     },
     {
         "testament": "Old Testament",
@@ -916,30 +780,6 @@
         "area": "Historical",
         "book": "1chronicles",
         "chapter": 3,
-        "verse": 6,
-        "text": "and Ibhar, Elishama, Eliphelet,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 3,
-        "verse": 7,
-        "text": "Nogah, Nepheg, Japhia,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 3,
-        "verse": 8,
-        "text": "Elishama, Eliada, and Eliphelet, nine."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 3,
         "verse": 9,
         "text": "All these were the sons of David, in addition to the sons of the concubines; and Tamar was their sister."
     },
@@ -1278,30 +1118,6 @@
         "chapter": 4,
         "verse": 27,
         "text": "Shimei had sixteen sons and six daughters; but his brothers didn’t have many children, and all their family didn’t multiply like the children of Judah."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 4,
-        "verse": 28,
-        "text": "They lived at Beersheba, Moladah, Hazarshual,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 4,
-        "verse": 29,
-        "text": "at Bilhah, at Ezem, at Tolad,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 4,
-        "verse": 30,
-        "text": "at Bethuel, at Hormah, at Ziklag,"
     },
     {
         "testament": "Old Testament",
@@ -2604,30 +2420,6 @@
         "area": "Historical",
         "book": "1chronicles",
         "chapter": 8,
-        "verse": 3,
-        "text": "Bela had sons: Addar, Gera, Abihud,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
-        "verse": 4,
-        "text": "Abishua, Naaman, Ahoah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
-        "verse": 5,
-        "text": "Gera, Shephuphan, and Huram."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
         "verse": 6,
         "text": "These are the sons of Ehud. These are the heads of fathers’ households of the inhabitants of Geba, who were carried captive to Manahath:"
     },
@@ -2692,32 +2484,8 @@
         "area": "Historical",
         "book": "1chronicles",
         "chapter": 8,
-        "verse": 14,
-        "text": "and Ahio, Shashak, Jeremoth,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
-        "verse": 15,
-        "text": "Zebadiah, Arad, Eder,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
         "verse": 16,
         "text": "Michael, Ishpah, Joha, the sons of Beriah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
-        "verse": 17,
-        "text": "Zebadiah, Meshullam, Hizki, Heber,"
     },
     {
         "testament": "Old Testament",
@@ -2732,64 +2500,8 @@
         "area": "Historical",
         "book": "1chronicles",
         "chapter": 8,
-        "verse": 19,
-        "text": "Jakim, Zichri, Zabdi,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
-        "verse": 20,
-        "text": "Elienai, Zillethai, Eliel,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
         "verse": 21,
         "text": "Adaiah, Beraiah, Shimrath, the sons of Shimei,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
-        "verse": 22,
-        "text": "Ishpan, Eber, Eliel,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
-        "verse": 23,
-        "text": "Abdon, Zichri, Hanan,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
-        "verse": 24,
-        "text": "Hananiah, Elam, Anthothijah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
-        "verse": 25,
-        "text": "Iphdeiah, Penuel, the sons of Shashak,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
-        "verse": 26,
-        "text": "Shamsherai, Shehariah, Athaliah,"
     },
     {
         "testament": "Old Testament",
@@ -2822,14 +2534,6 @@
         "chapter": 8,
         "verse": 30,
         "text": "with his firstborn son Abdon, Zur, Kish, Baal, Nadab,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 8,
-        "verse": 31,
-        "text": "Gedor, Ahio, and Zecher."
     },
     {
         "testament": "Old Testament",
@@ -2974,14 +2678,6 @@
         "chapter": 9,
         "verse": 9,
         "text": "and their brothers, according to their generations, nine hundred fifty-six. All these men were heads of fathers’ households by their fathers’ houses."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 9,
-        "verse": 10,
-        "text": "Of the priests: Jedaiah, Jehoiarib, Jachin,"
     },
     {
         "testament": "Old Testament",
@@ -3190,14 +2886,6 @@
         "chapter": 9,
         "verse": 36,
         "text": "his firstborn son Abdon, Zur, Kish, Baal, Ner, Nadab,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 9,
-        "verse": 37,
-        "text": "Gedor, Ahio, Zechariah, and Mikloth."
     },
     {
         "testament": "Old Testament",
@@ -3580,24 +3268,8 @@
         "area": "Historical",
         "book": "1chronicles",
         "chapter": 11,
-        "verse": 27,
-        "text": "Shammoth the Harorite, Helez the Pelonite,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 11,
         "verse": 28,
         "text": "Ira the son of Ikkesh the Tekoite, Abiezer the Anathothite,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 11,
-        "verse": 29,
-        "text": "Sibbecai the Hushathite, Ilai the Ahohite,"
     },
     {
         "testament": "Old Testament",
@@ -3628,14 +3300,6 @@
         "area": "Historical",
         "book": "1chronicles",
         "chapter": 11,
-        "verse": 33,
-        "text": "Azmaveth the Baharumite, Eliahba the Shaalbonite,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 11,
         "verse": 34,
         "text": "the sons of Hashem the Gizonite, Jonathan the son of Shagee the Hararite,"
     },
@@ -3646,14 +3310,6 @@
         "chapter": 11,
         "verse": 35,
         "text": "Ahiam the son of Sacar the Hararite, Eliphal the son of Ur,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 11,
-        "verse": 36,
-        "text": "Hepher the Mecherathite, Ahijah the Pelonite,"
     },
     {
         "testament": "Old Testament",
@@ -3678,14 +3334,6 @@
         "chapter": 11,
         "verse": 39,
         "text": "Zelek the Ammonite, Naharai the Berothite, the armor bearer of Joab the son of Zeruiah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 11,
-        "verse": 40,
-        "text": "Ira the Ithrite, Gareb the Ithrite,"
     },
     {
         "testament": "Old Testament",
@@ -3814,30 +3462,6 @@
         "chapter": 12,
         "verse": 9,
         "text": "Ezer the chief, Obadiah the second, Eliab the third,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 12,
-        "verse": 10,
-        "text": "Mishmannah the fourth, Jeremiah the fifth,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 12,
-        "verse": 11,
-        "text": "Attai the sixth, Eliel the seventh,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 12,
-        "verse": 12,
-        "text": "Johanan the eighth, Elzabad the ninth,"
     },
     {
         "testament": "Old Testament",
@@ -4206,30 +3830,6 @@
         "chapter": 14,
         "verse": 4,
         "text": "These are the names of the children whom he had in Jerusalem: Shammua, Shobab, Nathan, Solomon,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 14,
-        "verse": 5,
-        "text": "Ibhar, Elishua, Elpelet,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 14,
-        "verse": 6,
-        "text": "Nogah, Nepheg, Japhia,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 14,
-        "verse": 7,
-        "text": "Elishama, Beeliada, and Eliphelet."
     },
     {
         "testament": "Old Testament",
@@ -5894,14 +5494,6 @@
         "chapter": 23,
         "verse": 6,
         "text": "David divided them into divisions according to the sons of Levi: Gershon, Kohath, and Merari."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1chronicles",
-        "chapter": 23,
-        "verse": 7,
-        "text": "Of the Gershonites: Ladan and Shimei."
     },
     {
         "testament": "Old Testament",
@@ -9276,14 +8868,6 @@
         "area": "Pauls letters",
         "book": "1corinthians",
         "chapter": 10,
-        "verse": 14,
-        "text": "Therefore, my beloved, flee from idolatry."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "1corinthians",
-        "chapter": 10,
         "verse": 15,
         "text": "I speak as to wise men. Judge what I say."
     },
@@ -11756,14 +11340,6 @@
         "area": "John Letters and Visions",
         "book": "1john",
         "chapter": 5,
-        "verse": 7,
-        "text": "For there are three who testify:"
-    },
-    {
-        "testament": "New Testament",
-        "area": "John Letters and Visions",
-        "book": "1john",
-        "chapter": 5,
         "verse": 8,
         "text": "the Spirit, the water, and the blood; and the three agree as one."
     },
@@ -11862,14 +11438,6 @@
         "chapter": 5,
         "verse": 20,
         "text": "We know that the Son of God has come, and has given us an understanding, that we know him who is true, and we are in him who is true, in his Son Jesus Christ. This is the true God and eternal life."
-    },
-    {
-        "testament": "New Testament",
-        "area": "John Letters and Visions",
-        "book": "1john",
-        "chapter": 5,
-        "verse": 21,
-        "text": "Little children, keep yourselves from idols."
     },
     {
         "testament": "Old Testament",
@@ -13172,14 +12740,6 @@
         "area": "Historical",
         "book": "1kings",
         "chapter": 5,
-        "verse": 2,
-        "text": "Solomon sent to Hiram, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1kings",
-        "chapter": 5,
         "verse": 3,
         "text": "“You know that David my father could not build a house for the name of Yahweh his God because of the wars which were around him on every side, until Yahweh put his enemies under the soles of his feet."
     },
@@ -13388,14 +12948,6 @@
         "area": "Historical",
         "book": "1kings",
         "chapter": 6,
-        "verse": 11,
-        "text": "Yahweh’s word came to Solomon, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1kings",
-        "chapter": 6,
         "verse": 12,
         "text": "“Concerning this house which you are building, if you will walk in my statutes, and execute my ordinances, and keep all my commandments to walk in them; then I will establish my word with you, which I spoke to David your father."
     },
@@ -13518,14 +13070,6 @@
         "chapter": 6,
         "verse": 27,
         "text": "He set the cherubim within the inner house. The wings of the cherubim were stretched out, so that the wing of the one touched the one wall, and the wing of the other cherub touched the other wall; and their wings touched one another in the middle of the house."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1kings",
-        "chapter": 6,
-        "verse": 28,
-        "text": "He overlaid the cherubim with gold."
     },
     {
         "testament": "Old Testament",
@@ -14678,14 +14222,6 @@
         "chapter": 9,
         "verse": 17,
         "text": "Solomon built in the land Gezer, Beth Horon the lower,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1kings",
-        "chapter": 9,
-        "verse": 18,
-        "text": "Baalath, Tamar in the wilderness,"
     },
     {
         "testament": "Old Testament",
@@ -16726,14 +16262,6 @@
         "chapter": 17,
         "verse": 7,
         "text": "After a while, the brook dried up, because there was no rain in the land."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "1kings",
-        "chapter": 17,
-        "verse": 8,
-        "text": "Yahweh’s word came to him, saying,"
     },
     {
         "testament": "Old Testament",
@@ -18806,14 +18334,6 @@
         "chapter": 3,
         "verse": 1,
         "text": "In the same way, wives, be in subjection to your own husbands; so that, even if any don’t obey the Word, they may be won by the behavior of their wives without a word,"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Peter letters",
-        "book": "1peter",
-        "chapter": 3,
-        "verse": 2,
-        "text": "seeing your pure behavior in fear."
     },
     {
         "testament": "New Testament",
@@ -26332,22 +25852,6 @@
         "area": "Pauls letters",
         "book": "1thessalonians",
         "chapter": 5,
-        "verse": 16,
-        "text": "Always rejoice."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "1thessalonians",
-        "chapter": 5,
-        "verse": 17,
-        "text": "Pray without ceasing."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "1thessalonians",
-        "chapter": 5,
         "verse": 18,
         "text": "In everything give thanks, for this is the will of God in Christ Jesus toward you."
     },
@@ -26356,32 +25860,8 @@
         "area": "Pauls letters",
         "book": "1thessalonians",
         "chapter": 5,
-        "verse": 19,
-        "text": "Don’t quench the Spirit."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "1thessalonians",
-        "chapter": 5,
-        "verse": 20,
-        "text": "Don’t despise prophecies."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "1thessalonians",
-        "chapter": 5,
         "verse": 21,
         "text": "Test all things, and hold firmly that which is good."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "1thessalonians",
-        "chapter": 5,
-        "verse": 22,
-        "text": "Abstain from every form of evil."
     },
     {
         "testament": "New Testament",
@@ -26398,14 +25878,6 @@
         "chapter": 5,
         "verse": 24,
         "text": "He who calls you is faithful, who will also do it."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "1thessalonians",
-        "chapter": 5,
-        "verse": 25,
-        "text": "Brothers, pray for us."
     },
     {
         "testament": "New Testament",
@@ -26924,14 +26396,6 @@
         "area": "Pauls letters",
         "book": "1timothy",
         "chapter": 4,
-        "verse": 11,
-        "text": "Command and teach these things."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "1timothy",
-        "chapter": 4,
         "verse": 12,
         "text": "Let no man despise your youth; but be an example to those who believe, in word, in your way of life, in love, in spirit, in faith, and in purity."
     },
@@ -26982,14 +26446,6 @@
         "chapter": 5,
         "verse": 2,
         "text": "the elder women as mothers; the younger as sisters, in all purity."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "1timothy",
-        "chapter": 5,
-        "verse": 3,
-        "text": "Honor widows who are widows indeed."
     },
     {
         "testament": "New Testament",
@@ -29134,38 +28590,6 @@
         "chapter": 11,
         "verse": 5,
         "text": "Rehoboam lived in Jerusalem, and built cities for defense in Judah."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2chronicles",
-        "chapter": 11,
-        "verse": 6,
-        "text": "He built Bethlehem, Etam, Tekoa,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2chronicles",
-        "chapter": 11,
-        "verse": 7,
-        "text": "Beth Zur, Soco, Adullam,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2chronicles",
-        "chapter": 11,
-        "verse": 8,
-        "text": "Gath, Mareshah, Ziph,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2chronicles",
-        "chapter": 11,
-        "verse": 9,
-        "text": "Adoraim, Lachish, Azekah,"
     },
     {
         "testament": "Old Testament",
@@ -35950,14 +35374,6 @@
         "chapter": 13,
         "verse": 12,
         "text": "Greet one another with a holy kiss."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "2corinthians",
-        "chapter": 13,
-        "verse": 13,
-        "text": "All the saints greet you."
     },
     {
         "testament": "New Testament",
@@ -43308,22 +42724,6 @@
         "area": "Historical",
         "book": "2samuel",
         "chapter": 5,
-        "verse": 15,
-        "text": "Ibhar, Elishua, Nepheg, Japhia,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2samuel",
-        "chapter": 5,
-        "verse": 16,
-        "text": "Elishama, Eliada, and Eliphelet."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2samuel",
-        "chapter": 5,
         "verse": 17,
         "text": "When the Philistines heard that they had anointed David king over Israel, all the Philistines went up to seek David, but David heard about it and went down to the stronghold."
     },
@@ -47556,32 +46956,8 @@
         "area": "Historical",
         "book": "2samuel",
         "chapter": 23,
-        "verse": 25,
-        "text": "Shammah the Harodite, Elika the Harodite,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2samuel",
-        "chapter": 23,
         "verse": 26,
         "text": "Helez the Paltite, Ira the son of Ikkesh the Tekoite,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2samuel",
-        "chapter": 23,
-        "verse": 27,
-        "text": "Abiezer the Anathothite, Mebunnai the Hushathite,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2samuel",
-        "chapter": 23,
-        "verse": 28,
-        "text": "Zalmon the Ahohite, Maharai the Netophathite,"
     },
     {
         "testament": "Old Testament",
@@ -47598,14 +46974,6 @@
         "chapter": 23,
         "verse": 30,
         "text": "Benaiah a Pirathonite, Hiddai of the brooks of Gaash."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2samuel",
-        "chapter": 23,
-        "verse": 31,
-        "text": "Abialbon the Arbathite, Azmaveth the Barhumite,"
     },
     {
         "testament": "Old Testament",
@@ -47636,14 +47004,6 @@
         "area": "Historical",
         "book": "2samuel",
         "chapter": 23,
-        "verse": 35,
-        "text": "Hezro the Carmelite, Paarai the Arbite,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2samuel",
-        "chapter": 23,
         "verse": 36,
         "text": "Igal the son of Nathan of Zobah, Bani the Gadite,"
     },
@@ -47654,14 +47014,6 @@
         "chapter": 23,
         "verse": 37,
         "text": "Zelek the Ammonite, Naharai the Beerothite, armor bearers to Joab the son of Zeruiah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "2samuel",
-        "chapter": 23,
-        "verse": 38,
-        "text": "Ira the Ithrite, Gareb the Ithrite,"
     },
     {
         "testament": "Old Testament",
@@ -48822,14 +48174,6 @@
         "chapter": 4,
         "verse": 11,
         "text": "Only Luke is with me. Take Mark, and bring him with you, for he is useful to me for service."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "2timothy",
-        "chapter": 4,
-        "verse": 12,
-        "text": "But I sent Tychicus to Ephesus."
     },
     {
         "testament": "New Testament",
@@ -50940,14 +50284,6 @@
         "area": "Acts from Hebrews",
         "book": "acts",
         "chapter": 7,
-        "verse": 47,
-        "text": "But Solomon built him a house."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Acts from Hebrews",
-        "book": "acts",
-        "chapter": 7,
         "verse": 48,
         "text": "However, the Most High doesn’t dwell in temples made with hands, as the prophet says,"
     },
@@ -52990,14 +52326,6 @@
         "chapter": 14,
         "verse": 6,
         "text": "they became aware of it and fled to the cities of Lycaonia, Lystra, Derbe, and the surrounding region."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Acts from Hebrews",
-        "book": "acts",
-        "chapter": 14,
-        "verse": 7,
-        "text": "There they preached the Good News."
     },
     {
         "testament": "New Testament",
@@ -55686,14 +55014,6 @@
         "chapter": 23,
         "verse": 24,
         "text": "He asked them to provide animals, that they might set Paul on one, and bring him safely to Felix the governor."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Acts from Hebrews",
-        "book": "acts",
-        "chapter": 23,
-        "verse": 25,
-        "text": "He wrote a letter like this:"
     },
     {
         "testament": "New Testament",
@@ -58614,14 +57934,6 @@
         "chapter": 2,
         "verse": 20,
         "text": "If you died with Christ from the elements of the world, why, as though living in the world, do you subject yourselves to ordinances,"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "colossians",
-        "chapter": 2,
-        "verse": 21,
-        "text": "“Don’t handle, nor taste, nor touch”"
     },
     {
         "testament": "New Testament",
@@ -62220,14 +61532,6 @@
         "area": "Torah",
         "book": "deuteronomy",
         "chapter": 2,
-        "verse": 2,
-        "text": "Yahweh spoke to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "deuteronomy",
-        "chapter": 2,
         "verse": 3,
         "text": "“You have encircled this mountain long enough. Turn northward."
     },
@@ -62334,14 +61638,6 @@
         "chapter": 2,
         "verse": 16,
         "text": "So, when all the men of war were consumed and dead from among the people,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "deuteronomy",
-        "chapter": 2,
-        "verse": 17,
-        "text": "Yahweh spoke to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -62614,14 +61910,6 @@
         "chapter": 3,
         "verse": 14,
         "text": "Jair the son of Manasseh took all the region of Argob, to the border of the Geshurites and the Maacathites, and called them, even Bashan, after his own name, Havvoth Jair, to this day.)"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "deuteronomy",
-        "chapter": 3,
-        "verse": 15,
-        "text": "I gave Gilead to Machir."
     },
     {
         "testament": "Old Testament",
@@ -63254,30 +62542,6 @@
         "chapter": 5,
         "verse": 16,
         "text": "“Honor your father and your mother, as Yahweh your God commanded you; that your days may be long, and that it may go well with you in the land which Yahweh your God gives you."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "deuteronomy",
-        "chapter": 5,
-        "verse": 17,
-        "text": "“You shall not murder."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "deuteronomy",
-        "chapter": 5,
-        "verse": 18,
-        "text": "“You shall not commit adultery."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "deuteronomy",
-        "chapter": 5,
-        "verse": 19,
-        "text": "“You shall not steal."
     },
     {
         "testament": "Old Testament",
@@ -65132,14 +64396,6 @@
         "area": "Torah",
         "book": "deuteronomy",
         "chapter": 14,
-        "verse": 14,
-        "text": "every raven after its kind,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "deuteronomy",
-        "chapter": 14,
         "verse": 15,
         "text": "the ostrich, the owl, the seagull, the hawk after its kind,"
     },
@@ -65150,14 +64406,6 @@
         "chapter": 14,
         "verse": 16,
         "text": "the little owl, the great owl, the horned owl,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "deuteronomy",
-        "chapter": 14,
-        "verse": 17,
-        "text": "the pelican, the vulture, the cormorant,"
     },
     {
         "testament": "Old Testament",
@@ -71852,14 +71100,6 @@
         "area": "Pauls letters",
         "book": "ephesians",
         "chapter": 4,
-        "verse": 5,
-        "text": "one Lord, one faith, one baptism,"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "ephesians",
-        "chapter": 4,
         "verse": 6,
         "text": "one God and Father of all, who is over all and through all, and in us all."
     },
@@ -72118,14 +71358,6 @@
         "chapter": 5,
         "verse": 6,
         "text": "Let no one deceive you with empty words. For because of these things, the wrath of God comes on the children of disobedience."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "ephesians",
-        "chapter": 5,
-        "verse": 7,
-        "text": "Therefore don’t be partakers with them."
     },
     {
         "testament": "New Testament",
@@ -73100,14 +72332,6 @@
         "area": "Small stories",
         "book": "esther",
         "chapter": 4,
-        "verse": 12,
-        "text": "They told Esther’s words to Mordecai."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "esther",
-        "chapter": 4,
         "verse": 13,
         "text": "Then Mordecai asked them to return this answer to Esther: “Don’t think to yourself that you will escape in the king’s house any more than all the Jews."
     },
@@ -73636,30 +72860,6 @@
         "area": "Small stories",
         "book": "esther",
         "chapter": 9,
-        "verse": 7,
-        "text": "They killed Parshandatha, Dalphon, Aspatha,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "esther",
-        "chapter": 9,
-        "verse": 8,
-        "text": "Poratha, Adalia, Aridatha,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "esther",
-        "chapter": 9,
-        "verse": 9,
-        "text": "Parmashta, Arisai, Aridai, and Vaizatha,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "esther",
-        "chapter": 9,
         "verse": 10,
         "text": "the ten sons of Haman the son of Hammedatha, the Jews’ enemy, but they didn’t lay their hand on the plunder."
     },
@@ -73870,30 +73070,6 @@
         "chapter": 1,
         "verse": 1,
         "text": "Now these are the names of the sons of Israel, who came into Egypt (every man and his household came with Jacob):"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 1,
-        "verse": 2,
-        "text": "Reuben, Simeon, Levi, and Judah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 1,
-        "verse": 3,
-        "text": "Issachar, Zebulun, and Benjamin,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 1,
-        "verse": 4,
-        "text": "Dan and Naphtali, Gad and Asher."
     },
     {
         "testament": "Old Testament",
@@ -74918,14 +74094,6 @@
         "chapter": 6,
         "verse": 9,
         "text": "Moses spoke so to the children of Israel, but they didn’t listen to Moses for anguish of spirit, and for cruel bondage."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 6,
-        "verse": 10,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -76548,14 +75716,6 @@
         "area": "Torah",
         "book": "exodus",
         "chapter": 13,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 13,
         "verse": 2,
         "text": "“Sanctify to me all the firstborn, whatever opens the womb among the children of Israel, both of man and of animal. It is mine.”"
     },
@@ -76718,14 +75878,6 @@
         "chapter": 13,
         "verse": 22,
         "text": "the pillar of cloud by day, and the pillar of fire by night, didn’t depart from before the people."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 14,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -77108,14 +76260,6 @@
         "area": "Torah",
         "book": "exodus",
         "chapter": 15,
-        "verse": 18,
-        "text": "Yahweh will reign forever and ever.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 15,
         "verse": 19,
         "text": "For the horses of Pharaoh went in with his chariots and with his horsemen into the sea, and Yahweh brought back the waters of the sea on them; but the children of Israel walked on dry land in the middle of the sea."
     },
@@ -77262,14 +76406,6 @@
         "chapter": 16,
         "verse": 10,
         "text": "As Aaron spoke to the whole congregation of the children of Israel, they looked toward the wilderness, and behold, Yahweh’s glory appeared in the cloud."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 16,
-        "verse": 11,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -78020,14 +77156,6 @@
         "area": "Torah",
         "book": "exodus",
         "chapter": 20,
-        "verse": 1,
-        "text": "God spoke all these words, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 20,
         "verse": 2,
         "text": "“I am Yahweh your God, who brought you out of the land of Egypt, out of the house of bondage."
     },
@@ -78110,30 +77238,6 @@
         "chapter": 20,
         "verse": 12,
         "text": "“Honor your father and your mother, that your days may be long in the land which Yahweh your God gives you."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 20,
-        "verse": 13,
-        "text": "“You shall not murder."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 20,
-        "verse": 14,
-        "text": "“You shall not commit adultery."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 20,
-        "verse": 15,
-        "text": "“You shall not steal."
     },
     {
         "testament": "Old Testament",
@@ -79172,14 +78276,6 @@
         "area": "Torah",
         "book": "exodus",
         "chapter": 25,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 25,
         "verse": 2,
         "text": "“Speak to the children of Israel, that they take an offering for me. From everyone whose heart makes him willing you shall take my offering."
     },
@@ -80052,14 +79148,6 @@
         "area": "Torah",
         "book": "exodus",
         "chapter": 28,
-        "verse": 13,
-        "text": "You shall make settings of gold,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 28,
         "verse": 14,
         "text": "and two chains of pure gold; you shall make them like cords of braided work. You shall put the braided chains on the settings."
     },
@@ -80748,14 +79836,6 @@
         "area": "Torah",
         "book": "exodus",
         "chapter": 30,
-        "verse": 11,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 30,
         "verse": 12,
         "text": "“When you take a census of the children of Israel, according to those who are counted among them, then each man shall give a ransom for his soul to Yahweh, when you count them; that there be no plague among them when you count them."
     },
@@ -80796,14 +79876,6 @@
         "area": "Torah",
         "book": "exodus",
         "chapter": 30,
-        "verse": 17,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 30,
         "verse": 18,
         "text": "“You shall also make a basin of bronze, and its base of bronze, in which to wash. You shall put it between the Tent of Meeting and the altar, and you shall put water in it."
     },
@@ -80830,14 +79902,6 @@
         "chapter": 30,
         "verse": 21,
         "text": "So they shall wash their hands and their feet, that they not die. This shall be a statute forever to them, even to him and to his descendants throughout their generations.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 30,
-        "verse": 22,
-        "text": "Moreover Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -80972,14 +80036,6 @@
         "area": "Torah",
         "book": "exodus",
         "chapter": 31,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 31,
         "verse": 2,
         "text": "“Behold, I have called by name Bezalel the son of Uri, the son of Hur, of the tribe of Judah."
     },
@@ -81054,14 +80110,6 @@
         "chapter": 31,
         "verse": 11,
         "text": "the anointing oil, and the incense of sweet spices for the holy place: according to all that I have commanded you they shall do.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 31,
-        "verse": 12,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -83268,14 +82316,6 @@
         "area": "Torah",
         "book": "exodus",
         "chapter": 40,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "exodus",
-        "chapter": 40,
         "verse": 2,
         "text": "“On the first day of the first month you shall raise up the tabernacle of the Tent of Meeting."
     },
@@ -84364,14 +83404,6 @@
         "area": "Prophets Major",
         "book": "ezekiel",
         "chapter": 6,
-        "verse": 1,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 6,
         "verse": 2,
         "text": "“Son of man, set your face toward the mountains of Israel, and prophesy to them,"
     },
@@ -85204,14 +84236,6 @@
         "area": "Prophets Major",
         "book": "ezekiel",
         "chapter": 11,
-        "verse": 14,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 11,
         "verse": 15,
         "text": "“Son of man, your brothers, even your brothers, the men of your relatives, and all the house of Israel, all of them, are they to whom the inhabitants of Jerusalem have said, ‘Go far away from Yahweh. This land has been given to us for a possession.’ ”"
     },
@@ -85460,14 +84484,6 @@
         "area": "Prophets Major",
         "book": "ezekiel",
         "chapter": 12,
-        "verse": 21,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 12,
         "verse": 22,
         "text": "“Son of man, what is this proverb that you have in the land of Israel, saying, ‘The days are prolonged, and every vision fails?’"
     },
@@ -85518,14 +84534,6 @@
         "chapter": 12,
         "verse": 28,
         "text": "“Therefore tell them, ‘The Lord Yahweh says: “None of my words will be deferred any more, but the word which I speak will be performed,” says the Lord Yahweh.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 13,
-        "verse": 1,
-        "text": "Yahweh’s word came to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -85716,14 +84724,6 @@
         "area": "Prophets Major",
         "book": "ezekiel",
         "chapter": 14,
-        "verse": 2,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 14,
         "verse": 3,
         "text": "“Son of man, these men have taken their idols into their heart, and put the stumbling block of their iniquity before their face. Should I be inquired of at all by them?"
     },
@@ -85790,14 +84790,6 @@
         "chapter": 14,
         "verse": 11,
         "text": "that the house of Israel may no more go astray from me, neither defile themselves any more with all their transgressions; but that they may be my people, and I may be their God,” says the Lord Yahweh.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 14,
-        "verse": 12,
-        "text": "Yahweh’s word came to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -85886,14 +84878,6 @@
         "chapter": 14,
         "verse": 23,
         "text": "They will comfort you, when you see their way and their doings; then you will know that I have not done all that I have done in it without cause,” says the Lord Yahweh."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 15,
-        "verse": 1,
-        "text": "Yahweh’s word came to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -86228,14 +85212,6 @@
         "area": "Prophets Major",
         "book": "ezekiel",
         "chapter": 16,
-        "verse": 35,
-        "text": "“Therefore, prostitute, hear Yahweh’s word:"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 16,
         "verse": 36,
         "text": "‘The Lord Yahweh says, “Because your filthiness was poured out, and your nakedness uncovered through your prostitution with your lovers; and because of all the idols of your abominations, and for the blood of your children, that you gave to them;"
     },
@@ -86454,14 +85430,6 @@
         "chapter": 16,
         "verse": 63,
         "text": "that you may remember, and be confounded, and never open your mouth any more, because of your shame, when I have forgiven you all that you have done,” says the Lord Yahweh.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 17,
-        "verse": 1,
-        "text": "Yahweh’s word came to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -87028,14 +85996,6 @@
         "area": "Prophets Major",
         "book": "ezekiel",
         "chapter": 20,
-        "verse": 2,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 20,
         "verse": 3,
         "text": "“Son of man, speak to the elders of Israel, and tell them, ‘The Lord Yahweh says: “Is it to inquire of me that you have come? As I live,” says the Lord Yahweh, “I will not be inquired of by you.” ’"
     },
@@ -87372,14 +86332,6 @@
         "area": "Prophets Major",
         "book": "ezekiel",
         "chapter": 20,
-        "verse": 45,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 20,
         "verse": 46,
         "text": "“Son of man, set your face toward the south, and preach toward the south, and prophesy against the forest of the field in the South."
     },
@@ -87406,14 +86358,6 @@
         "chapter": 20,
         "verse": 49,
         "text": "Then I said, “Ah Lord Yahweh! They say of me, ‘Isn’t he a speaker of parables?’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 21,
-        "verse": 1,
-        "text": "Yahweh’s word came to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -87462,14 +86406,6 @@
         "chapter": 21,
         "verse": 7,
         "text": "It shall be, when they ask you, ‘Why do you sigh?’ that you shall say, ‘Because of the news, for it comes! Every heart will melt, all hands will be feeble, every spirit will faint, and all knees will be weak as water. Behold, it comes, and it shall be done, says the Lord Yahweh.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 21,
-        "verse": 8,
-        "text": "Yahweh’s word came to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -87796,14 +86732,6 @@
         "area": "Prophets Major",
         "book": "ezekiel",
         "chapter": 22,
-        "verse": 17,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 22,
         "verse": 18,
         "text": "“Son of man, the house of Israel has become dross to me. All of them are bronze, tin, iron, and lead in the middle of the furnace. They are the dross of silver."
     },
@@ -87838,14 +86766,6 @@
         "chapter": 22,
         "verse": 22,
         "text": "As silver is melted in the middle of the furnace, so you will be melted in the middle of it; and you will know that I, Yahweh, have poured out my wrath on you.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 22,
-        "verse": 23,
-        "text": "Yahweh’s word came to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -88518,14 +87438,6 @@
         "chapter": 24,
         "verse": 27,
         "text": "In that day your mouth will be opened to him who has escaped, and you will speak, and be no more mute. So you will be a sign to them. Then they will know that I am Yahweh.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 25,
-        "verse": 1,
-        "text": "Yahweh’s word came to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -89262,14 +88174,6 @@
         "chapter": 28,
         "verse": 19,
         "text": "All those who know you among the peoples will be astonished at you. You have become a terror, and you will exist no more.” ’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 28,
-        "verse": 20,
-        "text": "Yahweh’s word came to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -90100,14 +89004,6 @@
         "area": "Prophets Major",
         "book": "ezekiel",
         "chapter": 33,
-        "verse": 1,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 33,
         "verse": 2,
         "text": "“Son of man, speak to the children of your people, and tell them, ‘When I bring the sword on a land, and the people of the land take a man from among them, and set him for their watchman;"
     },
@@ -90276,14 +89172,6 @@
         "area": "Prophets Major",
         "book": "ezekiel",
         "chapter": 33,
-        "verse": 23,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 33,
         "verse": 24,
         "text": "“Son of man, those who inhabit the waste places in the land of Israel speak, saying, ‘Abraham was one, and he inherited the land; but we are many. The land is given us for inheritance.’"
     },
@@ -90364,14 +89252,6 @@
         "area": "Prophets Major",
         "book": "ezekiel",
         "chapter": 34,
-        "verse": 1,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 34,
         "verse": 2,
         "text": "“Son of man, prophesy against the shepherds of Israel. Prophesy, and tell them, even the shepherds, ‘The Lord Yahweh says: “Woe to the shepherds of Israel who feed themselves! Shouldn’t the shepherds feed the sheep?"
     },
@@ -90422,14 +89302,6 @@
         "chapter": 34,
         "verse": 8,
         "text": "“As I live,” says the Lord Yahweh, “surely because my sheep became a prey, and my sheep became food to all the animals of the field, because there was no shepherd. My shepherds didn’t search for my sheep, but the shepherds fed themselves, and didn’t feed my sheep.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 34,
-        "verse": 9,
-        "text": "Therefore, you shepherds, hear Yahweh’s word:"
     },
     {
         "testament": "Old Testament",
@@ -91254,14 +90126,6 @@
         "chapter": 37,
         "verse": 28,
         "text": "The nations will know that I am Yahweh who sanctifies Israel, when my sanctuary is among them forever more.” ’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "ezekiel",
-        "chapter": 38,
-        "verse": 1,
-        "text": "Yahweh’s word came to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -93996,14 +92860,6 @@
         "area": "Small stories",
         "book": "ezra",
         "chapter": 2,
-        "verse": 20,
-        "text": "The children of Gibbar, ninety-five."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 2,
         "verse": 21,
         "text": "The children of Bethlehem, one hundred twenty-three."
     },
@@ -94012,24 +92868,8 @@
         "area": "Small stories",
         "book": "ezra",
         "chapter": 2,
-        "verse": 22,
-        "text": "The men of Netophah, fifty-six."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 2,
         "verse": 23,
         "text": "The men of Anathoth, one hundred twenty-eight."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 2,
-        "verse": 24,
-        "text": "The children of Azmaveth, forty-two."
     },
     {
         "testament": "Old Testament",
@@ -94062,14 +92902,6 @@
         "chapter": 2,
         "verse": 28,
         "text": "The men of Bethel and Ai, two hundred twenty-three."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 2,
-        "verse": 29,
-        "text": "The children of Nebo, fifty-two."
     },
     {
         "testament": "Old Testament",
@@ -95892,14 +94724,6 @@
         "area": "Small stories",
         "book": "ezra",
         "chapter": 10,
-        "verse": 32,
-        "text": "Benjamin, Malluch, Shemariah."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 10,
         "verse": 33,
         "text": "Of the sons of Hashum: Mattenai, Mattattah, Zabad, Eliphelet, Jeremai, Manasseh, Shimei."
     },
@@ -95910,70 +94734,6 @@
         "chapter": 10,
         "verse": 34,
         "text": "Of the sons of Bani: Maadai, Amram, and Uel,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 10,
-        "verse": 35,
-        "text": "Benaiah, Bedeiah, Cheluhi,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 10,
-        "verse": 36,
-        "text": "Vaniah, Meremoth, Eliashib,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 10,
-        "verse": 37,
-        "text": "Mattaniah, Mattenai, and Jaasu,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 10,
-        "verse": 38,
-        "text": "and Bani, and Binnui, Shimei,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 10,
-        "verse": 39,
-        "text": "and Shelemiah, and Nathan, and Adaiah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 10,
-        "verse": 40,
-        "text": "Machnadebai, Shashai, Sharai,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 10,
-        "verse": 41,
-        "text": "Azarel, and Shelemiah, Shemariah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "ezra",
-        "chapter": 10,
-        "verse": 42,
-        "text": "Shallum, Amariah, Joseph."
     },
     {
         "testament": "Old Testament",
@@ -96174,14 +94934,6 @@
         "chapter": 1,
         "verse": 23,
         "text": "but they only heard: “He who once persecuted us now preaches the faith that he once tried to destroy.”"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Pauls letters",
-        "book": "galatians",
-        "chapter": 1,
-        "verse": 24,
-        "text": "So they glorified God in me."
     },
     {
         "testament": "New Testament",
@@ -98772,14 +97524,6 @@
         "area": "Torah",
         "book": "genesis",
         "chapter": 8,
-        "verse": 15,
-        "text": "God spoke to Noah, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 8,
         "verse": 16,
         "text": "“Go out of the ship, you, your wife, your sons, and your sons’ wives with you."
     },
@@ -99188,22 +97932,6 @@
         "area": "Torah",
         "book": "genesis",
         "chapter": 10,
-        "verse": 16,
-        "text": "the Jebusites, the Amorites, the Girgashites,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 10,
-        "verse": 17,
-        "text": "the Hivites, the Arkites, the Sinites,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 10,
         "verse": 18,
         "text": "the Arvadites, the Zemarites, and the Hamathites. Afterward the families of the Canaanites were spread abroad."
     },
@@ -99270,22 +97998,6 @@
         "chapter": 10,
         "verse": 26,
         "text": "Joktan became the father of Almodad, Sheleph, Hazarmaveth, Jerah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 10,
-        "verse": 27,
-        "text": "Hadoram, Uzal, Diklah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 10,
-        "verse": 28,
-        "text": "Obal, Abimael, Sheba,"
     },
     {
         "testament": "Old Testament",
@@ -100222,14 +98934,6 @@
         "chapter": 15,
         "verse": 19,
         "text": "the land of the Kenites, the Kenizzites, the Kadmonites,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 15,
-        "verse": 20,
-        "text": "the Hittites, the Perizzites, the Rephaim,"
     },
     {
         "testament": "Old Testament",
@@ -101484,14 +100188,6 @@
         "area": "Torah",
         "book": "genesis",
         "chapter": 21,
-        "verse": 24,
-        "text": "Abraham said, “I will swear.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 21,
         "verse": 25,
         "text": "Abraham complained to Abimelech because of a water well, which Abimelech’s servants had violently taken away."
     },
@@ -101740,14 +100436,6 @@
         "area": "Torah",
         "book": "genesis",
         "chapter": 22,
-        "verse": 22,
-        "text": "Chesed, Hazo, Pildash, Jidlaph, and Bethuel.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 22,
         "verse": 23,
         "text": "Bethuel became the father of Rebekah. These eight Milcah bore to Nahor, Abraham’s brother."
     },
@@ -101862,14 +100550,6 @@
         "chapter": 23,
         "verse": 13,
         "text": "He spoke to Ephron in the audience of the people of the land, saying, “But if you will, please hear me. I will give the price of the field. Take it from me, and I will bury my dead there.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 23,
-        "verse": 14,
-        "text": "Ephron answered Abraham, saying to him,"
     },
     {
         "testament": "Old Testament",
@@ -102182,14 +100862,6 @@
         "chapter": 24,
         "verse": 33,
         "text": "Food was set before him to eat, but he said, “I will not eat until I have told my message.” Laban said, “Speak on.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 24,
-        "verse": 34,
-        "text": "He said, “I am Abraham’s servant."
     },
     {
         "testament": "Old Testament",
@@ -102564,22 +101236,6 @@
         "area": "Torah",
         "book": "genesis",
         "chapter": 25,
-        "verse": 14,
-        "text": "Mishma, Dumah, Massa,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 25,
-        "verse": 15,
-        "text": "Hadad, Tema, Jetur, Naphish, and Kedemah."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 25,
         "verse": 16,
         "text": "These are the sons of Ishmael, and these are their names, by their villages, and by their encampments: twelve princes, according to their nations."
     },
@@ -102766,14 +101422,6 @@
         "chapter": 26,
         "verse": 5,
         "text": "because Abraham obeyed my voice, and kept my requirements, my commandments, my statutes, and my laws.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 26,
-        "verse": 6,
-        "text": "Isaac lived in Gerar."
     },
     {
         "testament": "Old Testament",
@@ -102998,14 +101646,6 @@
         "chapter": 26,
         "verse": 34,
         "text": "When Esau was forty years old, he took as wife Judith, the daughter of Beeri the Hittite, and Basemath, the daughter of Elon the Hittite."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 26,
-        "verse": 35,
-        "text": "They grieved Isaac’s and Rebekah’s spirits."
     },
     {
         "testament": "Old Testament",
@@ -105836,22 +104476,6 @@
         "area": "Torah",
         "book": "genesis",
         "chapter": 36,
-        "verse": 41,
-        "text": "chief Oholibamah, chief Elah, chief Pinon,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 36,
-        "verse": 42,
-        "text": "chief Kenaz, chief Teman, chief Mibzar,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 36,
         "verse": 43,
         "text": "chief Magdiel, and chief Iram. These are the chiefs of Edom, according to their habitations in the land of their possession. This is Esau, the father of the Edomites."
     },
@@ -108454,14 +107078,6 @@
         "chapter": 46,
         "verse": 22,
         "text": "These are the sons of Rachel, who were born to Jacob: all the souls were fourteen."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "genesis",
-        "chapter": 46,
-        "verse": 23,
-        "text": "The son of Dan: Hushim."
     },
     {
         "testament": "Old Testament",
@@ -112428,14 +111044,6 @@
         "area": "Acts from Hebrews",
         "book": "hebrews",
         "chapter": 13,
-        "verse": 1,
-        "text": "Let brotherly love continue."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Acts from Hebrews",
-        "book": "hebrews",
-        "chapter": 13,
         "verse": 2,
         "text": "Don’t forget to show hospitality to strangers, for in doing so, some have entertained angels without knowing it."
     },
@@ -112614,14 +111222,6 @@
         "chapter": 13,
         "verse": 24,
         "text": "Greet all of your leaders and all the saints. The Italians greet you."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Acts from Hebrews",
-        "book": "hebrews",
-        "chapter": 13,
-        "verse": 25,
-        "text": "Grace be with you all. Amen."
     },
     {
         "testament": "Old Testament",
@@ -114588,14 +113188,6 @@
         "area": "Prophets Major",
         "book": "isaiah",
         "chapter": 2,
-        "verse": 18,
-        "text": "The idols shall utterly pass away."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "isaiah",
-        "chapter": 2,
         "verse": 19,
         "text": "Men shall go into the caves of the rocks, and into the holes of the earth, from before the terror of Yahweh, and from the glory of his majesty, when he arises to shake the earth mightily."
     },
@@ -114772,24 +113364,8 @@
         "area": "Prophets Major",
         "book": "isaiah",
         "chapter": 3,
-        "verse": 19,
-        "text": "the earrings, the bracelets, the veils,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "isaiah",
-        "chapter": 3,
         "verse": 20,
         "text": "the headdresses, the ankle chains, the sashes, the perfume containers, the charms,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "isaiah",
-        "chapter": 3,
-        "verse": 21,
-        "text": "the signet rings, the nose rings,"
     },
     {
         "testament": "Old Testament",
@@ -115294,14 +113870,6 @@
         "chapter": 7,
         "verse": 9,
         "text": "The head of Ephraim is Samaria, and the head of Samaria is Remaliah’s son. If you will not believe, surely you shall not be established.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "isaiah",
-        "chapter": 7,
-        "verse": 10,
-        "text": "Yahweh spoke again to Ahaz, saying,"
     },
     {
         "testament": "Old Testament",
@@ -119894,14 +118462,6 @@
         "chapter": 37,
         "verse": 14,
         "text": "Hezekiah received the letter from the hand of the messengers and read it. Then Hezekiah went up to Yahweh’s house, and spread it before Yahweh."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "isaiah",
-        "chapter": 37,
-        "verse": 15,
-        "text": "Hezekiah prayed to Yahweh, saying,"
     },
     {
         "testament": "Old Testament",
@@ -124660,14 +123220,6 @@
         "area": "James and Jude",
         "book": "james",
         "chapter": 1,
-        "verse": 16,
-        "text": "Don’t be deceived, my beloved brothers."
-    },
-    {
-        "testament": "New Testament",
-        "area": "James and Jude",
-        "book": "james",
-        "chapter": 1,
         "verse": 17,
         "text": "Every good gift and every perfect gift is from above, coming down from the Father of lights, with whom can be no variation, nor turning shadow."
     },
@@ -125550,14 +124102,6 @@
         "chapter": 1,
         "verse": 19,
         "text": "They will fight against you, but they will not prevail against you; for I am with you”, says Yahweh, “to rescue you.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "jeremiah",
-        "chapter": 2,
-        "verse": 1,
-        "text": "Yahweh’s word came to me, saying,"
     },
     {
         "testament": "Old Testament",
@@ -130052,14 +128596,6 @@
         "area": "Prophets Major",
         "book": "jeremiah",
         "chapter": 24,
-        "verse": 4,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "jeremiah",
-        "chapter": 24,
         "verse": 5,
         "text": "“Yahweh, the God of Israel says: ‘Like these good figs, so I will regard the captives of Judah, whom I have sent out of this place into the land of the Chaldeans, for good."
     },
@@ -131780,14 +130316,6 @@
         "area": "Prophets Major",
         "book": "jeremiah",
         "chapter": 32,
-        "verse": 13,
-        "text": "“I commanded Baruch before them, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "jeremiah",
-        "chapter": 32,
         "verse": 14,
         "text": "Yahweh of Armies, the God of Israel says: ‘Take these deeds, this deed of the purchase which is sealed, and this deed which is open, and put them in an earthen vessel, that they may last many days.’"
     },
@@ -132180,14 +130708,6 @@
         "area": "Prophets Major",
         "book": "jeremiah",
         "chapter": 33,
-        "verse": 19,
-        "text": "Yahweh’s word came to Jeremiah, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "jeremiah",
-        "chapter": 33,
         "verse": 20,
         "text": "“Yahweh says: ‘If you can break my covenant of the day and my covenant of the night, so that there will not be day and night in their time;"
     },
@@ -132206,14 +130726,6 @@
         "chapter": 33,
         "verse": 22,
         "text": "As the army of the sky can’t be counted, and the sand of the sea can’t be measured; so I will multiply the offspring of David my servant and the Levites who minister to me.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Major",
-        "book": "jeremiah",
-        "chapter": 33,
-        "verse": 23,
-        "text": "Yahweh’s word came to Jeremiah, saying,"
     },
     {
         "testament": "Old Testament",
@@ -136604,14 +135116,6 @@
         "area": "Small stories",
         "book": "job",
         "chapter": 3,
-        "verse": 2,
-        "text": "Job answered:"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 3,
         "verse": 3,
         "text": "“Let the day perish in which I was born, the night which said, ‘There is a boy conceived.’"
     },
@@ -136798,14 +135302,6 @@
         "chapter": 3,
         "verse": 26,
         "text": "I am not at ease, neither am I quiet, neither have I rest; but trouble comes.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 4,
-        "verse": 1,
-        "text": "Then Eliphaz the Temanite answered,"
     },
     {
         "testament": "Old Testament",
@@ -137182,14 +135678,6 @@
         "chapter": 5,
         "verse": 27,
         "text": "Look at this. We have searched it. It is so. Hear it, and know it for your good.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 6,
-        "verse": 1,
-        "text": "Then Job answered,"
     },
     {
         "testament": "Old Testament",
@@ -137596,14 +136084,6 @@
         "area": "Small stories",
         "book": "job",
         "chapter": 8,
-        "verse": 1,
-        "text": "Then Bildad the Shuhite answered,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 8,
         "verse": 2,
         "text": "“How long will you speak these things? Shall the words of your mouth be a mighty wind?"
     },
@@ -137766,14 +136246,6 @@
         "chapter": 8,
         "verse": 22,
         "text": "Those who hate you will be clothed with shame. The tent of the wicked will be no more.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 9,
-        "verse": 1,
-        "text": "Then Job answered,"
     },
     {
         "testament": "Old Testament",
@@ -138228,14 +136700,6 @@
         "area": "Small stories",
         "book": "job",
         "chapter": 11,
-        "verse": 1,
-        "text": "Then Zophar, the Naamathite, answered,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 11,
         "verse": 2,
         "text": "“Shouldn’t the multitude of words be answered? Should a man full of talk be justified?"
     },
@@ -138382,14 +136846,6 @@
         "chapter": 11,
         "verse": 20,
         "text": "But the eyes of the wicked will fail. They will have no way to flee. Their hope will be the giving up of the spirit.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 12,
-        "verse": 1,
-        "text": "Then Job answered,"
     },
     {
         "testament": "Old Testament",
@@ -138988,14 +137444,6 @@
         "area": "Small stories",
         "book": "job",
         "chapter": 15,
-        "verse": 1,
-        "text": "Then Eliphaz the Temanite answered,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 15,
         "verse": 2,
         "text": "“Should a wise man answer with vain knowledge, and fill himself with the east wind?"
     },
@@ -139262,14 +137710,6 @@
         "chapter": 15,
         "verse": 35,
         "text": "They conceive mischief, and produce iniquity. Their heart prepares deceit.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 16,
-        "verse": 1,
-        "text": "Then Job answered,"
     },
     {
         "testament": "Old Testament",
@@ -139572,14 +138012,6 @@
         "area": "Small stories",
         "book": "job",
         "chapter": 18,
-        "verse": 1,
-        "text": "Then Bildad the Shuhite answered,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 18,
         "verse": 2,
         "text": "“How long will you hunt for words? Consider, and afterwards we will speak."
     },
@@ -139734,14 +138166,6 @@
         "chapter": 18,
         "verse": 21,
         "text": "Surely such are the dwellings of the unrighteous. This is the place of him who doesn’t know God.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 19,
-        "verse": 1,
-        "text": "Then Job answered,"
     },
     {
         "testament": "Old Testament",
@@ -139972,14 +138396,6 @@
         "area": "Small stories",
         "book": "job",
         "chapter": 20,
-        "verse": 1,
-        "text": "Then Zophar the Naamathite answered,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 20,
         "verse": 2,
         "text": "“Therefore my thoughts answer me, even by reason of my haste that is in me."
     },
@@ -140198,14 +138614,6 @@
         "chapter": 20,
         "verse": 29,
         "text": "This is the portion of a wicked man from God, the heritage appointed to him by God.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 21,
-        "verse": 1,
-        "text": "Then Job answered,"
     },
     {
         "testament": "Old Testament",
@@ -140476,14 +138884,6 @@
         "area": "Small stories",
         "book": "job",
         "chapter": 22,
-        "verse": 1,
-        "text": "Then Eliphaz the Temanite answered,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 22,
         "verse": 2,
         "text": "“Can a man be profitable to God? Surely he who is wise is profitable to himself."
     },
@@ -140710,14 +139110,6 @@
         "chapter": 22,
         "verse": 30,
         "text": "He will even deliver him who is not innocent. Yes, he will be delivered through the cleanness of your hands.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 23,
-        "verse": 1,
-        "text": "Then Job answered,"
     },
     {
         "testament": "Old Testament",
@@ -141052,14 +139444,6 @@
         "area": "Small stories",
         "book": "job",
         "chapter": 25,
-        "verse": 1,
-        "text": "Then Bildad the Shuhite answered,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 25,
         "verse": 2,
         "text": "“Dominion and fear are with him. He makes peace in his high places."
     },
@@ -141094,14 +139478,6 @@
         "chapter": 25,
         "verse": 6,
         "text": "How much less man, who is a worm, the son of man, who is a worm!”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 26,
-        "verse": 1,
-        "text": "Then Job answered,"
     },
     {
         "testament": "Old Testament",
@@ -142828,14 +141204,6 @@
         "area": "Small stories",
         "book": "job",
         "chapter": 34,
-        "verse": 1,
-        "text": "Moreover Elihu answered,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 34,
         "verse": 2,
         "text": "“Hear my words, you wise men. Give ear to me, you who have knowledge."
     },
@@ -143124,14 +141492,6 @@
         "area": "Small stories",
         "book": "job",
         "chapter": 35,
-        "verse": 1,
-        "text": "Moreover Elihu answered,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 35,
         "verse": 2,
         "text": "“Do you think this to be your right, or do you say, ‘My righteousness is more than God’s,’"
     },
@@ -143246,14 +141606,6 @@
         "chapter": 35,
         "verse": 16,
         "text": "Therefore Job opens his mouth with empty talk, and he multiplies words without knowledge.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 36,
-        "verse": 1,
-        "text": "Elihu also continued, and said,"
     },
     {
         "testament": "Old Testament",
@@ -144276,24 +142628,8 @@
         "area": "Small stories",
         "book": "job",
         "chapter": 40,
-        "verse": 1,
-        "text": "Moreover Yahweh answered Job,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 40,
         "verse": 2,
         "text": "“Shall he who argues contend with the Almighty? He who argues with God, let him answer it.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 40,
-        "verse": 3,
-        "text": "Then Job answered Yahweh,"
     },
     {
         "testament": "Old Testament",
@@ -144734,14 +143070,6 @@
         "chapter": 41,
         "verse": 34,
         "text": "He sees everything that is high. He is king over all the sons of pride.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Small stories",
-        "book": "job",
-        "chapter": 42,
-        "verse": 1,
-        "text": "Then Job answered Yahweh,"
     },
     {
         "testament": "Old Testament",
@@ -146380,14 +144708,6 @@
         "area": "Gospel",
         "book": "john",
         "chapter": 4,
-        "verse": 4,
-        "text": "He needed to pass through Samaria."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "john",
-        "chapter": 4,
         "verse": 5,
         "text": "So he came to a city of Samaria, called Sychar, near the parcel of ground that Jacob gave to his son, Joseph."
     },
@@ -147108,14 +145428,6 @@
         "area": "Gospel",
         "book": "john",
         "chapter": 5,
-        "verse": 41,
-        "text": "I don’t receive glory from men."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "john",
-        "chapter": 5,
         "verse": 42,
         "text": "But I know you, that you don’t have God’s love in yourselves."
     },
@@ -147534,14 +145846,6 @@
         "chapter": 6,
         "verse": 47,
         "text": "Most certainly, I tell you, he who believes in me has eternal life."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "john",
-        "chapter": 6,
-        "verse": 48,
-        "text": "I am the bread of life."
     },
     {
         "testament": "New Testament",
@@ -148142,14 +146446,6 @@
         "chapter": 7,
         "verse": 52,
         "text": "They answered him, “Are you also from Galilee? Search, and see that no prophet has arisen out of Galilee.”"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "john",
-        "chapter": 7,
-        "verse": 53,
-        "text": "Everyone went to his own house,"
     },
     {
         "testament": "New Testament",
@@ -149188,14 +147484,6 @@
         "area": "Gospel",
         "book": "john",
         "chapter": 10,
-        "verse": 30,
-        "text": "I and the Father are one.”"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "john",
-        "chapter": 10,
         "verse": 31,
         "text": "Therefore Jews took up stones again to stone him."
     },
@@ -149278,14 +147566,6 @@
         "chapter": 10,
         "verse": 41,
         "text": "Many came to him. They said, “John indeed did no sign, but everything that John said about this man is true.”"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "john",
-        "chapter": 10,
-        "verse": 42,
-        "text": "Many believed in him there."
     },
     {
         "testament": "New Testament",
@@ -149558,14 +147838,6 @@
         "chapter": 11,
         "verse": 34,
         "text": "and said, “Where have you laid him?” They told him, “Lord, come and see.”"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "john",
-        "chapter": 11,
-        "verse": 35,
-        "text": "Jesus wept."
     },
     {
         "testament": "New Testament",
@@ -153460,14 +151732,6 @@
         "area": "Historical",
         "book": "joshua",
         "chapter": 4,
-        "verse": 15,
-        "text": "Yahweh spoke to Joshua, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 4,
         "verse": 16,
         "text": "“Command the priests who bear the ark of the covenant, that they come up out of the Jordan.”"
     },
@@ -155436,14 +153700,6 @@
         "area": "Historical",
         "book": "joshua",
         "chapter": 13,
-        "verse": 18,
-        "text": "Jahaz, Kedemoth, Mephaath,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 13,
         "verse": 19,
         "text": "Kiriathaim, Sibmah, Zereth Shahar in the mount of the valley,"
     },
@@ -155852,80 +154108,8 @@
         "area": "Historical",
         "book": "joshua",
         "chapter": 15,
-        "verse": 22,
-        "text": "Kinah, Dimonah, Adadah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 23,
-        "text": "Kedesh, Hazor, Ithnan,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 24,
-        "text": "Ziph, Telem, Bealoth,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
         "verse": 25,
         "text": "Hazor Hadattah, Kerioth Hezron (also called Hazor),"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 26,
-        "text": "Amam, Shema, Moladah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 27,
-        "text": "Hazar Gaddah, Heshmon, Beth Pelet,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 28,
-        "text": "Hazar Shual, Beersheba, Biziothiah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 29,
-        "text": "Baalah, Iim, Ezem,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 30,
-        "text": "Eltolad, Chesil, Hormah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 31,
-        "text": "Ziklag, Madmannah, Sansannah,"
     },
     {
         "testament": "Old Testament",
@@ -155940,30 +154124,6 @@
         "area": "Historical",
         "book": "joshua",
         "chapter": 15,
-        "verse": 33,
-        "text": "In the lowland, Eshtaol, Zorah, Ashnah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 34,
-        "text": "Zanoah, En Gannim, Tappuah, Enam,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 35,
-        "text": "Jarmuth, Adullam, Socoh, Azekah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
         "verse": 36,
         "text": "Shaaraim, Adithaim and Gederah (or Gederothaim); fourteen cities with their villages."
     },
@@ -155972,56 +154132,8 @@
         "area": "Historical",
         "book": "joshua",
         "chapter": 15,
-        "verse": 37,
-        "text": "Zenan, Hadashah, Migdal Gad,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 38,
-        "text": "Dilean, Mizpah, Joktheel,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 39,
-        "text": "Lachish, Bozkath, Eglon,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 40,
-        "text": "Cabbon, Lahmam, Chitlish,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
         "verse": 41,
         "text": "Gederoth, Beth Dagon, Naamah, and Makkedah; sixteen cities with their villages."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 42,
-        "text": "Libnah, Ether, Ashan,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 43,
-        "text": "Iphtah, Ashnah, Nezib,"
     },
     {
         "testament": "Old Testament",
@@ -156068,40 +154180,8 @@
         "area": "Historical",
         "book": "joshua",
         "chapter": 15,
-        "verse": 49,
-        "text": "Dannah, Kiriath Sannah (which is Debir),"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 50,
-        "text": "Anab, Eshtemoh, Anim,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
         "verse": 51,
         "text": "Goshen, Holon, and Giloh; eleven cities with their villages."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 52,
-        "text": "Arab, Dumah, Eshan,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 53,
-        "text": "Janim, Beth Tappuah, Aphekah,"
     },
     {
         "testament": "Old Testament",
@@ -156116,32 +154196,8 @@
         "area": "Historical",
         "book": "joshua",
         "chapter": 15,
-        "verse": 55,
-        "text": "Maon, Carmel, Ziph, Jutah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 56,
-        "text": "Jezreel, Jokdeam, Zanoah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
         "verse": 57,
         "text": "Kain, Gibeah, and Timnah; ten cities with their villages."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 15,
-        "verse": 58,
-        "text": "Halhul, Beth Zur, Gedor,"
     },
     {
         "testament": "Old Testament",
@@ -156580,48 +154636,8 @@
         "area": "Historical",
         "book": "joshua",
         "chapter": 18,
-        "verse": 22,
-        "text": "Beth Arabah, Zemaraim, Bethel,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 18,
-        "verse": 23,
-        "text": "Avvim, Parah, Ophrah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 18,
         "verse": 24,
         "text": "Chephar Ammoni, Ophni, and Geba; twelve cities with their villages."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 18,
-        "verse": 25,
-        "text": "Gibeon, Ramah, Beeroth,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 18,
-        "verse": 26,
-        "text": "Mizpeh, Chephirah, Mozah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 18,
-        "verse": 27,
-        "text": "Rekem, Irpeel, Taralah,"
     },
     {
         "testament": "Old Testament",
@@ -156646,30 +154662,6 @@
         "chapter": 19,
         "verse": 2,
         "text": "They had for their inheritance Beersheba (or Sheba), Moladah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 19,
-        "verse": 3,
-        "text": "Hazar Shual, Balah, Ezem,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 19,
-        "verse": 4,
-        "text": "Eltolad, Bethul, Hormah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 19,
-        "verse": 5,
-        "text": "Ziklag, Beth Marcaboth, Hazar Susah,"
     },
     {
         "testament": "Old Testament",
@@ -156774,22 +154766,6 @@
         "chapter": 19,
         "verse": 18,
         "text": "Their border was to Jezreel, Chesulloth, Shunem,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 19,
-        "verse": 19,
-        "text": "Hapharaim, Shion, Anaharath,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 19,
-        "verse": 20,
-        "text": "Rabbith, Kishion, Ebez,"
     },
     {
         "testament": "Old Testament",
@@ -156916,22 +154892,6 @@
         "area": "Historical",
         "book": "joshua",
         "chapter": 19,
-        "verse": 36,
-        "text": "Adamah, Ramah, Hazor,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 19,
-        "verse": 37,
-        "text": "Kedesh, Edrei, En Hazor,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 19,
         "verse": 38,
         "text": "Iron, Migdal El, Horem, Beth Anath, and Beth Shemesh; nineteen cities with their villages."
     },
@@ -156958,38 +154918,6 @@
         "chapter": 19,
         "verse": 41,
         "text": "The border of their inheritance was Zorah, Eshtaol, Irshemesh,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 19,
-        "verse": 42,
-        "text": "Shaalabbin, Aijalon, Ithlah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 19,
-        "verse": 43,
-        "text": "Elon, Timnah, Ekron,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 19,
-        "verse": 44,
-        "text": "Eltekeh, Gibbethon, Baalath,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 19,
-        "verse": 45,
-        "text": "Jehud, Bene Berak, Gath Rimmon,"
     },
     {
         "testament": "Old Testament",
@@ -157038,14 +154966,6 @@
         "chapter": 19,
         "verse": 51,
         "text": "These are the inheritances, which Eleazar the priest, Joshua the son of Nun, and the heads of the fathers’ houses of the tribes of the children of Israel, distributed for inheritance by lot in Shiloh before Yahweh, at the door of the Tent of Meeting. So they finished dividing the land."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "joshua",
-        "chapter": 20,
-        "verse": 1,
-        "text": "Yahweh spoke to Joshua, saying,"
     },
     {
         "testament": "Old Testament",
@@ -162924,14 +160844,6 @@
         "area": "Historical",
         "book": "judges",
         "chapter": 20,
-        "verse": 29,
-        "text": "Israel set ambushes all around Gibeah."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "judges",
-        "chapter": 20,
         "verse": 30,
         "text": "The children of Israel went up against the children of Benjamin on the third day, and set themselves in array against Gibeah, as at other times."
     },
@@ -164916,14 +162828,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 4,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 4,
         "verse": 2,
         "text": "“Speak to the children of Israel, saying, ‘If anyone sins unintentionally, in any of the things which Yahweh has commanded not to be done, and does any one of them,"
     },
@@ -165300,14 +163204,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 5,
-        "verse": 14,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 5,
         "verse": 15,
         "text": "“If anyone commits a trespass, and sins unwittingly regarding Yahweh’s holy things, then he shall bring his trespass offering to Yahweh: a ram without defect from the flock, according to your estimation in silver by shekels, according to the shekel of the sanctuary, for a trespass offering."
     },
@@ -165342,14 +163238,6 @@
         "chapter": 5,
         "verse": 19,
         "text": "It is a trespass offering. He is certainly guilty before Yahweh.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 6,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -165398,14 +163286,6 @@
         "chapter": 6,
         "verse": 7,
         "text": "The priest shall make atonement for him before Yahweh, and he will be forgiven concerning whatever he does to become guilty.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 6,
-        "verse": 8,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -165492,14 +163372,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 6,
-        "verse": 19,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 6,
         "verse": 20,
         "text": "“This is the offering of Aaron and of his sons, which they shall offer to Yahweh in the day when he is anointed: one tenth of an ephah of fine flour for a meal offering perpetually, half of it in the morning, and half of it in the evening."
     },
@@ -165526,14 +163398,6 @@
         "chapter": 6,
         "verse": 23,
         "text": "Every meal offering of a priest shall be wholly burned. It shall not be eaten.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 6,
-        "verse": 24,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -165756,14 +163620,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 7,
-        "verse": 22,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 7,
         "verse": 23,
         "text": "“Speak to the children of Israel, saying, ‘You shall eat no fat, of bull, or sheep, or goat."
     },
@@ -165798,14 +163654,6 @@
         "chapter": 7,
         "verse": 27,
         "text": "Whoever it is who eats any blood, that soul shall be cut off from his people.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 7,
-        "verse": 28,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -165886,14 +163734,6 @@
         "chapter": 7,
         "verse": 38,
         "text": "which Yahweh commanded Moses in Mount Sinai in the day that he commanded the children of Israel to offer their offerings to Yahweh, in the wilderness of Sinai."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 8,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -166428,14 +164268,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 10,
-        "verse": 8,
-        "text": "Then Yahweh said to Aaron,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 10,
         "verse": 9,
         "text": "“You and your sons are not to drink wine or strong drink whenever you go into the Tent of Meeting, or you will die. This shall be a statute forever throughout your generations."
     },
@@ -166638,14 +164470,6 @@
         "chapter": 11,
         "verse": 14,
         "text": "the red kite, any kind of black kite,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 11,
-        "verse": 15,
-        "text": "any kind of raven,"
     },
     {
         "testament": "Old Testament",
@@ -166902,14 +164726,6 @@
         "chapter": 11,
         "verse": 47,
         "text": "to make a distinction between the unclean and the clean, and between the living thing that may be eaten and the living thing that may not be eaten.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 12,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -167438,14 +165254,6 @@
         "chapter": 13,
         "verse": 59,
         "text": "This is the law of the plague of mildew in a garment of wool or linen, either in the warp, or the woof, or in anything of skin, to pronounce it clean, or to pronounce it unclean."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 14,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -168436,14 +166244,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 17,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 17,
         "verse": 2,
         "text": "“Speak to Aaron, and to his sons, and to all the children of Israel, and say to them, ‘This is the thing which Yahweh has commanded:"
     },
@@ -168558,14 +166358,6 @@
         "chapter": 17,
         "verse": 16,
         "text": "But if he doesn’t wash them, or bathe his flesh, then he shall bear his iniquity.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 18,
-        "verse": 1,
-        "text": "Yahweh said to Moses,"
     },
     {
         "testament": "Old Testament",
@@ -168798,14 +166590,6 @@
         "chapter": 18,
         "verse": 30,
         "text": "Therefore you shall keep my requirements, that you do not practice any of these abominable customs which were practiced before you, and that you do not defile yourselves with them. I am Yahweh your God.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 19,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -169094,14 +166878,6 @@
         "chapter": 19,
         "verse": 37,
         "text": "“ ‘You shall observe all my statutes and all my ordinances, and do them. I am Yahweh.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 20,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -169436,14 +167212,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 21,
-        "verse": 16,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 21,
         "verse": 17,
         "text": "“Say to Aaron, ‘None of your offspring throughout their generations who has a defect may approach to offer the bread of his God."
     },
@@ -169502,14 +167270,6 @@
         "chapter": 21,
         "verse": 24,
         "text": "So Moses spoke to Aaron, and to his sons, and to all the children of Israel."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 22,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -169636,14 +167396,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 22,
-        "verse": 17,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 22,
         "verse": 18,
         "text": "“Speak to Aaron, and to his sons, and to all the children of Israel, and say to them, ‘Whoever is of the house of Israel, or of the foreigners in Israel, who offers his offering, whether it is any of their vows or any of their free will offerings, which they offer to Yahweh for a burnt offering:"
     },
@@ -169708,14 +167460,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 22,
-        "verse": 26,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 22,
         "verse": 27,
         "text": "“When a bull, a sheep, or a goat is born, it shall remain seven days with its mother. From the eighth day on it shall be accepted for the offering of an offering made by fire to Yahweh."
     },
@@ -169772,14 +167516,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 23,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 23,
         "verse": 2,
         "text": "“Speak to the children of Israel, and tell them, ‘The set feasts of Yahweh, which you shall proclaim to be holy convocations, even these are my set feasts."
     },
@@ -169830,14 +167566,6 @@
         "chapter": 23,
         "verse": 8,
         "text": "But you shall offer an offering made by fire to Yahweh seven days. In the seventh day is a holy convocation. You shall do no regular work.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 23,
-        "verse": 9,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -169948,14 +167676,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 23,
-        "verse": 23,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 23,
         "verse": 24,
         "text": "“Speak to the children of Israel, saying, ‘In the seventh month, on the first day of the month, there shall be a solemn rest for you, a memorial of blowing of trumpets, a holy convocation."
     },
@@ -169966,14 +167686,6 @@
         "chapter": 23,
         "verse": 25,
         "text": "You shall do no regular work. You shall offer an offering made by fire to Yahweh.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 23,
-        "verse": 26,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -170022,14 +167734,6 @@
         "chapter": 23,
         "verse": 32,
         "text": "It shall be a Sabbath of solemn rest for you, and you shall deny yourselves. In the ninth day of the month at evening, from evening to evening, you shall keep your Sabbath.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 23,
-        "verse": 33,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -170124,14 +167828,6 @@
         "area": "Torah",
         "book": "leviticus",
         "chapter": 24,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 24,
         "verse": 2,
         "text": "“Command the children of Israel, that they bring to you pure olive oil beaten for the light, to cause a lamp to burn continually."
     },
@@ -170214,14 +167910,6 @@
         "chapter": 24,
         "verse": 12,
         "text": "They put him in custody until Yahweh’s will should be declared to them."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 24,
-        "verse": 13,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -171110,14 +168798,6 @@
         "chapter": 26,
         "verse": 46,
         "text": "These are the statutes, ordinances, and laws, which Yahweh made between him and the children of Israel in Mount Sinai by Moses."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "leviticus",
-        "chapter": 27,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -176964,14 +174644,6 @@
         "area": "Gospel",
         "book": "luke",
         "chapter": 15,
-        "verse": 3,
-        "text": "He told them this parable."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "luke",
-        "chapter": 15,
         "verse": 4,
         "text": "“Which of you men, if you had one hundred sheep, and lost one of them, wouldn’t leave the ninety-nine in the wilderness, and go after the one that was lost, until he found it?"
     },
@@ -177700,14 +175372,6 @@
         "area": "Gospel",
         "book": "luke",
         "chapter": 17,
-        "verse": 32,
-        "text": "Remember Lot’s wife!"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "luke",
-        "chapter": 17,
         "verse": 33,
         "text": "Whoever seeks to save his life loses it, but whoever loses his life preserves it."
     },
@@ -178348,14 +176012,6 @@
         "area": "Gospel",
         "book": "luke",
         "chapter": 19,
-        "verse": 34,
-        "text": "They said, “The Lord needs it.”"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "luke",
-        "chapter": 19,
         "verse": 35,
         "text": "Then they brought it to Jesus. They threw their cloaks on the colt, and sat Jesus on them."
     },
@@ -178710,14 +176366,6 @@
         "chapter": 20,
         "verse": 31,
         "text": "The third took her, and likewise the seven all left no children, and died."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "luke",
-        "chapter": 20,
-        "verse": 32,
-        "text": "Afterward the woman also died."
     },
     {
         "testament": "New Testament",
@@ -179636,14 +177284,6 @@
         "area": "Gospel",
         "book": "luke",
         "chapter": 22,
-        "verse": 62,
-        "text": "He went out, and wept bitterly."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "luke",
-        "chapter": 22,
         "verse": 63,
         "text": "The men who held Jesus mocked him and beat him."
     },
@@ -180220,14 +177860,6 @@
         "area": "Gospel",
         "book": "luke",
         "chapter": 24,
-        "verse": 8,
-        "text": "They remembered his words,"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "luke",
-        "chapter": 24,
         "verse": 9,
         "text": "returned from the tomb, and told all these things to the eleven and to all the rest."
     },
@@ -180534,14 +178166,6 @@
         "chapter": 24,
         "verse": 47,
         "text": "and that repentance and remission of sins should be preached in his name to all the nations, beginning at Jerusalem."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "luke",
-        "chapter": 24,
-        "verse": 48,
-        "text": "You are witnesses of these things."
     },
     {
         "testament": "New Testament",
@@ -181996,14 +179620,6 @@
         "area": "Gospel",
         "book": "mark",
         "chapter": 4,
-        "verse": 14,
-        "text": "The farmer sows the word."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "mark",
-        "chapter": 4,
         "verse": 15,
         "text": "The ones by the road are the ones where the word is sown; and when they have heard, immediately Satan comes, and takes away the word which has been sown in them."
     },
@@ -182886,14 +180502,6 @@
         "chapter": 6,
         "verse": 41,
         "text": "He took the five loaves and the two fish, and looking up to heaven, he blessed and broke the loaves, and he gave to his disciples to set before them, and he divided the two fish among them all."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "mark",
-        "chapter": 6,
-        "verse": 42,
-        "text": "They all ate, and were filled."
     },
     {
         "testament": "New Testament",
@@ -185732,14 +183340,6 @@
         "area": "Gospel",
         "book": "mark",
         "chapter": 14,
-        "verse": 50,
-        "text": "They all left him, and fled."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "mark",
-        "chapter": 14,
         "verse": 51,
         "text": "A certain young man followed him, having a linen cloth thrown around himself over his naked body. The young men grabbed him,"
     },
@@ -185798,14 +183398,6 @@
         "chapter": 14,
         "verse": 58,
         "text": "“We heard him say, ‘I will destroy this temple that is made with hands, and in three days I will build another made without hands.’ ”"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "mark",
-        "chapter": 14,
-        "verse": 59,
-        "text": "Even so, their testimony didn’t agree."
     },
     {
         "testament": "New Testament",
@@ -186006,14 +183598,6 @@
         "chapter": 15,
         "verse": 12,
         "text": "Pilate again asked them, “What then should I do to him whom you call the King of the Jews?”"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "mark",
-        "chapter": 15,
-        "verse": 13,
-        "text": "They cried out again, “Crucify him!”"
     },
     {
         "testament": "New Testament",
@@ -186892,14 +184476,6 @@
         "area": "Gospel",
         "book": "matthew",
         "chapter": 3,
-        "verse": 8,
-        "text": "Therefore produce fruit worthy of repentance!"
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "matthew",
-        "chapter": 3,
         "verse": 9,
         "text": "Don’t think to yourselves, ‘We have Abraham for our father,’ for I tell you that God is able to raise up children to Abraham from these stones."
     },
@@ -187630,14 +185206,6 @@
         "chapter": 6,
         "verse": 10,
         "text": "Let your Kingdom come. Let your will be done on earth as it is in heaven."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "matthew",
-        "chapter": 6,
-        "verse": 11,
-        "text": "Give us today our daily bread."
     },
     {
         "testament": "New Testament",
@@ -192484,14 +190052,6 @@
         "area": "Gospel",
         "book": "matthew",
         "chapter": 22,
-        "verse": 27,
-        "text": "After them all, the woman died."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "matthew",
-        "chapter": 22,
         "verse": 28,
         "text": "In the resurrection therefore, whose wife will she be of the seven? For they all had her.”"
     },
@@ -193142,14 +190702,6 @@
         "chapter": 24,
         "verse": 24,
         "text": "For there will arise false christs, and false prophets, and they will show great signs and wonders, so as to lead astray, if possible, even the chosen ones."
-    },
-    {
-        "testament": "New Testament",
-        "area": "Gospel",
-        "book": "matthew",
-        "chapter": 24,
-        "verse": 25,
-        "text": "“Behold, I have told you beforehand."
     },
     {
         "testament": "New Testament",
@@ -197420,14 +194972,6 @@
         "area": "Historical",
         "book": "nehemiah",
         "chapter": 7,
-        "verse": 25,
-        "text": "The children of Gibeon: ninety-five."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 7,
         "verse": 26,
         "text": "The men of Bethlehem and Netophah: one hundred eighty-eight."
     },
@@ -197438,14 +194982,6 @@
         "chapter": 7,
         "verse": 27,
         "text": "The men of Anathoth: one hundred twenty-eight."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 7,
-        "verse": 28,
-        "text": "The men of Beth Azmaveth: forty-two."
     },
     {
         "testament": "Old Testament",
@@ -198268,54 +195804,6 @@
         "area": "Historical",
         "book": "nehemiah",
         "chapter": 10,
-        "verse": 2,
-        "text": "Seraiah, Azariah, Jeremiah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 3,
-        "text": "Pashhur, Amariah, Malchijah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 4,
-        "text": "Hattush, Shebaniah, Malluch,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 5,
-        "text": "Harim, Meremoth, Obadiah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 6,
-        "text": "Daniel, Ginnethon, Baruch,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 7,
-        "text": "Meshullam, Abijah, Mijamin,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
         "verse": 8,
         "text": "Maaziah, Bilgai, and Shemaiah. These were the priests."
     },
@@ -198340,136 +195828,8 @@
         "area": "Historical",
         "book": "nehemiah",
         "chapter": 10,
-        "verse": 11,
-        "text": "Mica, Rehob, Hashabiah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 12,
-        "text": "Zaccur, Sherebiah, Shebaniah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 13,
-        "text": "Hodiah, Bani, and Beninu."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
         "verse": 14,
         "text": "The chiefs of the people: Parosh, Pahathmoab, Elam, Zattu, Bani,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 15,
-        "text": "Bunni, Azgad, Bebai,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 16,
-        "text": "Adonijah, Bigvai, Adin,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 17,
-        "text": "Ater, Hezekiah, Azzur,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 18,
-        "text": "Hodiah, Hashum, Bezai,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 19,
-        "text": "Hariph, Anathoth, Nobai,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 20,
-        "text": "Magpiash, Meshullam, Hezir,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 21,
-        "text": "Meshezabel, Zadok, Jaddua,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 22,
-        "text": "Pelatiah, Hanan, Anaiah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 23,
-        "text": "Hoshea, Hananiah, Hasshub,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 24,
-        "text": "Hallohesh, Pilha, Shobek,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 25,
-        "text": "Rehum, Hashabnah, Maaseiah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 26,
-        "text": "Ahiah, Hanan, Anan,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 10,
-        "verse": 27,
-        "text": "Malluch, Harim, and Baanah."
     },
     {
         "testament": "Old Testament",
@@ -198772,14 +196132,6 @@
         "area": "Historical",
         "book": "nehemiah",
         "chapter": 11,
-        "verse": 26,
-        "text": "in Jeshua, in Moladah, Beth Pelet,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 11,
         "verse": 27,
         "text": "in Hazar Shual, in Beersheba and its towns,"
     },
@@ -198820,30 +196172,6 @@
         "area": "Historical",
         "book": "nehemiah",
         "chapter": 11,
-        "verse": 32,
-        "text": "at Anathoth, Nob, Ananiah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 11,
-        "verse": 33,
-        "text": "Hazor, Ramah, Gittaim,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 11,
-        "verse": 34,
-        "text": "Hadid, Zeboim, Neballat,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 11,
         "verse": 35,
         "text": "Lod, and Ono, the valley of craftsmen."
     },
@@ -198862,46 +196190,6 @@
         "chapter": 12,
         "verse": 1,
         "text": "Now these are the priests and the Levites who went up with Zerubbabel the son of Shealtiel, and Jeshua: Seraiah, Jeremiah, Ezra,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 2,
-        "text": "Amariah, Malluch, Hattush,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 3,
-        "text": "Shecaniah, Rehum, Meremoth,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 4,
-        "text": "Iddo, Ginnethoi, Abijah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 5,
-        "text": "Mijamin, Maadiah, Bilgah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 6,
-        "text": "Shemaiah, and Joiarib, Jedaiah."
     },
     {
         "testament": "Old Testament",
@@ -198956,38 +196244,6 @@
         "area": "Historical",
         "book": "nehemiah",
         "chapter": 12,
-        "verse": 13,
-        "text": "of Ezra, Meshullam; of Amariah, Jehohanan;"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 14,
-        "text": "of Malluchi, Jonathan; of Shebaniah, Joseph;"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 15,
-        "text": "of Harim, Adna; of Meraioth, Helkai;"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 16,
-        "text": "of Iddo, Zechariah; of Ginnethon, Meshullam;"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
         "verse": 17,
         "text": "of Abijah, Zichri; of Miniamin, of Moadiah, Piltai;"
     },
@@ -198996,32 +196252,8 @@
         "area": "Historical",
         "book": "nehemiah",
         "chapter": 12,
-        "verse": 18,
-        "text": "of Bilgah, Shammua; of Shemaiah, Jehonathan;"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
         "verse": 19,
         "text": "and of Joiarib, Mattenai; of Jedaiah, Uzzi;"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 20,
-        "text": "of Sallai, Kallai; of Amok, Eber;"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 21,
-        "text": "of Hilkiah, Hashabiah; of Jedaiah, Nethanel."
     },
     {
         "testament": "Old Testament",
@@ -199110,22 +196342,6 @@
         "chapter": 12,
         "verse": 32,
         "text": "and after them went Hoshaiah, with half of the princes of Judah,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 33,
-        "text": "and Azariah, Ezra, and Meshullam,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Historical",
-        "book": "nehemiah",
-        "chapter": 12,
-        "verse": 34,
-        "text": "Judah, Benjamin, Shemaiah, Jeremiah,"
     },
     {
         "testament": "Old Testament",
@@ -199860,14 +197076,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 1,
-        "verse": 48,
-        "text": "For Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 1,
         "verse": 49,
         "text": "“Only the tribe of Levi you shall not count, neither shall you take a census of them among the children of Israel;"
     },
@@ -200220,14 +197428,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 3,
-        "verse": 5,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 3,
         "verse": 6,
         "text": "“Bring the tribe of Levi near, and set them before Aaron the priest, that they may minister to him."
     },
@@ -200262,14 +197462,6 @@
         "chapter": 3,
         "verse": 10,
         "text": "You shall appoint Aaron and his sons, and they shall keep their priesthood, but the stranger who comes near shall be put to death.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 3,
-        "verse": 11,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -200532,14 +197724,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 3,
-        "verse": 44,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 3,
         "verse": 45,
         "text": "“Take the Levites instead of all the firstborn among the children of Israel, and the livestock of the Levites instead of their livestock; and the Levites shall be mine. I am Yahweh."
     },
@@ -200750,14 +197934,6 @@
         "chapter": 4,
         "verse": 20,
         "text": "but they shall not go in to see the sanctuary even for a moment, lest they die.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 4,
-        "verse": 21,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -200988,14 +198164,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 5,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 5,
         "verse": 2,
         "text": "“Command the children of Israel that they put out of the camp every leper, everyone who has a discharge, and whoever is unclean by a corpse."
     },
@@ -201014,14 +198182,6 @@
         "chapter": 5,
         "verse": 4,
         "text": "The children of Israel did so, and put them outside of the camp; as Yahweh spoke to Moses, so the children of Israel did."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 5,
-        "verse": 5,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -201062,14 +198222,6 @@
         "chapter": 5,
         "verse": 10,
         "text": "Every man’s holy things shall be his; whatever any man gives the priest, it shall be his.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 5,
-        "verse": 11,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -201236,14 +198388,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 6,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 6,
         "verse": 2,
         "text": "“Speak to the children of Israel, and tell them: ‘When either man or woman shall make a special vow, the vow of a Nazirite, to separate himself to Yahweh,"
     },
@@ -201404,24 +198548,8 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 6,
-        "verse": 22,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 6,
         "verse": 23,
         "text": "“Speak to Aaron and to his sons, saying, ‘This is how you shall bless the children of Israel.’ You shall tell them,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 6,
-        "verse": 24,
-        "text": "‘Yahweh bless you, and keep you."
     },
     {
         "testament": "Old Testament",
@@ -201470,14 +198598,6 @@
         "chapter": 7,
         "verse": 3,
         "text": "and they brought their offering before Yahweh, six covered wagons and twelve oxen; a wagon for every two of the princes, and for each one an ox. They presented them before the tabernacle."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 7,
-        "verse": 4,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -202164,14 +199284,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 8,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 8,
         "verse": 2,
         "text": "“Speak to Aaron, and tell him, ‘When you light the lamps, the seven lamps shall give light in front of the lamp stand.’ ”"
     },
@@ -202190,14 +199302,6 @@
         "chapter": 8,
         "verse": 4,
         "text": "This was the workmanship of the lamp stand, beaten work of gold. From its base to its flowers, it was beaten work. He made the lamp stand according to the pattern which Yahweh had shown Moses."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 8,
-        "verse": 5,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -202340,14 +199444,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 8,
-        "verse": 23,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 8,
         "verse": 24,
         "text": "“This is what is assigned to the Levites: from twenty-five years old and upward they shall go in to wait on the service in the work of the Tent of Meeting;"
     },
@@ -202430,14 +199526,6 @@
         "chapter": 9,
         "verse": 8,
         "text": "Moses answered them, “Wait, that I may hear what Yahweh will command concerning you.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 9,
-        "verse": 9,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -202550,14 +199638,6 @@
         "chapter": 9,
         "verse": 23,
         "text": "At the commandment of Yahweh they encamped, and at the commandment of Yahweh they traveled. They kept Yahweh’s command, at the commandment of Yahweh by Moses."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 10,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -203252,14 +200332,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 13,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 13,
         "verse": 2,
         "text": "“Send men, that they may spy out the land of Canaan, which I give to the children of Israel. Of every tribe of their fathers, you shall send a man, every one a prince among them.”"
     },
@@ -203876,14 +200948,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 15,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 15,
         "verse": 2,
         "text": "“Speak to the children of Israel, and tell them, ‘When you have come into the land of your habitations, which I give to you,"
     },
@@ -203998,14 +201062,6 @@
         "chapter": 15,
         "verse": 16,
         "text": "One law and one ordinance shall be for you and for the stranger who lives as a foreigner with you.’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 15,
-        "verse": 17,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -204158,14 +201214,6 @@
         "chapter": 15,
         "verse": 36,
         "text": "All the congregation brought him outside of the camp, and stoned him to death with stones, as Yahweh commanded Moses."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 15,
-        "verse": 37,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -204380,14 +201428,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 16,
-        "verse": 23,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 16,
         "verse": 24,
         "text": "“Speak to the congregation, saying, ‘Get away from around the tent of Korah, Dathan, and Abiram!’ ”"
     },
@@ -204484,14 +201524,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 16,
-        "verse": 36,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 16,
         "verse": 37,
         "text": "“Speak to Eleazar the son of Aaron the priest, that he take up the censers out of the burning, and scatter the fire away from the camp; for they are holy,"
     },
@@ -204548,14 +201580,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 16,
-        "verse": 44,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 16,
         "verse": 45,
         "text": "“Get away from among this congregation, that I may consume them in a moment!” They fell on their faces."
     },
@@ -204598,14 +201622,6 @@
         "chapter": 16,
         "verse": 50,
         "text": "Aaron returned to Moses to the door of the Tent of Meeting, and the plague was stopped."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 17,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -204900,14 +201916,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 18,
-        "verse": 25,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 18,
         "verse": 26,
         "text": "“Moreover you shall speak to the Levites, and tell them, ‘When you take of the children of Israel the tithe which I have given you from them for your inheritance, then you shall offer up a wave offering of it for Yahweh, a tithe of the tithe."
     },
@@ -205182,14 +202190,6 @@
         "chapter": 20,
         "verse": 6,
         "text": "Moses and Aaron went from the presence of the assembly to the door of the Tent of Meeting, and fell on their faces. Yahweh’s glory appeared to them."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 20,
-        "verse": 7,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -206492,14 +203492,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 25,
-        "verse": 10,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 25,
         "verse": 11,
         "text": "“Phinehas, the son of Eleazar, the son of Aaron the priest, has turned my wrath away from the children of Israel, in that he was jealous with my jealousy among them, so that I didn’t consume the children of Israel in my jealousy."
     },
@@ -206534,22 +203526,6 @@
         "chapter": 25,
         "verse": 15,
         "text": "The name of the Midianite woman who was slain was Cozbi, the daughter of Zur. He was head of the people of a fathers’ house in Midian."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 25,
-        "verse": 16,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 25,
-        "verse": 17,
-        "text": "“Harass the Midianites, and strike them;"
     },
     {
         "testament": "Old Testament",
@@ -206614,14 +203590,6 @@
         "chapter": 26,
         "verse": 7,
         "text": "These are the families of the Reubenites; and those who were counted of them were forty-three thousand seven hundred thirty."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 26,
-        "verse": 8,
-        "text": "The son of Pallu: Eliab."
     },
     {
         "testament": "Old Testament",
@@ -206972,14 +203940,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 26,
-        "verse": 52,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 26,
         "verse": 53,
         "text": "“To these the land shall be divided for an inheritance according to the number of names."
     },
@@ -207116,22 +204076,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 27,
-        "verse": 5,
-        "text": "Moses brought their cause before Yahweh."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 27,
-        "verse": 6,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 27,
         "verse": 7,
         "text": "“The daughters of Zelophehad speak right. You shall surely give them a possession of an inheritance among their father’s brothers. You shall cause the inheritance of their father to pass to them."
     },
@@ -207196,14 +204140,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 27,
-        "verse": 15,
-        "text": "Moses spoke to Yahweh, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 27,
         "verse": 16,
         "text": "“Let Yahweh, the God of the spirits of all flesh, appoint a man over the congregation,"
     },
@@ -207262,14 +204198,6 @@
         "chapter": 27,
         "verse": 23,
         "text": "He laid his hands on him and commissioned him, as Yahweh spoke by Moses."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 28,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -207964,14 +204892,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 31,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 31,
         "verse": 2,
         "text": "“Avenge the children of Israel on the Midianites. Afterward you shall be gathered to your people.”"
     },
@@ -208156,14 +205076,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 31,
-        "verse": 25,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 31,
         "verse": 26,
         "text": "“Count the plunder that was taken, both of man and of animal, you, and Eleazar the priest, and the heads of the fathers’ households of the congregation;"
     },
@@ -208214,22 +205126,6 @@
         "chapter": 31,
         "verse": 32,
         "text": "Now the plunder, over and above the booty which the men of war took, was six hundred seventy-five thousand sheep,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 31,
-        "verse": 33,
-        "text": "seventy-two thousand head of cattle,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 31,
-        "verse": 34,
-        "text": "sixty-one thousand donkeys,"
     },
     {
         "testament": "Old Testament",
@@ -208302,30 +205198,6 @@
         "chapter": 31,
         "verse": 43,
         "text": "(now the congregation’s half was three hundred thirty-seven thousand five hundred sheep,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 31,
-        "verse": 44,
-        "text": "thirty-six thousand head of cattle,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 31,
-        "verse": 45,
-        "text": "thirty thousand five hundred donkeys,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 31,
-        "verse": 46,
-        "text": "and sixteen thousand persons),"
     },
     {
         "testament": "Old Testament",
@@ -208662,14 +205534,6 @@
         "chapter": 32,
         "verse": 34,
         "text": "The children of Gad built Dibon, Ataroth, Aroer,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 32,
-        "verse": 35,
-        "text": "Atroth-shophan, Jazer, Jogbehah,"
     },
     {
         "testament": "Old Testament",
@@ -209180,14 +206044,6 @@
         "area": "Torah",
         "book": "numbers",
         "chapter": 34,
-        "verse": 1,
-        "text": "Yahweh spoke to Moses, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 34,
         "verse": 2,
         "text": "“Command the children of Israel, and tell them, ‘When you come into the land of Canaan (this is the land that shall fall to you for an inheritance, even the land of Canaan according to its borders),"
     },
@@ -209294,14 +206150,6 @@
         "chapter": 34,
         "verse": 15,
         "text": "The two tribes and the half-tribe have received their inheritance beyond the Jordan at Jericho eastward, toward the sunrise.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 34,
-        "verse": 16,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -209470,14 +206318,6 @@
         "chapter": 35,
         "verse": 8,
         "text": "Concerning the cities which you shall give of the possession of the children of Israel, from the many you shall take many, and from the few you shall take few. Everyone according to his inheritance which he inherits shall give some of his cities to the Levites.”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Torah",
-        "book": "numbers",
-        "chapter": 35,
-        "verse": 9,
-        "text": "Yahweh spoke to Moses, saying,"
     },
     {
         "testament": "Old Testament",
@@ -219734,14 +216574,6 @@
         "chapter": 17,
         "verse": 15,
         "text": "As for me, I shall see your face in righteousness. I shall be satisfied, when I awake, with seeing your form."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Poems",
-        "book": "psalms",
-        "chapter": 18,
-        "verse": 1,
-        "text": "I love you, Yahweh, my strength."
     },
     {
         "testament": "Old Testament",
@@ -237524,14 +234356,6 @@
         "area": "Poems",
         "book": "psalms",
         "chapter": 146,
-        "verse": 1,
-        "text": "Praise Yah! Praise Yahweh, my soul."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Poems",
-        "book": "psalms",
-        "chapter": 146,
         "verse": 2,
         "text": "While I live, I will praise Yahweh. I will sing praises to my God as long as I exist."
     },
@@ -246828,14 +243652,6 @@
         "area": "Prophets Minor",
         "book": "zechariah",
         "chapter": 1,
-        "verse": 20,
-        "text": "Yahweh showed me four craftsmen."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Minor",
-        "book": "zechariah",
-        "chapter": 1,
         "verse": 21,
         "text": "Then I asked, “What are these coming to do?” He said, “These are the horns which scattered Judah, so that no man lifted up his head; but these have come to terrify them, to cast down the horns of the nations, which lifted up their horn against the land of Judah to scatter it.”"
     },
@@ -246982,14 +243798,6 @@
         "chapter": 3,
         "verse": 5,
         "text": "I said, “Let them set a clean turban on his head.” So they set a clean turban on his head, and clothed him; and Yahweh’s angel was standing by."
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Minor",
-        "book": "zechariah",
-        "chapter": 3,
-        "verse": 6,
-        "text": "Yahweh’s angel protested to Joshua, saying,"
     },
     {
         "testament": "Old Testament",
@@ -247292,14 +244100,6 @@
         "area": "Prophets Minor",
         "book": "zechariah",
         "chapter": 6,
-        "verse": 9,
-        "text": "Yahweh’s word came to me, saying,"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Minor",
-        "book": "zechariah",
-        "chapter": 6,
         "verse": 10,
         "text": "“Take of them of the captivity, even of Heldai, of Tobijah, and of Jedaiah; and come the same day, and go into the house of Josiah the son of Zephaniah, where they have come from Babylon."
     },
@@ -247398,14 +244198,6 @@
         "chapter": 7,
         "verse": 7,
         "text": "Aren’t these the words which Yahweh proclaimed by the former prophets, when Jerusalem was inhabited and in prosperity, and its cities around her, and the South and the lowland were inhabited?’ ”"
-    },
-    {
-        "testament": "Old Testament",
-        "area": "Prophets Minor",
-        "book": "zechariah",
-        "chapter": 7,
-        "verse": 8,
-        "text": "Yahweh’s word came to Zechariah, saying,"
     },
     {
         "testament": "Old Testament",
