@@ -73,6 +73,34 @@ void StartScreen::SetupUi() {
     actions->Add(settingsBtn, 1, wxEXPAND | wxALL, 5);
     layout->Add(actions, 0, wxEXPAND | wxALL, 10);
 
+    wxPanel* newsCard = new wxPanel(this);
+    newsCard->SetBackgroundColour(*wxWHITE);
+    wxBoxSizer* newsLayout = new wxBoxSizer(wxVERTICAL);
+
+    wxStaticText* newsTitle = new wxStaticText(newsCard, wxID_ANY, "What's New");
+    wxFont newsFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+    newsTitle->SetFont(newsFont);
+    newsLayout->Add(newsTitle, 0, wxALL, 8);
+
+    const char* announcements[] = {
+        "Useful verses only: turn it on in Settings to play only well-known "
+        "verses like John 3:16 and Philippians 4:13. No more genealogies!",
+        "Poetry is here: Psalms, Proverbs, Job, Lamentations and Song of "
+        "Solomon verses are now in the game. Psalm 23 included!",
+        "Fixed verses: verses that run across two paragraphs now show the "
+        "whole verse instead of only the second half.",
+        "Psalms past chapter 99 aren't included yet, since guesses use two "
+        "chapter digits.",
+    };
+    for (const char* text : announcements) {
+        wxStaticText* item = new wxStaticText(newsCard, wxID_ANY, wxString::FromUTF8("\xE2\x80\xA2 ") + text);
+        item->Wrap(400);
+        newsLayout->Add(item, 0, wxLEFT | wxRIGHT | wxBOTTOM, 8);
+    }
+
+    newsCard->SetSizer(newsLayout);
+    layout->Add(newsCard, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
+
     wxPanel* infoCard = new wxPanel(this);
     infoCard->SetBackgroundColour(*wxWHITE);
     wxBoxSizer* infoLayout = new wxBoxSizer(wxVERTICAL);

@@ -1,4 +1,5 @@
 #include "BibleData.h"
+#include "UsefulVerses.h"
 #include <fstream>
 #include <cmath>
 #include <algorithm>
@@ -97,6 +98,20 @@ Verse BibleData::getRandomVerse() const {
 Verse BibleData::getVerseAtIndex(int index) const {
     if (index < 0 || index >= (int)m_verses.size()) return Verse();
     return m_verses[index];
+}
+
+std::vector<int> BibleData::getUsefulVerseIndices() const {
+    std::vector<int> indices;
+    for (int i = 0; i < (int)m_verses.size(); ++i) {
+        const Verse& v = m_verses[i];
+        for (const auto& ref : kUsefulVerses) {
+            if (v.book == ref.book && v.chapter == ref.chapter && v.verse == ref.verse) {
+                indices.push_back(i);
+                break;
+            }
+        }
+    }
+    return indices;
 }
 
 bool BibleData::verseExists(const std::string& book, int chapter, int verse) const {

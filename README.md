@@ -9,12 +9,13 @@ src/
 ├── main.cpp                 # Application entry point
 ├── BibirbleWindow.h/cpp     # Main frame: screen switching, turn processing, keyboard
 ├── StartScreen.h/cpp        # Mode-select landing screen (Daily/Random/Settings)
-├── SettingsScreen.h/cpp     # Hard Mode toggle, seed entry/randomize/readout
+├── SettingsScreen.h/cpp     # Hard Mode + Useful verses toggles, seed entry/randomize/readout
 ├── GameRow.h/cpp            # Bible verse input row component
 ├── GameState.h/cpp          # Single source of truth: mode, seed, stage, history, Hard Mode, share text
 ├── GuessColor.h             # Canonical Gray/Yellow/Green result enum
 ├── BibleData.h/cpp          # Bible data loading and logic
 ├── SeededRandom.h/cpp       # Daily hash + seeded RNG, bit-for-bit port of data.js
+├── UsefulVerses.h           # Curated well-known verse pool for "Useful verses only"
 ├── PersistenceManager.h/cpp # Daily lockout + last-seed persistence (JSON file)
 ├── loading_dialog.h         # Loading dialog for data import
 └── bibirble.cpp             # Placeholder for future features
@@ -161,11 +162,15 @@ python3 tools/sort.py
 - **Random mode**: pick any seed (or generate one) for a shareable, replayable puzzle.
 - **Hard Mode**: guesses must respect previously confirmed book/area and revealed digits, and must
   reference a verse that actually exists in the dataset.
+- **Useful verses only**: a Settings toggle that limits Daily/Random games to a curated pool of
+  well-known verses (`src/UsefulVerses.h`), skipping genealogies, census lists, and the like.
 - **Persistence**: once-a-day lockout for Daily mode and last-used seed are remembered between launches.
 - **Share**: a Wordle-style emoji grid (🟩/🟨/⬛) plus citation, copied to the clipboard.
 
 ## Notes and known issues
 
+- `tools/sort.py` keeps prose and poetry verses with at least 7 words. References past 99 (Psalms 100-150,
+  Psalm 119:100-176) are skipped, because the guess row only has two chapter digits and two verse digits.
 - Book area mappings are defined in both `tools/sort.py` and `src/BibleData.cpp::getBookArea()`; keep them in sync when changing categories.
 
 ## Contributing

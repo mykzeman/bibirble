@@ -33,6 +33,7 @@ set(SOURCES
     src/BibleData.h
     src/SeededRandom.cpp
     src/SeededRandom.h
+    src/UsefulVerses.h
     src/GameState.cpp
     src/GameState.h
     src/GuessColor.h
