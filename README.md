@@ -169,6 +169,8 @@ python3 tools/sort.py
 
 ## Notes and known issues
 
+- `tools/sort.py` keeps prose and poetry verses with at least 7 words. References past 99 (Psalms 100-150,
+  Psalm 119:100-176) are skipped, because the guess row only has two chapter digits and two verse digits.
 - Book area mappings are defined in both `tools/sort.py` and `src/BibleData.cpp::getBookArea()`; keep them in sync when changing categories.
 
 ## Contributing

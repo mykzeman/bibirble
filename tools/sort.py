@@ -19,53 +19,47 @@ AREAS={
     "James and Jude":["james","jude"],
     "John Letters and Visions":["1john","2john","3john","revelation"]
 }
+# The game's guess row has two chapter digits and two verse digits, so a
+# reference past 99 (Psalms 100-150, Psalm 119:100-176) can't be entered.
+MAX_REFERENCE_NUMBER = 99
+MIN_WORDS = 7
+# Prose arrives as "paragraph text"; poetry (Psalms, Proverbs, songs inside
+# other books) arrives as "line text", one element per line of the verse.
+VERSE_TEXT_TYPES = ("paragraph text", "line text")
+
 for file_path in file_list:
     with open(file_path, 'r', encoding='utf-8') as f:
         book=file_path.stem
         data = json.load(f)
-        sectionNumbers=[]
-        text=""
+        testament="Old Testament" if book in OLD_TESTIMENT else "New Testament"
+        for area, books in AREAS.items():
+            if book in books:
+                book_area=area
+                break
+
+        # Collect every section/line of a verse before deciding whether to
+        # keep it, so multi-line poetry verses come out whole.
+        verse_parts={}
         for element in data:
-            if element["type"]!="paragraph text":
+            if element["type"] not in VERSE_TEXT_TYPES:
                 continue
-            chapter=element["chapterNumber"]
-            verse=element["verseNumber"]
-            testament="Old Testament" if book in OLD_TESTIMENT else "New Testament"
-            for area, books in AREAS.items():
-                if book in books:
-                    book_area=area
-                    break
-       
-            if element["sectionNumber"] ==1:
-                if sectionNumbers==[]:
-                    sectionNumbers.append(1)
-                    text=element["value"]
-                else:
-                    sectionNumbers=[]
-                    text=""
-            else:
-                sectionNumbers.append(element["sectionNumber"])
-                text+= " " + element["value"]
-            words_in_text = text.strip().split(" ")
-            allowed=False
-            if len(sectionNumbers)>=1 and len(words_in_text)>=7:
-                if chapter<99 or verse<99:
-                            allowed=True
-                            
-                            
-                if allowed:              
-                    big_list.append({
-                    "testament": testament,
-                    "area": book_area,
-                    "book": book,
-                    "chapter": chapter,
-                    "verse": verse, 
-                    "text": text.strip(),})
-                    sectionNumbers=[]
-                    text=""
-                    
-                
-                    i+=1
+            key=(element["chapterNumber"], element["verseNumber"])
+            verse_parts.setdefault(key, []).append(element["value"])
+
+        for (chapter, verse), parts in verse_parts.items():
+            if chapter > MAX_REFERENCE_NUMBER or verse > MAX_REFERENCE_NUMBER:
+                continue
+            text=" ".join(" ".join(parts).split())
+            if len(text.split(" ")) < MIN_WORDS:
+                continue
+            big_list.append({
+                "testament": testament,
+                "area": book_area,
+                "book": book,
+                "chapter": chapter,
+                "verse": verse,
+                "text": text,})
+            i+=1
 big_list=sorted(big_list, key=lambda x: (x["book"], x["chapter"], x["verse"]))
 with open("bible_sections.json", 'w', encoding='utf-8') as f:
     json.dump(big_list, f, ensure_ascii=False, indent=4)
