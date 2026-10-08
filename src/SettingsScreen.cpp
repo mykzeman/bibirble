@@ -43,6 +43,12 @@ void SettingsScreen::SetupUi() {
     hardModeRow->Add(m_hardModeCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 8);
     cardLayout->Add(hardModeRow, 0, wxEXPAND);
 
+    wxBoxSizer* usefulRow = new wxBoxSizer(wxHORIZONTAL);
+    usefulRow->Add(new wxStaticText(card, wxID_ANY, "Useful verses only"), 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
+    m_usefulOnlyCheck = new wxCheckBox(card, wxID_ANY, "");
+    usefulRow->Add(m_usefulOnlyCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 8);
+    cardLayout->Add(usefulRow, 0, wxEXPAND);
+
     wxBoxSizer* seedRow = new wxBoxSizer(wxHORIZONTAL);
     seedRow->Add(new wxStaticText(card, wxID_ANY, "Random seed"), 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
     m_seedInput = new wxTextCtrl(card, wxID_ANY, "", wxDefaultPosition, wxSize(150, -1));
@@ -64,7 +70,7 @@ void SettingsScreen::SetupUi() {
     cardLayout->Add(randomizeBtn, 0, wxALIGN_CENTER | wxALL, 8);
 
     wxStaticText* note = new wxStaticText(card, wxID_ANY,
-        "Seed settings and hard mode apply to the next game you start. "
+        "Seed settings, hard mode, and useful verses only apply to the next game you start. "
         "You can return here anytime.");
     note->Wrap(400);
     cardLayout->Add(note, 0, wxALL, 8);
@@ -77,6 +83,10 @@ void SettingsScreen::SetupUi() {
 
 bool SettingsScreen::GetHardMode() const {
     return m_hardModeCheck && m_hardModeCheck->GetValue();
+}
+
+bool SettingsScreen::GetUsefulOnly() const {
+    return m_usefulOnlyCheck && m_usefulOnlyCheck->GetValue();
 }
 
 wxString SettingsScreen::GetSeedText() const {

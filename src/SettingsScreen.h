@@ -3,7 +3,7 @@
 #include <wx/wx.h>
 #include <functional>
 
-// Hard Mode toggle + seed entry/randomize/readout, matching the web
+// Hard Mode and Useful-verses-only toggles + seed entry/randomize/readout, matching the web
 // version's Settings screen. Seed and hard-mode apply to the next game
 // started, same as the web version.
 class SettingsScreen : public wxPanel {
@@ -13,6 +13,7 @@ public:
     explicit SettingsScreen(wxWindow* parent);
 
     bool GetHardMode() const;
+    bool GetUsefulOnly() const;
     wxString GetSeedText() const;
     void SetSeedText(const wxString& seed);
     void SetCurrentSeedDisplay(const wxString& seed);
@@ -24,6 +25,7 @@ private:
     void SetupUi();
 
     wxCheckBox* m_hardModeCheck = nullptr;
+    wxCheckBox* m_usefulOnlyCheck = nullptr;
     wxTextCtrl* m_seedInput = nullptr;
     wxStaticText* m_currentSeedDisplay = nullptr;
 
