@@ -79,6 +79,7 @@ bool BibleData::loadData(const std::string& filePath) {
             v.chapter = obj.value("chapter", 0);
             v.verse = obj.value("verse", 0);
             v.text = obj.value("text", "");
+            v.mature = obj.value("mature", false);
             m_verses.push_back(v);
         }
         return true;
@@ -112,6 +113,22 @@ std::vector<int> BibleData::getUsefulVerseIndices() const {
         }
     }
     return indices;
+}
+
+std::vector<int> BibleData::getCandidateIndices(bool usefulOnly, bool allowMature) const {
+    std::vector<int> pool;
+    if (usefulOnly) pool = getUsefulVerseIndices();
+    if (pool.empty()) {
+        pool.resize(m_verses.size());
+        for (int i = 0; i < (int)m_verses.size(); ++i) pool[i] = i;
+    }
+    if (allowMature) return pool;
+
+    std::vector<int> candidates;
+    for (int i : pool) {
+        if (!m_verses[i].mature) candidates.push_back(i);
+    }
+    return candidates;
 }
 
 bool BibleData::verseExists(const std::string& book, int chapter, int verse) const {

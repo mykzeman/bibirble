@@ -24,6 +24,8 @@ import json
 import re
 from pathlib import Path
 
+from content_filters import is_mature_text
+
 # --- Book: how often a book's verses are quoted, memorized, or preached. ---
 BOOK_WEIGHTS = {
     "psalms": 3.0, "proverbs": 3.0, "john": 3.0, "romans": 3.0,
@@ -101,24 +103,9 @@ LIST_PHRASES = [
 CASE_SENSITIVE_LIST_PHRASES = [r"\b[Tt]he father of\b"]
 MAX_LIST_PHRASES = 0         # any genealogy/list phrase makes a verse not useful
 LIST_PHRASE_PENALTY = 1.0
-# Mature (R18) content: sexual content, explicit body references, and
-# graphic violence. These verses never go in the pool, hand-picked or not,
-# so Useful mode stays family friendly. Plain "naked" and "womb" are left
-# out on purpose (Job 1:21 is about birth).
-MATURE_PATTERNS = [
-    r"\bbreasts?\b", r"\bnakedness\b", r"\bprostitut", r"\bharlot",
-    r"\bwhore", r"\badulter(ess|esses|er|ers|ous)\b", r"\blust", r"\bsexual",
-    # "slept with his fathers" means died; "come in to him" (Revelation 3:20)
-    # is Jesus at the door.
-    r"\b(lie|lay|lain|lying|slept|sleep|sleeps) with\b(?! (his|their|your|my|our) fathers)",
-    r"\b(go|goes|went|came|come|comes) in to (her|his wife|your wife|my wife|his neighbor.s wife|a prostitute)\b",
-    r"\b(knew|known) her\b", r"\bcircumcis", r"\buncircumcis",
-    r"\bforeskins?\b", r"\bconcubines?\b", r"\brap(e|ed)\b", r"\bravish",
-    r"\beunuchs?\b", r"\bgenitals?\b", r"\bseduc", r"\bsodomite",
-    r"\bdung\b", r"\bexcrement\b", r"\burine\b",
-    r"\bflesh of (their|your|his) (sons|daughters)\b", r"\bripped up\b",
-    r"\bdash(ed|es)? (in pieces|to pieces|against)\b",
-]
+# Not R18, but awkward for a family game, so kept out of the Useful pool only.
+FAMILY_UNFRIENDLY_PATTERNS = [r"\bcircumcis", r"\buncircumcis"]
+
 # Books whose verses are only used when hand-picked. Song of Solomon is
 # mostly romantic poetry between a husband and wife.
 MATURE_BOOKS = {"songofsolomon"}
@@ -164,8 +151,10 @@ def count_list_phrases(text):
 
 
 def is_mature(v):
+    """R18 verses plus family-unfriendly ones: never in the Useful pool."""
     lower = v["text"].lower()
-    return any(re.search(pat, lower) for pat in MATURE_PATTERNS)
+    return (v.get("mature", False) or is_mature_text(v["text"])
+            or any(re.search(pat, lower) for pat in FAMILY_UNFRIENDLY_PATTERNS))
 
 
 def is_useful(v):

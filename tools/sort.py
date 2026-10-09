@@ -1,5 +1,7 @@
 from pathlib import Path
 import json
+
+from content_filters import is_mature_text
 dir_path = Path("tools/")
 file_list = list(dir_path.glob("*.json"))
 big_list=[]
@@ -52,13 +54,17 @@ for file_path in file_list:
             text=" ".join(" ".join(parts).split())
             if len(text.split(" ")) < MIN_WORDS:
                 continue
-            big_list.append({
+            entry={
                 "testament": testament,
                 "area": book_area,
                 "book": book,
                 "chapter": chapter,
                 "verse": verse,
-                "text": text,})
+                "text": text,}
+            # R18 verses are hidden in-game unless R18 mode is on.
+            if is_mature_text(text):
+                entry["mature"]=True
+            big_list.append(entry)
             i+=1
 big_list=sorted(big_list, key=lambda x: (x["book"], x["chapter"], x["verse"]))
 with open("bible_sections.json", 'w', encoding='utf-8') as f:

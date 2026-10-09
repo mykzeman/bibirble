@@ -34,6 +34,7 @@ set(SOURCES
     src/SeededRandom.cpp
     src/SeededRandom.h
     src/UsefulVerses.h
+    src/AgeCheck.h
     src/GameState.cpp
     src/GameState.h
     src/GuessColor.h

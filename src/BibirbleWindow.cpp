@@ -316,14 +316,9 @@ void BibirbleWindow::StartNewGame(GameMode mode, bool hardMode, const wxString& 
         seed = GenerateRandomSeed();
     }
 
-    int idx;
-    std::vector<int> usefulIndices;
-    if (m_settingsScreen->GetUsefulOnly()) usefulIndices = m_data.getUsefulVerseIndices();
-    if (!usefulIndices.empty()) {
-        idx = usefulIndices[PickIndexFromSeed(seed, (int)usefulIndices.size())];
-    } else {
-        idx = PickIndexFromSeed(seed, m_data.getVerseCount());
-    }
+    std::vector<int> candidates = m_data.getCandidateIndices(
+        m_settingsScreen->GetUsefulOnly(), m_settingsScreen->GetR18Mode());
+    int idx = candidates[PickIndexFromSeed(seed, (int)candidates.size())];
     Verse verse = m_data.getVerseAtIndex(idx);
     m_state.Reset(mode, seed, hardMode, m_settingsScreen->GetBookHints(), verse);
 
