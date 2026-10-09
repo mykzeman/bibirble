@@ -22,7 +22,8 @@ wxString FormatCountdownToNextUtcMidnight() {
 }
 }  // namespace
 
-StartScreen::StartScreen(wxWindow* parent) : wxPanel(parent), m_timer(this) {
+StartScreen::StartScreen(wxWindow* parent) : wxScrolledWindow(parent), m_timer(this) {
+    SetScrollRate(0, 10);
     SetupUi();
 
     Bind(wxEVT_TIMER, &StartScreen::UpdateCountdown, this, m_timer.GetId());
@@ -82,28 +83,42 @@ void StartScreen::SetupUi() {
     newsTitle->SetFont(newsFont);
     newsLayout->Add(newsTitle, 0, wxALL, 8);
 
-    const char* announcements[] = {
+    auto addHeading = [&](const char* text) {
+        wxStaticText* heading = new wxStaticText(newsCard, wxID_ANY, text);
+        wxFont font = heading->GetFont();
+        font.SetWeight(wxFONTWEIGHT_BOLD);
+        heading->SetFont(font);
+        newsLayout->Add(heading, 0, wxLEFT | wxRIGHT | wxBOTTOM, 8);
+    };
+    auto addItems = [&](std::initializer_list<const char*> items) {
+        for (const char* text : items) {
+            wxStaticText* item = new wxStaticText(newsCard, wxID_ANY, wxString::FromUTF8("\xE2\x80\xA2 ") + text);
+            item->Wrap(400);
+            newsLayout->Add(item, 0, wxLEFT | wxRIGHT | wxBOTTOM, 8);
+        }
+    };
+
+    addHeading("New in this update");
+    addItems({
+        "R18 mode: verses with mature content are now hidden by default. "
+        "Players 18 or older can turn on R18 mode in Settings after picking "
+        "their date of birth on a calendar.",
         "Book hints: an accessibility option in Settings. After each guess, "
         "the next book list only shows books that still fit your clues. Not "
         "available in hard mode.",
         "Bible order: books in the dropdown now go Genesis to Revelation.",
-        "Family friendly by default: verses with mature content are hidden. "
-        "Players 18 or older can turn on R18 mode in Settings to include them.",
-        "Useful verses only now has 365 family-friendly verses to play.",
-        "Useful verses only: turn it on in Settings to play only well-known "
-        "verses like John 3:16 and Philippians 4:13. No more genealogies!",
+        "More useful verses: Useful verses only now has 365 family-friendly "
+        "verses, picked to skip genealogies, census lists and measurements.",
+    });
+    addHeading("Earlier");
+    addItems({
+        "Useful verses only: play only well-known verses like John 3:16 and "
+        "Philippians 4:13.",
         "Poetry is here: Psalms, Proverbs, Job, Lamentations and Song of "
-        "Solomon verses are now in the game. Psalm 23 included!",
-        "Fixed verses: verses that run across two paragraphs now show the "
-        "whole verse instead of only the second half.",
-        "Psalms past chapter 99 aren't included yet, since guesses use two "
-        "chapter digits.",
-    };
-    for (const char* text : announcements) {
-        wxStaticText* item = new wxStaticText(newsCard, wxID_ANY, wxString::FromUTF8("\xE2\x80\xA2 ") + text);
-        item->Wrap(400);
-        newsLayout->Add(item, 0, wxLEFT | wxRIGHT | wxBOTTOM, 8);
-    }
+        "Solomon. Psalm 23 included! (Psalms past chapter 99 aren't included "
+        "yet, since guesses use two chapter digits.)",
+        "Fixed verses: verses that run across two paragraphs now show in full.",
+    });
 
     newsCard->SetSizer(newsLayout);
     layout->Add(newsCard, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);

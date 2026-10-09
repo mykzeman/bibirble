@@ -1,7 +1,7 @@
 #include "SettingsScreen.h"
 
+#include <wx/datectrl.h>
 #include <wx/datetime.h>
-#include <wx/textdlg.h>
 
 #include "AgeCheck.h"
 
@@ -136,23 +136,30 @@ bool SettingsScreen::GetR18Mode() const {
 }
 
 bool SettingsScreen::VerifyAge() {
-    wxTextEntryDialog dlg(this, "Enter your date of birth (YYYY-MM-DD):", "R18 mode");
+    wxDialog dlg(this, wxID_ANY, "R18 mode");
+    wxBoxSizer* layout = new wxBoxSizer(wxVERTICAL);
+    layout->Add(new wxStaticText(&dlg, wxID_ANY, "Pick your date of birth:"), 0, wxALL, 10);
+
+    wxDateTime today = wxDateTime::Today();
+    wxDatePickerCtrl* picker = new wxDatePickerCtrl(&dlg, wxID_ANY, today, wxDefaultPosition,
+                                                    wxDefaultSize, wxDP_DROPDOWN | wxDP_SHOWCENTURY);
+    picker->SetRange(wxDateTime(1, wxDateTime::Jan, 1900), today);
+    layout->Add(picker, 0, wxEXPAND | wxLEFT | wxRIGHT, 10);
+    layout->Add(dlg.CreateButtonSizer(wxOK | wxCANCEL), 0, wxEXPAND | wxALL, 10);
+    dlg.SetSizerAndFit(layout);
+    dlg.CentreOnParent();
+
     if (dlg.ShowModal() != wxID_OK) return false;
 
-    wxDateTime birth;
-    wxString::const_iterator end;
-    wxString value = dlg.GetValue().Trim(true).Trim(false);
+    wxDateTime birth = picker->GetValue();
     int age = -1;
-    if (birth.ParseISODate(value) || (birth.ParseFormat(value, "%Y-%m-%d", &end) && end == value.end())) {
-        wxDateTime today = wxDateTime::Today();
-        if (birth <= today) {
-            age = AgeOnDate(birth.GetYear(), birth.GetMonth() + 1, birth.GetDay(),
-                            today.GetYear(), today.GetMonth() + 1, today.GetDay());
-        }
+    if (birth.IsValid() && birth <= today) {
+        age = AgeOnDate(birth.GetYear(), birth.GetMonth() + 1, birth.GetDay(),
+                        today.GetYear(), today.GetMonth() + 1, today.GetDay());
     }
 
     if (age < 0) {
-        wxMessageBox("Please enter a valid date of birth, like 2000-01-31.", "R18 mode",
+        wxMessageBox("Please pick a valid date of birth.", "R18 mode",
                      wxOK | wxICON_WARNING, this);
         return false;
     }
