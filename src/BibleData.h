@@ -28,6 +28,7 @@ public:
     // Dataset indices of the curated "Useful verses only" pool (see
     // UsefulVerses.h), in dataset order so a seed maps to the same verse.
     std::vector<int> getUsefulVerseIndices() const;
+    // Books in the dataset, in traditional order (Genesis to Revelation).
     std::vector<std::string> getAllBooks() const;
     std::string getRevealedText(const Verse& verse, int stage);
     std::string getBookArea(const std::string& bookName) const;

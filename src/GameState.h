@@ -21,11 +21,14 @@ struct GuessRecord {
 // directly on BibirbleWindow.
 class GameState {
 public:
-    void Reset(GameMode newMode, int64_t newSeed, bool newHardMode, const Verse& verse);
+    void Reset(GameMode newMode, int64_t newSeed, bool newHardMode, bool newBookHints, const Verse& verse);
 
     GameMode mode = GameMode::Daily;
     int64_t seed = 0;
     bool hardMode = false;
+    // Accessibility assist: narrow later rows' book lists using book clues.
+    // Never active in hard mode.
+    bool bookHints = false;
     int currentStage = 0;
     bool gameOver = false;
     Verse targetVerse;
@@ -45,4 +48,10 @@ public:
     // Immune to the web's gray/grey emoji-key mismatch since there is only
     // ever one GuessColor.
     std::string BuildShareText() const;
+
+    // Book hints: the books from allBooks that still fit the book clues in
+    // history. Green keeps only that book, yellow keeps only its area, gray
+    // removes its whole area; books already guessed wrong are dropped.
+    std::vector<std::string> FilterBooksByClues(const std::vector<std::string>& allBooks,
+                                                const BibleData& data) const;
 };

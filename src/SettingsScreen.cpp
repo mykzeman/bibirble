@@ -49,6 +49,22 @@ void SettingsScreen::SetupUi() {
     usefulRow->Add(m_usefulOnlyCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 8);
     cardLayout->Add(usefulRow, 0, wxEXPAND);
 
+    wxBoxSizer* hintsRow = new wxBoxSizer(wxHORIZONTAL);
+    wxStaticText* hintsLabel = new wxStaticText(card, wxID_ANY,
+        "Book hints (narrows the book list using your clues; not in hard mode)");
+    hintsLabel->Wrap(300);
+    hintsRow->Add(hintsLabel, 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
+    m_bookHintsCheck = new wxCheckBox(card, wxID_ANY, "");
+    hintsRow->Add(m_bookHintsCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 8);
+    cardLayout->Add(hintsRow, 0, wxEXPAND);
+
+    m_hardModeCheck->Bind(wxEVT_CHECKBOX, [this, hintsLabel](wxCommandEvent& event) {
+        bool hard = m_hardModeCheck->GetValue();
+        m_bookHintsCheck->Enable(!hard);
+        hintsLabel->Enable(!hard);
+        event.Skip();
+    });
+
     wxBoxSizer* seedRow = new wxBoxSizer(wxHORIZONTAL);
     seedRow->Add(new wxStaticText(card, wxID_ANY, "Random seed"), 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
     m_seedInput = new wxTextCtrl(card, wxID_ANY, "", wxDefaultPosition, wxSize(150, -1));
@@ -70,7 +86,7 @@ void SettingsScreen::SetupUi() {
     cardLayout->Add(randomizeBtn, 0, wxALIGN_CENTER | wxALL, 8);
 
     wxStaticText* note = new wxStaticText(card, wxID_ANY,
-        "Seed settings, hard mode, and useful verses only apply to the next game you start. "
+        "Seed settings, hard mode, useful verses only, and book hints apply to the next game you start. "
         "You can return here anytime.");
     note->Wrap(400);
     cardLayout->Add(note, 0, wxALL, 8);
@@ -87,6 +103,10 @@ bool SettingsScreen::GetHardMode() const {
 
 bool SettingsScreen::GetUsefulOnly() const {
     return m_usefulOnlyCheck && m_usefulOnlyCheck->GetValue();
+}
+
+bool SettingsScreen::GetBookHints() const {
+    return m_bookHintsCheck && m_bookHintsCheck->GetValue() && !GetHardMode();
 }
 
 wxString SettingsScreen::GetSeedText() const {

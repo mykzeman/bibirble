@@ -6,6 +6,14 @@
 #include <wx/textdlg.h>
 #include <algorithm>
 
+namespace {
+wxArrayString ToArrayString(const std::vector<std::string>& items) {
+    wxArrayString out;
+    for (const auto& item : items) out.Add(item);
+    return out;
+}
+}  // namespace
+
 wxBEGIN_EVENT_TABLE(BibirbleWindow, wxFrame)
 wxEND_EVENT_TABLE()
 
@@ -93,12 +101,8 @@ void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
     scrollArea->SetSizer(m_rowsSizer);
 
     // 7 Game Rows
-    wxArrayString books;
-    std::vector<std::string> bookList = m_data.getAllBooks();
-    std::sort(bookList.begin(), bookList.end());
-    for (const auto& book : bookList) {
-        books.Add(book);
-    }
+    m_allBooks = m_data.getAllBooks();
+    wxArrayString books = ToArrayString(m_allBooks);
 
     for (int i = 0; i < 7; ++i) {
         GameRow* row = new GameRow(scrollArea, books);
@@ -321,7 +325,7 @@ void BibirbleWindow::StartNewGame(GameMode mode, bool hardMode, const wxString& 
         idx = PickIndexFromSeed(seed, m_data.getVerseCount());
     }
     Verse verse = m_data.getVerseAtIndex(idx);
-    m_state.Reset(mode, seed, hardMode, verse);
+    m_state.Reset(mode, seed, hardMode, m_settingsScreen->GetBookHints(), verse);
 
     if (mode == GameMode::Random) {
         wxString seedStr = wxString::Format("%lld", (long long)seed);
@@ -339,8 +343,10 @@ void BibirbleWindow::StartNewGame(GameMode mode, bool hardMode, const wxString& 
 
 
 void BibirbleWindow::ResetGameUi() {
+    wxArrayString books = ToArrayString(m_allBooks);
     for (auto* row : m_rows) {
         row->Reset();
+        row->SetBooks(books);
     }
     if (!m_rows.empty()) {
         m_rows[0]->setDisabled(false);
@@ -476,6 +482,12 @@ void BibirbleWindow::OnSubmit(wxCommandEvent& event) {
         m_gamePanel->Layout();
     } else {
         m_state.currentStage = result;
+        if (m_state.bookHints) {
+            wxArrayString hinted = ToArrayString(m_state.FilterBooksByClues(m_allBooks, m_data));
+            for (int i = result; i < (int)m_rows.size(); ++i) {
+                m_rows[i]->SetBooks(hinted);
+            }
+        }
         UpdateRevealText();
     }
 }
