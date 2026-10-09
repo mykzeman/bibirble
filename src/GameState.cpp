@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <set>
 #include <sstream>
 
 namespace {
@@ -15,10 +16,11 @@ const char* EmojiFor(GuessColor color) {
 }
 }  // namespace
 
-void GameState::Reset(GameMode newMode, int64_t newSeed, bool newHardMode, const Verse& verse) {
+void GameState::Reset(GameMode newMode, int64_t newSeed, bool newHardMode, bool newBookHints, const Verse& verse) {
     mode = newMode;
     seed = newSeed;
     hardMode = newHardMode;
+    bookHints = newBookHints && !newHardMode;
     currentStage = 0;
     gameOver = false;
     targetVerse = verse;
@@ -91,4 +93,31 @@ std::string GameState::BuildShareText() const {
     }
 
     return out.str();
+}
+
+std::vector<std::string> GameState::FilterBooksByClues(const std::vector<std::string>& allBooks,
+                                                       const BibleData& data) const {
+    std::set<std::string> wrongBooks;
+    std::set<std::string> grayAreas;
+    std::string yellowArea;
+    for (const auto& record : history) {
+        if (record.bookColor == GuessColor::Green) {
+            return {record.bookGuess};
+        }
+        wrongBooks.insert(record.bookGuess);
+        if (record.bookColor == GuessColor::Yellow && yellowArea.empty()) {
+            yellowArea = data.getBookArea(record.bookGuess);
+        } else if (record.bookColor == GuessColor::Gray) {
+            grayAreas.insert(data.getBookArea(record.bookGuess));
+        }
+    }
+
+    std::vector<std::string> books;
+    for (const auto& book : allBooks) {
+        if (wrongBooks.count(book)) continue;
+        std::string area = data.getBookArea(book);
+        if (!yellowArea.empty() ? area != yellowArea : grayAreas.count(area) > 0) continue;
+        books.push_back(book);
+    }
+    return books;
 }

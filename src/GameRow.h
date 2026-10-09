@@ -18,6 +18,9 @@ public:
     std::vector<wxTextCtrl*> GetDigitCtrls();
 
     void setBookColor(GuessColor color);
+    // Replaces the book list. A single remaining book is selected for the
+    // player (used by book hints).
+    void SetBooks(const wxArrayString& books);
     void setDigitColors(const std::vector<GuessColor>& colors);
     void lockSubmitted();
 

@@ -126,6 +126,17 @@ void GameRow::setBookColor(GuessColor color) {
     ApplyGuessColor(m_bookSelect, color);
 }
 
+void GameRow::SetBooks(const wxArrayString& books) {
+    wxString current = m_bookSelect->GetStringSelection();
+    m_bookSelect->Set(books);
+    if (books.size() == 1) {
+        m_bookSelect->SetSelection(0);
+    } else if (!current.IsEmpty()) {
+        m_bookSelect->SetStringSelection(current);
+    }
+    m_lockedBookSelection = m_bookSelect->GetStringSelection();
+}
+
 void GameRow::setDigitColors(const std::vector<GuessColor>& colors) {
     std::vector<wxTextCtrl*> edits = {m_c1, m_c2, m_v1, m_v2};
 

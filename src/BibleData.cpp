@@ -79,6 +79,7 @@ bool BibleData::loadData(const std::string& filePath) {
             v.chapter = obj.value("chapter", 0);
             v.verse = obj.value("verse", 0);
             v.text = obj.value("text", "");
+            v.mature = obj.value("mature", false);
             m_verses.push_back(v);
         }
         return true;
@@ -114,6 +115,22 @@ std::vector<int> BibleData::getUsefulVerseIndices() const {
     return indices;
 }
 
+std::vector<int> BibleData::getCandidateIndices(bool usefulOnly, bool allowMature) const {
+    std::vector<int> pool;
+    if (usefulOnly) pool = getUsefulVerseIndices();
+    if (pool.empty()) {
+        pool.resize(m_verses.size());
+        for (int i = 0; i < (int)m_verses.size(); ++i) pool[i] = i;
+    }
+    if (allowMature) return pool;
+
+    std::vector<int> candidates;
+    for (int i : pool) {
+        if (!m_verses[i].mature) candidates.push_back(i);
+    }
+    return candidates;
+}
+
 bool BibleData::verseExists(const std::string& book, int chapter, int verse) const {
     for (const auto& v : m_verses) {
         if (v.book == book && v.chapter == chapter && v.verse == verse) {
@@ -123,6 +140,32 @@ bool BibleData::verseExists(const std::string& book, int chapter, int verse) con
     return false;
 }
 
+namespace {
+// Traditional (Protestant canon) book order. Keep in sync with
+// Bibirble-web's scripts/books.js.
+const std::vector<std::string>& BookOrder() {
+    static const std::vector<std::string> ORDER = {
+        "genesis", "exodus", "leviticus", "numbers", "deuteronomy",
+        "joshua", "judges", "ruth", "1samuel", "2samuel", "1kings", "2kings",
+        "1chronicles", "2chronicles", "ezra", "nehemiah", "esther", "job",
+        "psalms", "proverbs", "ecclesiastes", "songofsolomon", "isaiah",
+        "jeremiah", "lamentations", "ezekiel", "daniel", "hosea", "joel", "amos",
+        "obadiah", "jonah", "micah", "nahum", "habakkuk", "zephaniah", "haggai",
+        "zechariah", "malachi",
+        "matthew", "mark", "luke", "john", "acts", "romans", "1corinthians",
+        "2corinthians", "galatians", "ephesians", "philippians", "colossians",
+        "1thessalonians", "2thessalonians", "1timothy", "2timothy", "titus",
+        "philemon", "hebrews", "james", "1peter", "2peter", "1john", "2john",
+        "3john", "jude", "revelation"};
+    return ORDER;
+}
+
+size_t BookRank(const std::string& book) {
+    const auto& order = BookOrder();
+    return std::find(order.begin(), order.end(), book) - order.begin();
+}
+}  // namespace
+
 std::vector<std::string> BibleData::getAllBooks() const {
     std::vector<std::string> books;
     for (const auto& v : m_verses) {
@@ -130,6 +173,10 @@ std::vector<std::string> BibleData::getAllBooks() const {
             books.push_back(v.book);
         }
     }
+    std::stable_sort(books.begin(), books.end(), [](const std::string& a, const std::string& b) {
+        size_t ra = BookRank(a), rb = BookRank(b);
+        return ra != rb ? ra < rb : a < b;
+    });
     return books;
 }
 
