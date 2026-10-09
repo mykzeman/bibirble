@@ -1,8 +1,10 @@
 """Automatically choose the verse pool for "Useful verses only" mode.
 
-A verse counts as useful when it has few commas and few numbers: lots of
-commas usually means a list (genealogies, names, places) and lots of numbers
-means a census, measurements, or ages. Useful verses are then ranked by book
+A verse counts as useful when it has few commas, few numbers, and no
+genealogy-style phrases: lots of commas usually means a list (genealogies,
+names, places), lots of numbers means a census, measurements, or ages, and
+phrases like "became the father of" or "by their families" mark genealogies,
+census lists, and building or ritual specs. Useful verses are then ranked by book
 and chapter, and the pool keeps the hand-picked verses in
 tools/useful_must_include.txt plus the best-ranked useful verses until it
 reaches --count. This only affects Useful mode; Daily and Random games
@@ -74,8 +76,32 @@ NUMBER_WORDS = {
     "thousands", "hundreds", "first", "second", "third", "fourth", "fifth",
     "sixth", "seventh", "eighth", "ninth", "tenth", "twelfth",
 }
-MAX_COMMAS = 4               # more than this reads like a list
-MAX_COMMAS_PER_10_WORDS = 1.5
+# Phrases common in genealogies, census lists, land allotments, and
+# building/ritual specs. Each match counts as one list phrase.
+LIST_PHRASES = [
+    r"\bbecame the father of\b", r"\bbegot\b", r"\bfathered\b",
+    r"\bsons? (also )?of\b(?! (man|god|the father|the most high)\b)",
+    r"\bdaughters? of\b", r"\bhis firstborn\b", r"\bthe firstborn of\b",
+    r"\bbrothers? of\b", r"\bthe family of\b", r"\bwere born\b",
+    r"\bbore (him )?a son\b", r"\byears old\b", r"\bpasture lands\b",
+    r"\bsin offering\b", r"\bmale goat\b", r"\bgatekeepers\b",
+    r"\bby their families\b", r"\btheir families\b", r"\bfamilies of\b",
+    r"\bfathers.? houses?\b", r"\bheads of\b", r"\bgenerations of\b",
+    r"\bgenealog", r"\btribe of\b", r"\bcounted\b", r"\bnumbered\b",
+    r"\bby their names\b", r"\baccording to their\b", r"\blived \w+ years\b",
+    r"\bthe border\b", r"\bborder of\b", r"\bwith its villages\b",
+    r"\bwith their villages\b", r"\bcubits?\b", r"\bshekels?\b",
+    r"\bephahs?\b", r"\bsockets?\b", r"\bboards?\b", r"\bcurtains?\b",
+    r"\bdrink offering\b", r"\bwave offering\b", r"\bmeal offering\b",
+    r"\bkid of the goats\b", r"\byear old\b",
+]
+# Matched without ignoring case: "the father of X" is a genealogy, but
+# "the Father of lights" (James 1:17) is God.
+CASE_SENSITIVE_LIST_PHRASES = [r"\b[Tt]he father of\b"]
+MAX_LIST_PHRASES = 0         # any genealogy/list phrase makes a verse not useful
+LIST_PHRASE_PENALTY = 1.0
+MAX_COMMAS = 6               # more than this reads like a list
+MAX_COMMAS_PER_10_WORDS = 2.5
 MAX_NUMBERS = 1              # more than this reads like a census or measurement
 COMMA_PENALTY = 0.3          # ranking tiebreak among useful verses
 NUMBER_PENALTY = 1.0
@@ -108,7 +134,16 @@ def count_numbers(text):
     return sum(1 for w in words if w.isdigit() or w in NUMBER_WORDS)
 
 
+def count_list_phrases(text):
+    lower = text.lower()
+    count = sum(len(re.findall(pat, lower)) for pat in LIST_PHRASES)
+    count += sum(len(re.findall(pat, text)) for pat in CASE_SENSITIVE_LIST_PHRASES)
+    return count
+
+
 def is_useful(v):
+    if count_list_phrases(v["text"]) > MAX_LIST_PHRASES:
+        return False
     commas = count_commas(v["text"])
     numbers = count_numbers(v["text"])
     words = len(v["text"].split())
@@ -126,6 +161,9 @@ def score_verse(v, explain=False):
         parts.append(("famous chapter", FAMOUS_CHAPTER_BONUS))
     parts.append((f"{commas} commas", -commas * COMMA_PENALTY))
     parts.append((f"{numbers} numbers", -numbers * NUMBER_PENALTY))
+    phrases = count_list_phrases(v["text"])
+    if phrases:
+        parts.append((f"{phrases} list phrases", -phrases * LIST_PHRASE_PENALTY))
     total = sum(p for _, p in parts)
     if explain:
         return total, parts
