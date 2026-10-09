@@ -87,7 +87,7 @@ void StartScreen::SetupUi() {
         "the next book list only shows books that still fit your clues. Not "
         "available in hard mode.",
         "Bible order: books in the dropdown now go Genesis to Revelation.",
-        "Useful verses only now has 365 verses to play.",
+        "Useful verses only now has 365 family-friendly verses to play.",
         "Useful verses only: turn it on in Settings to play only well-known "
         "verses like John 3:16 and Philippians 4:13. No more genealogies!",
         "Poetry is here: Psalms, Proverbs, Job, Lamentations and Song of "

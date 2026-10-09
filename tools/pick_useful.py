@@ -4,7 +4,8 @@ A verse counts as useful when it has few commas, few numbers, and no
 genealogy-style phrases: lots of commas usually means a list (genealogies,
 names, places), lots of numbers means a census, measurements, or ages, and
 phrases like "became the father of" or "by their families" mark genealogies,
-census lists, and building or ritual specs. Useful verses are then ranked by book
+census lists, and building or ritual specs. Verses with mature (R18) content
+are never picked, even from the hand-picked list. Useful verses are then ranked by book
 and chapter, and the pool keeps the hand-picked verses in
 tools/useful_must_include.txt plus the best-ranked useful verses until it
 reaches --count. This only affects Useful mode; Daily and Random games
@@ -100,6 +101,27 @@ LIST_PHRASES = [
 CASE_SENSITIVE_LIST_PHRASES = [r"\b[Tt]he father of\b"]
 MAX_LIST_PHRASES = 0         # any genealogy/list phrase makes a verse not useful
 LIST_PHRASE_PENALTY = 1.0
+# Mature (R18) content: sexual content, explicit body references, and
+# graphic violence. These verses never go in the pool, hand-picked or not,
+# so Useful mode stays family friendly. Plain "naked" and "womb" are left
+# out on purpose (Job 1:21 is about birth).
+MATURE_PATTERNS = [
+    r"\bbreasts?\b", r"\bnakedness\b", r"\bprostitut", r"\bharlot",
+    r"\bwhore", r"\badulter(ess|esses|er|ers|ous)\b", r"\blust", r"\bsexual",
+    # "slept with his fathers" means died; "come in to him" (Revelation 3:20)
+    # is Jesus at the door.
+    r"\b(lie|lay|lain|lying|slept|sleep|sleeps) with\b(?! (his|their|your|my|our) fathers)",
+    r"\b(go|goes|went|came|come|comes) in to (her|his wife|your wife|my wife|his neighbor.s wife|a prostitute)\b",
+    r"\b(knew|known) her\b", r"\bcircumcis", r"\buncircumcis",
+    r"\bforeskins?\b", r"\bconcubines?\b", r"\brap(e|ed)\b", r"\bravish",
+    r"\beunuchs?\b", r"\bgenitals?\b", r"\bseduc", r"\bsodomite",
+    r"\bdung\b", r"\bexcrement\b", r"\burine\b",
+    r"\bflesh of (their|your|his) (sons|daughters)\b", r"\bripped up\b",
+    r"\bdash(ed|es)? (in pieces|to pieces|against)\b",
+]
+# Books whose verses are only used when hand-picked. Song of Solomon is
+# mostly romantic poetry between a husband and wife.
+MATURE_BOOKS = {"songofsolomon"}
 MAX_COMMAS = 6               # more than this reads like a list
 MAX_COMMAS_PER_10_WORDS = 2.5
 MAX_NUMBERS = 1              # more than this reads like a census or measurement
@@ -141,7 +163,14 @@ def count_list_phrases(text):
     return count
 
 
+def is_mature(v):
+    lower = v["text"].lower()
+    return any(re.search(pat, lower) for pat in MATURE_PATTERNS)
+
+
 def is_useful(v):
+    if is_mature(v) or v["book"] in MATURE_BOOKS:
+        return False
     if count_list_phrases(v["text"]) > MAX_LIST_PHRASES:
         return False
     commas = count_commas(v["text"])
@@ -174,12 +203,14 @@ def pick(verses, must_include, count):
     by_ref = {(v["book"], v["chapter"], v["verse"]): v for v in verses}
     chosen = []
     missing = []
+    mature = []
     for ref in must_include:
-        if ref in by_ref:
-            if ref not in chosen:
-                chosen.append(ref)
-        else:
+        if ref not in by_ref:
             missing.append(ref)
+        elif is_mature(by_ref[ref]):
+            mature.append(ref)
+        elif ref not in chosen:
+            chosen.append(ref)
 
     per_chapter = {}
     per_book = {}
@@ -211,7 +242,7 @@ def pick(verses, must_include, count):
     # Dataset order, so both games map a seed to the same verse.
     order = {(v["book"], v["chapter"], v["verse"]): i for i, v in enumerate(verses)}
     chosen.sort(key=order.get)
-    return chosen, missing
+    return chosen, missing, mature
 
 
 HEADER_COMMENT = (
@@ -262,15 +293,19 @@ def main():
         total, parts = score_verse(v, explain=True)
         print(v["text"])
         print(f"  useful: {'yes' if is_useful(v) else 'no'}")
+        if is_mature(v) or v["book"] in MATURE_BOOKS:
+            print("  mature: yes (never picked)")
         for name, pts in parts:
             print(f"  {name:15} {pts:+.2f}")
         print(f"  {'total':15} {total:+.2f}")
         return
 
     must_include = load_refs(args.must_include)
-    chosen, missing = pick(verses, must_include, args.count)
+    chosen, missing, mature = pick(verses, must_include, args.count)
     for ref in missing:
         print(f"warning: {ref[0]} {ref[1]}:{ref[2]} is not in the dataset, skipped")
+    for ref in mature:
+        print(f"warning: {ref[0]} {ref[1]}:{ref[2]} has mature content, skipped")
 
     must = set(must_include)
     by_ref = {(v["book"], v["chapter"], v["verse"]): v for v in verses}
