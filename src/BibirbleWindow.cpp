@@ -319,6 +319,8 @@ void BibirbleWindow::StartNewGame(GameMode mode, bool hardMode, const wxString& 
     std::vector<int> candidates = m_data.getCandidateIndices(
         m_settingsScreen->GetUsefulOnly(), m_settingsScreen->GetR18Mode());
     int idx = candidates[PickIndexFromSeed(seed, (int)candidates.size())];
+    // Only offer books that can be the answer in this game's verse pool.
+    m_allBooks = m_data.getBooks(candidates);
     Verse verse = m_data.getVerseAtIndex(idx);
     m_state.Reset(mode, seed, hardMode, m_settingsScreen->GetBookHints(), verse);
 

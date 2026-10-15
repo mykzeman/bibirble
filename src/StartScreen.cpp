@@ -100,6 +100,10 @@ void StartScreen::SetupUi() {
 
     addHeading("New in this update");
     addItems({
+        "1200 useful verses: Useful verses only now has 1200 verses, up from "
+        "365, ranked so verses about God, faith and life come first.",
+        "Book list: the book dropdown only shows books that have a verse in "
+        "the pool you're playing (so Useful mode skips books like Numbers).",
         "R18 mode: verses with mature content are now hidden by default. "
         "Players 18 or older can turn on R18 mode in Settings after picking "
         "their date of birth on a calendar.",
@@ -107,11 +111,11 @@ void StartScreen::SetupUi() {
         "the next book list only shows books that still fit your clues. Not "
         "available in hard mode.",
         "Bible order: books in the dropdown now go Genesis to Revelation.",
-        "More useful verses: Useful verses only now has 365 family-friendly "
-        "verses, picked to skip genealogies, census lists and measurements.",
     });
     addHeading("Earlier");
     addItems({
+        "More useful verses: Useful verses only now has 365 family-friendly "
+        "verses, picked to skip genealogies, census lists and measurements.",
         "Useful verses only: play only well-known verses like John 3:16 and "
         "Philippians 4:13.",
         "Poetry is here: Psalms, Proverbs, Job, Lamentations and Song of "

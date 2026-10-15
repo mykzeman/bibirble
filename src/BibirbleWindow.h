@@ -64,7 +64,7 @@ private:
     wxPanel* m_rowsPanel;
     wxBoxSizer* m_rowsSizer;
     wxVector<GameRow*> m_rows;
-    std::vector<std::string> m_allBooks;  // Traditional order, for book hints
+    std::vector<std::string> m_allBooks;  // Books in the current game's pool, traditional order
     wxButton* m_submitBtn;
 
     wxWindow* m_focusedInput;

@@ -34,6 +34,9 @@ public:
     std::vector<int> getCandidateIndices(bool usefulOnly, bool allowMature) const;
     // Books in the dataset, in traditional order (Genesis to Revelation).
     std::vector<std::string> getAllBooks() const;
+    // Books that have at least one of the given verses (e.g. a game's
+    // candidate pool), in traditional order.
+    std::vector<std::string> getBooks(const std::vector<int>& indices) const;
     std::string getRevealedText(const Verse& verse, int stage);
     std::string getBookArea(const std::string& bookName) const;
     bool isLoaded() const { return !m_verses.empty(); }

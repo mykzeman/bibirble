@@ -167,10 +167,18 @@ size_t BookRank(const std::string& book) {
 }  // namespace
 
 std::vector<std::string> BibleData::getAllBooks() const {
+    std::vector<int> all(m_verses.size());
+    for (int i = 0; i < (int)m_verses.size(); ++i) all[i] = i;
+    return getBooks(all);
+}
+
+std::vector<std::string> BibleData::getBooks(const std::vector<int>& indices) const {
     std::vector<std::string> books;
-    for (const auto& v : m_verses) {
-        if (std::find(books.begin(), books.end(), v.book) == books.end()) {
-            books.push_back(v.book);
+    for (int i : indices) {
+        if (i < 0 || i >= (int)m_verses.size()) continue;
+        const std::string& book = m_verses[i].book;
+        if (std::find(books.begin(), books.end(), book) == books.end()) {
+            books.push_back(book);
         }
     }
     std::stable_sort(books.begin(), books.end(), [](const std::string& a, const std::string& b) {
