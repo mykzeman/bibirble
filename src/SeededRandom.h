@@ -21,7 +21,15 @@ private:
     uint32_t m_value;
 };
 
-// JS: pickIndexFromSeed(seed, length) -- exactly one RNG call
+// JS: mixSeed(seed) -- murmur3 finalizer so nearby seeds (consecutive days,
+// seeds 1000 and 1001) pick far-apart verses. Never returns 0.
+uint32_t MixSeed(int64_t seed);
+
+// JS: seed text in initGame -- 1-9 digit numbers are used as-is, other text
+// is hashed with HashStringToInt.
+int64_t SeedFromText(const std::string& text);
+
+// JS: pickIndexFromSeed(seed, length) -- exactly one RNG call on MixSeed(seed)
 int PickIndexFromSeed(int64_t seed, int length);
 
 // JS: new Date().toISOString().slice(0, 10), computed in UTC

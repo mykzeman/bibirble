@@ -100,6 +100,9 @@ void StartScreen::SetupUi() {
 
     addHeading("New in this update");
     addItems({
+        "Daily fix: the daily verse now jumps all over the Bible instead of "
+        "moving one or two verses a day. Seeds typed as numbers now match the "
+        "web version.",
         "1200 useful verses: Useful verses only now has 1200 verses, up from "
         "365, ranked so verses about God, faith and life come first.",
         "Book list: the book dropdown only shows books that have a verse in "

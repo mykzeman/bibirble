@@ -311,7 +311,7 @@ void BibirbleWindow::StartNewGame(GameMode mode, bool hardMode, const wxString& 
     if (mode == GameMode::Daily) {
         seed = GetDailySeed();
     } else if (!seedText.IsEmpty()) {
-        seed = HashStringToInt(std::string(seedText.mb_str()));
+        seed = SeedFromText(std::string(wxString(seedText).Trim().Trim(false).mb_str()));
     } else {
         seed = GenerateRandomSeed();
     }
