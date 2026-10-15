@@ -65,8 +65,42 @@ FAMOUS_CHAPTERS = {
     ("philippians", 4), ("colossians", 3), ("hebrews", 11),
     ("hebrews", 12), ("james", 1), ("1peter", 5), ("1john", 1),
     ("1john", 4), ("revelation", 21), ("revelation", 22),
+    ("psalms", 8), ("psalms", 16), ("psalms", 32), ("psalms", 62),
+    ("psalms", 63), ("psalms", 84), ("psalms", 90), ("psalms", 95),
+    ("psalms", 100), ("psalms", 103), ("psalms", 121), ("psalms", 139),
+    ("psalms", 145), ("proverbs", 4), ("proverbs", 16), ("isaiah", 26),
+    ("isaiah", 41), ("isaiah", 43), ("matthew", 11), ("matthew", 22),
+    ("mark", 10), ("mark", 16), ("luke", 6), ("luke", 10), ("john", 6),
+    ("john", 8), ("john", 16), ("john", 17), ("john", 20), ("acts", 1),
+    ("acts", 2), ("romans", 10), ("1corinthians", 10), ("1corinthians", 12),
+    ("2corinthians", 4), ("2corinthians", 12), ("galatians", 2),
+    ("ephesians", 4), ("ephesians", 5), ("philippians", 1),
+    ("philippians", 3), ("colossians", 1), ("1thessalonians", 5),
+    ("2timothy", 3), ("hebrews", 4), ("hebrews", 13), ("1peter", 1),
+    ("1peter", 2), ("1john", 3), ("revelation", 3),
 }
 FAMOUS_CHAPTER_BONUS = 2.0
+
+# --- Theme: words that make a verse worth remembering. ---
+# With a pool of 1000+ verses the book and chapter alone let in plain
+# narrative ("So he drove them from the judgment seat"), so verses about God,
+# faith, and how to live rank above travel notes and name lists.
+THEME_WORDS = {
+    "god", "lord", "jesus", "christ", "spirit", "father", "love", "loves",
+    "loved", "faith", "grace", "hope", "peace", "joy", "mercy", "truth",
+    "life", "light", "heart", "hearts", "soul", "trust", "salvation", "saved",
+    "save", "righteous", "righteousness", "wisdom", "wise", "strength",
+    "strong", "praise", "glory", "holy", "forgive", "forgiven", "sin",
+    "sins", "kingdom", "eternal", "word", "prayer", "pray", "good",
+    "fear", "kindness", "faithful", "blessed", "bless", "comfort",
+}
+THEME_BONUS = 0.4            # per distinct theme word
+MAX_THEME_BONUS = 1.6
+# Proper names (capitalized words not starting a sentence) mostly mean
+# narrative or travel notes; names of God don't count.
+DIVINE_NAMES = {"God", "Lord", "LORD", "Yahweh", "Jesus", "Christ", "Spirit",
+                "Holy", "Father", "Son", "Most", "High", "Almighty", "I"}
+NAME_PENALTY = 0.5
 
 # --- Content: commas and numbers decide whether a verse is useful. ---
 # Numbers are mostly spelled out in the World English Bible ("two hundred
@@ -114,7 +148,7 @@ MAX_COMMAS_PER_10_WORDS = 2.5
 MAX_NUMBERS = 1              # more than this reads like a census or measurement
 COMMA_PENALTY = 0.3          # ranking tiebreak among useful verses
 NUMBER_PENALTY = 1.0
-MAX_PER_CHAPTER = 3         # keep the pool varied
+MAX_PER_CHAPTER = 4         # keep the pool varied
 MAX_BOOK_SHARE = 0.08       # no book over 8% of the pool
 
 
@@ -150,6 +184,21 @@ def count_list_phrases(text):
     return count
 
 
+def count_theme_words(text):
+    return len(set(re.findall(r"[a-z]+", text.lower())) & THEME_WORDS)
+
+
+def count_names(text):
+    words = re.findall(r"\S+", text)
+    names = 0
+    for prev, word in zip([""] + words, words):
+        bare = re.sub(r"[^A-Za-z]", "", word)
+        starts_sentence = not prev or prev[-1] in ".!?:;“\"" or word[0] in "“\"‘"
+        if bare[:1].isupper() and not starts_sentence and bare not in DIVINE_NAMES:
+            names += 1
+    return names
+
+
 def is_mature(v):
     """R18 verses plus family-unfriendly ones: never in the Useful pool."""
     lower = v["text"].lower()
@@ -177,6 +226,12 @@ def score_verse(v, explain=False):
     parts = [("book", BOOK_WEIGHTS.get(v["book"], 0.0))]
     if (v["book"], v["chapter"]) in FAMOUS_CHAPTERS:
         parts.append(("famous chapter", FAMOUS_CHAPTER_BONUS))
+    themes = count_theme_words(v["text"])
+    if themes:
+        parts.append((f"{themes} theme words", min(themes * THEME_BONUS, MAX_THEME_BONUS)))
+    names = count_names(v["text"])
+    if names:
+        parts.append((f"{names} names", -names * NAME_PENALTY))
     parts.append((f"{commas} commas", -commas * COMMA_PENALTY))
     parts.append((f"{numbers} numbers", -numbers * NUMBER_PENALTY))
     phrases = count_list_phrases(v["text"])
@@ -263,7 +318,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--data", default="bible_sections.json")
     parser.add_argument("--must-include", default="tools/useful_must_include.txt")
-    parser.add_argument("--count", type=int, default=365, help="pool size (default: 365)")
+    parser.add_argument("--count", type=int, default=1200, help="pool size (default: 1200)")
     parser.add_argument("--header", default="src/UsefulVerses.h")
     parser.add_argument("--js", default="../Bibirble-web/scripts/useful.js",
                         help="web output; skipped if its folder doesn't exist")
