@@ -32,8 +32,9 @@ int64_t SeedFromText(const std::string& text);
 // JS: pickIndexFromSeed(seed, length) -- exactly one RNG call on MixSeed(seed)
 int PickIndexFromSeed(int64_t seed, int length);
 
-// JS: new Date().toISOString().slice(0, 10), computed in UTC
-std::string GetTodayUtcDateString();
+// JS: getLocalDateKey() -- YYYY-MM-DD in the player's local time zone, so
+// the Daily resets at their midnight instead of UTC midnight.
+std::string GetTodayLocalDateString();
 
 // JS: getDailySeed() -- hashStringToInt(today)
 int64_t GetDailySeed();

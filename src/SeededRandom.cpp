@@ -50,22 +50,22 @@ int PickIndexFromSeed(int64_t seed, int length) {
     return static_cast<int>(std::floor(random.Next() * length));
 }
 
-std::string GetTodayUtcDateString() {
+std::string GetTodayLocalDateString() {
     std::time_t t = std::time(nullptr);
-    std::tm utcTm{};
+    std::tm localTm{};
 #if defined(_WIN32)
-    gmtime_s(&utcTm, &t);
+    localtime_s(&localTm, &t);
 #else
-    gmtime_r(&t, &utcTm);
+    localtime_r(&t, &localTm);
 #endif
     char buf[40];
     std::snprintf(buf, sizeof(buf), "%04d-%02d-%02d",
-                  utcTm.tm_year + 1900, utcTm.tm_mon + 1, utcTm.tm_mday);
+                  localTm.tm_year + 1900, localTm.tm_mon + 1, localTm.tm_mday);
     return std::string(buf);
 }
 
 int64_t GetDailySeed() {
-    return HashStringToInt(GetTodayUtcDateString());
+    return HashStringToInt(GetTodayLocalDateString());
 }
 
 int64_t GenerateRandomSeed() {

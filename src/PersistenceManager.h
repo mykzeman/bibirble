@@ -14,7 +14,7 @@ public:
     void Save() const;
 
     std::string GetLastPlayedDaily() const { return m_lastPlayedDaily; }
-    void SetLastPlayedDaily(const std::string& utcDateString);
+    void SetLastPlayedDaily(const std::string& dateString);
 
     bool HasLastSeed() const { return m_hasLastSeed; }
     int64_t GetLastSeed() const { return m_lastSeed; }

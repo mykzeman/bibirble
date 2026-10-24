@@ -160,7 +160,7 @@ python3 tools/sort.py
 
 ## Features
 
-- **Daily mode**: a seeded puzzle that's the same for everyone on a given UTC day, and matches the web
+- **Daily mode**: a seeded puzzle that's the same for everyone on a given calendar day (it resets at your local midnight), and matches the web
   version's verse exactly (bit-for-bit port of its hash/seed algorithm).
 - **Random mode**: pick any seed (or generate one) for a shareable, replayable puzzle.
 - **Hard Mode**: guesses must respect previously confirmed book/area and revealed digits, and must
