@@ -3,15 +3,15 @@
 #include <ctime>
 
 namespace {
-wxString FormatCountdownToNextUtcMidnight() {
+wxString FormatCountdownToNextLocalMidnight() {
     std::time_t t = std::time(nullptr);
-    std::tm utcTm{};
+    std::tm localTm{};
 #if defined(_WIN32)
-    gmtime_s(&utcTm, &t);
+    localtime_s(&localTm, &t);
 #else
-    gmtime_r(&t, &utcTm);
+    localtime_r(&t, &localTm);
 #endif
-    int secondsIntoDay = utcTm.tm_hour * 3600 + utcTm.tm_min * 60 + utcTm.tm_sec;
+    int secondsIntoDay = localTm.tm_hour * 3600 + localTm.tm_min * 60 + localTm.tm_sec;
     int secondsLeft = 24 * 3600 - secondsIntoDay;
     if (secondsLeft < 0) secondsLeft = 0;
 
@@ -29,7 +29,7 @@ StartScreen::StartScreen(wxWindow* parent) : wxScrolledWindow(parent), m_timer(t
     Bind(wxEVT_TIMER, &StartScreen::UpdateCountdown, this, m_timer.GetId());
     m_timer.Start(1000);
     if (m_countdownText) {
-        m_countdownText->SetLabel(FormatCountdownToNextUtcMidnight());
+        m_countdownText->SetLabel(FormatCountdownToNextLocalMidnight());
     }
 }
 
@@ -169,6 +169,6 @@ void StartScreen::SetupUi() {
 
 void StartScreen::UpdateCountdown(wxTimerEvent& event) {
     if (m_countdownText) {
-        m_countdownText->SetLabel(FormatCountdownToNextUtcMidnight());
+        m_countdownText->SetLabel(FormatCountdownToNextLocalMidnight());
     }
 }
