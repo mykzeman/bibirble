@@ -1,5 +1,7 @@
 #include "GameRow.h"
 
+#include "BibleData.h"
+
 GameRow::GameRow(wxWindow* parent, const wxArrayString& books)
     : wxPanel(parent) {
     SetupUi(books);
@@ -83,7 +85,9 @@ bool GameRow::isComplete() const {
 }
 
 std::string GameRow::getBook() const {
-    return std::string(m_bookSelect->GetStringSelection().mb_str());
+    // The dropdown shows tidy names ("1 Samuel"); the game uses dataset keys.
+    return BibleData::BookKeyFromDisplayName(
+        std::string(m_bookSelect->GetStringSelection().utf8_str()));
 }
 
 std::vector<std::string> GameRow::getDigits() const {

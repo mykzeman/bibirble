@@ -34,6 +34,8 @@ set(SOURCES
     src/SeededRandom.cpp
     src/SeededRandom.h
     src/UsefulVerses.h
+    src/ChristmasVerses.h
+    src/Theme.h
     src/AgeCheck.h
     src/GameState.cpp
     src/GameState.h

@@ -21,7 +21,8 @@ struct GuessRecord {
 // directly on BibirbleWindow.
 class GameState {
 public:
-    void Reset(GameMode newMode, int64_t newSeed, bool newHardMode, bool newBookHints, const Verse& verse);
+    void Reset(GameMode newMode, int64_t newSeed, bool newHardMode, bool newBookHints, const Verse& verse,
+               bool newChristmas = false);
 
     GameMode mode = GameMode::Daily;
     int64_t seed = 0;
@@ -29,6 +30,8 @@ public:
     // Accessibility assist: narrow later rows' book lists using book clues.
     // Never active in hard mode.
     bool bookHints = false;
+    // A Christmas verse game (December). Share text gets a tree.
+    bool christmas = false;
     int currentStage = 0;
     bool gameOver = false;
     Verse targetVerse;

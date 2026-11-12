@@ -29,6 +29,10 @@ public:
     // Dataset indices of the curated "Useful verses only" pool (see
     // UsefulVerses.h), in dataset order so a seed maps to the same verse.
     std::vector<int> getUsefulVerseIndices() const;
+    // Dataset indices of the Christmas verses (see ChristmasVerses.h), in
+    // that list's order (not dataset order) so the December Daily matches
+    // the web version.
+    std::vector<int> getChristmasVerseIndices() const;
     // Verses a new game can pick from: the Useful pool (or every verse),
     // minus mature (R18) verses unless allowMature is set.
     std::vector<int> getCandidateIndices(bool usefulOnly, bool allowMature) const;
@@ -39,6 +43,11 @@ public:
     std::vector<std::string> getBooks(const std::vector<int>& indices) const;
     std::string getRevealedText(const Verse& verse, int stage);
     std::string getBookArea(const std::string& bookName) const;
+    // Tidy name to show players ("1samuel" -> "1 Samuel", "songofsolomon" ->
+    // "Song of Solomon"). Game logic keeps using the dataset keys.
+    static std::string BookDisplayName(const std::string& book);
+    // The dataset key for a tidy name (the reverse of BookDisplayName).
+    static std::string BookKeyFromDisplayName(const std::string& name);
     bool isLoaded() const { return !m_verses.empty(); }
 
 private:

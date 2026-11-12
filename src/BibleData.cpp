@@ -1,5 +1,6 @@
 #include "BibleData.h"
 #include "UsefulVerses.h"
+#include "ChristmasVerses.h"
 #include <fstream>
 #include <cmath>
 #include <algorithm>
@@ -115,6 +116,20 @@ std::vector<int> BibleData::getUsefulVerseIndices() const {
     return indices;
 }
 
+std::vector<int> BibleData::getChristmasVerseIndices() const {
+    std::vector<int> indices;
+    for (const auto& ref : kChristmasVerses) {
+        for (int i = 0; i < (int)m_verses.size(); ++i) {
+            const Verse& v = m_verses[i];
+            if (v.book == ref.book && v.chapter == ref.chapter && v.verse == ref.verse) {
+                indices.push_back(i);
+                break;
+            }
+        }
+    }
+    return indices;
+}
+
 std::vector<int> BibleData::getCandidateIndices(bool usefulOnly, bool allowMature) const {
     std::vector<int> pool;
     if (usefulOnly) pool = getUsefulVerseIndices();
@@ -165,6 +180,53 @@ size_t BookRank(const std::string& book) {
     return std::find(order.begin(), order.end(), book) - order.begin();
 }
 }  // namespace
+
+namespace {
+// Tidy book names. Keep in sync with BOOK_NAMES in Bibirble-web's
+// scripts/books.js.
+const std::map<std::string, std::string>& BookNames() {
+    static const std::map<std::string, std::string> NAMES = {
+        {"genesis", "Genesis"}, {"exodus", "Exodus"}, {"leviticus", "Leviticus"},
+        {"numbers", "Numbers"}, {"deuteronomy", "Deuteronomy"}, {"joshua", "Joshua"},
+        {"judges", "Judges"}, {"ruth", "Ruth"}, {"1samuel", "1 Samuel"},
+        {"2samuel", "2 Samuel"}, {"1kings", "1 Kings"}, {"2kings", "2 Kings"},
+        {"1chronicles", "1 Chronicles"}, {"2chronicles", "2 Chronicles"},
+        {"ezra", "Ezra"}, {"nehemiah", "Nehemiah"}, {"esther", "Esther"},
+        {"job", "Job"}, {"psalms", "Psalms"}, {"proverbs", "Proverbs"},
+        {"ecclesiastes", "Ecclesiastes"}, {"songofsolomon", "Song of Solomon"},
+        {"isaiah", "Isaiah"}, {"jeremiah", "Jeremiah"},
+        {"lamentations", "Lamentations"}, {"ezekiel", "Ezekiel"}, {"daniel", "Daniel"},
+        {"hosea", "Hosea"}, {"joel", "Joel"}, {"amos", "Amos"}, {"obadiah", "Obadiah"},
+        {"jonah", "Jonah"}, {"micah", "Micah"}, {"nahum", "Nahum"},
+        {"habakkuk", "Habakkuk"}, {"zephaniah", "Zephaniah"}, {"haggai", "Haggai"},
+        {"zechariah", "Zechariah"}, {"malachi", "Malachi"}, {"matthew", "Matthew"},
+        {"mark", "Mark"}, {"luke", "Luke"}, {"john", "John"}, {"acts", "Acts"},
+        {"romans", "Romans"}, {"1corinthians", "1 Corinthians"},
+        {"2corinthians", "2 Corinthians"}, {"galatians", "Galatians"},
+        {"ephesians", "Ephesians"}, {"philippians", "Philippians"},
+        {"colossians", "Colossians"}, {"1thessalonians", "1 Thessalonians"},
+        {"2thessalonians", "2 Thessalonians"}, {"1timothy", "1 Timothy"},
+        {"2timothy", "2 Timothy"}, {"titus", "Titus"}, {"philemon", "Philemon"},
+        {"hebrews", "Hebrews"}, {"james", "James"}, {"1peter", "1 Peter"},
+        {"2peter", "2 Peter"}, {"1john", "1 John"}, {"2john", "2 John"},
+        {"3john", "3 John"}, {"jude", "Jude"}, {"revelation", "Revelation"}
+    };
+    return NAMES;
+}
+}  // namespace
+
+std::string BibleData::BookDisplayName(const std::string& book) {
+    const auto& names = BookNames();
+    auto it = names.find(book);
+    return it != names.end() ? it->second : book;
+}
+
+std::string BibleData::BookKeyFromDisplayName(const std::string& name) {
+    for (const auto& entry : BookNames()) {
+        if (entry.second == name) return entry.first;
+    }
+    return name;
+}
 
 std::vector<std::string> BibleData::getAllBooks() const {
     std::vector<int> all(m_verses.size());

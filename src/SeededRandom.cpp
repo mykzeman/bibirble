@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <ctime>
 #include <random>
+#include <utility>
+#include <vector>
 
 int64_t HashStringToInt(const std::string& str) {
     uint32_t hash = 0;
@@ -50,7 +52,7 @@ int PickIndexFromSeed(int64_t seed, int length) {
     return static_cast<int>(std::floor(random.Next() * length));
 }
 
-std::string GetTodayUtcDateString() {
+void GetTodayUtcDate(int& year, int& month, int& day) {
     std::time_t t = std::time(nullptr);
     std::tm utcTm{};
 #if defined(_WIN32)
@@ -58,10 +60,38 @@ std::string GetTodayUtcDateString() {
 #else
     gmtime_r(&t, &utcTm);
 #endif
+    year = utcTm.tm_year + 1900;
+    month = utcTm.tm_mon + 1;
+    day = utcTm.tm_mday;
+}
+
+std::string GetTodayUtcDateString() {
+    int year, month, day;
+    GetTodayUtcDate(year, month, day);
     char buf[40];
-    std::snprintf(buf, sizeof(buf), "%04d-%02d-%02d",
-                  utcTm.tm_year + 1900, utcTm.tm_mon + 1, utcTm.tm_mday);
+    std::snprintf(buf, sizeof(buf), "%04d-%02d-%02d", year, month, day);
     return std::string(buf);
+}
+
+bool IsChristmasSeason() {
+    int year, month, day;
+    GetTodayUtcDate(year, month, day);
+    return month == 12;
+}
+
+int PickChristmasDailyPosition(int poolLength, int specialPosition, int year, int day) {
+    if (day == 25 && specialPosition != -1) return specialPosition;
+    std::vector<int> positions;
+    for (int k = 0; k < poolLength; ++k) {
+        if (k != specialPosition) positions.push_back(k);
+    }
+    if (positions.empty()) return 0;
+    SeededRandom random(MixSeed(HashStringToInt("christmas " + std::to_string(year))));
+    for (int k = (int)positions.size() - 1; k > 0; --k) {
+        int j = static_cast<int>(std::floor(random.Next() * (k + 1)));
+        std::swap(positions[k], positions[j]);
+    }
+    return positions[(day - 1) % positions.size()];
 }
 
 int64_t GetDailySeed() {

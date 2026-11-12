@@ -13,13 +13,15 @@ public:
     void setDisabled(bool disabled);
     bool isComplete() const;
 
+    // The selected book's dataset key ("1samuel"), though the dropdown shows
+    // tidy names ("1 Samuel").
     std::string getBook() const;
     std::vector<std::string> getDigits() const;
     std::vector<wxTextCtrl*> GetDigitCtrls();
 
     void setBookColor(GuessColor color);
-    // Replaces the book list. A single remaining book is selected for the
-    // player (used by book hints).
+    // Replaces the book list (tidy names). A single remaining book is
+    // selected for the player (used by book hints).
     void SetBooks(const wxArrayString& books);
     void setDigitColors(const std::vector<GuessColor>& colors);
     void lockSubmitted();

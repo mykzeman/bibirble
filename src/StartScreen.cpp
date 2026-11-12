@@ -1,6 +1,9 @@
 #include "StartScreen.h"
+#include "Theme.h"
 
 #include <ctime>
+
+#include "SeededRandom.h"
 
 namespace {
 wxString FormatCountdownToNextUtcMidnight() {
@@ -34,10 +37,27 @@ StartScreen::StartScreen(wxWindow* parent) : wxScrolledWindow(parent), m_timer(t
 }
 
 void StartScreen::SetupUi() {
-    wxColour bgColor(234, 229, 159);
+    wxColour bgColor = Theme::Background();
     SetBackgroundColour(bgColor);
 
     wxBoxSizer* layout = new wxBoxSizer(wxVERTICAL);
+
+    // December: a Merry Christmas banner, like the web version.
+    if (Theme::Christmas()) {
+        int year, month, day;
+        GetTodayUtcDate(year, month, day);
+        wxPanel* banner = new wxPanel(this);
+        banner->SetBackgroundColour(*wxWHITE);
+        wxBoxSizer* bannerLayout = new wxBoxSizer(wxVERTICAL);
+        wxStaticText* bannerText = new wxStaticText(banner, wxID_ANY, wxString::FromUTF8(day == 25
+            ? "\xF0\x9F\x8E\x81 Merry Christmas! Jesus is born! Today's Daily is extra special."
+            : "\xF0\x9F\x8E\x84 Merry Christmas! Every Daily this month is a Christmas verse."),
+            wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL);
+        bannerText->Wrap(400);
+        bannerLayout->Add(bannerText, 0, wxALL | wxALIGN_CENTER, 10);
+        banner->SetSizer(bannerLayout);
+        layout->Add(banner, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
+    }
 
     wxStaticText* headline = new wxStaticText(this, wxID_ANY, "Choose a mode to begin");
     wxFont headlineFont(16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
@@ -47,8 +67,8 @@ void StartScreen::SetupUi() {
     wxBoxSizer* actions = new wxBoxSizer(wxHORIZONTAL);
     auto makeButton = [&](const wxString& label) {
         wxButton* btn = new wxButton(this, wxID_ANY, label);
-        btn->SetBackgroundColour(wxColour(200, 100, 50));
-        btn->SetForegroundColour(wxColour(235, 230, 157));
+        btn->SetBackgroundColour(Theme::Accent());
+        btn->SetForegroundColour(Theme::AccentText());
         wxFont btnFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
         btn->SetFont(btnFont);
         btn->SetMinSize(wxSize(-1, 40));
@@ -100,6 +120,14 @@ void StartScreen::SetupUi() {
 
     addHeading("New in this update");
     addItems({
+        "Christmas: all through December the app gets festive colours and "
+        "every Daily is a Christmas verse, with Luke 2:11 on Christmas Day. "
+        "Random games can pick Christmas verses too (a December setting).",
+        "Book names: the book dropdown shows tidy names like 1 Thessalonians "
+        "and Song of Solomon.",
+    });
+    addHeading("Earlier");
+    addItems({
         "Daily fix: the daily verse now jumps all over the Bible instead of "
         "moving one or two verses a day. Seeds typed as numbers now match the "
         "web version.",
@@ -114,9 +142,6 @@ void StartScreen::SetupUi() {
         "the next book list only shows books that still fit your clues. Not "
         "available in hard mode.",
         "Bible order: books in the dropdown now go Genesis to Revelation.",
-    });
-    addHeading("Earlier");
-    addItems({
         "More useful verses: Useful verses only now has 365 family-friendly "
         "verses, picked to skip genealogies, census lists and measurements.",
         "Useful verses only: play only well-known verses like John 3:16 and "
