@@ -32,13 +32,14 @@ int64_t SeedFromText(const std::string& text);
 // JS: pickIndexFromSeed(seed, length) -- exactly one RNG call on MixSeed(seed)
 int PickIndexFromSeed(int64_t seed, int length);
 
-// JS: new Date().toISOString().slice(0, 10), computed in UTC
-std::string GetTodayUtcDateString();
+// JS: getLocalDateKey() -- YYYY-MM-DD on the player's own calendar, so the
+// Daily resets at their own midnight, like Wordle.
+std::string GetTodayLocalDateString();
 
-// The same UTC day as GetTodayUtcDateString, as numbers (month 1-12).
-void GetTodayUtcDate(int& year, int& month, int& day);
+// The same local day as GetTodayLocalDateString, as numbers (month 1-12).
+void GetTodayLocalDate(int& year, int& month, int& day);
 
-// JS: isChristmasSeason() -- December, on the same (UTC) day the Daily uses.
+// JS: isChristmasSeason() -- December, on the same local day the Daily uses.
 bool IsChristmasSeason();
 
 // JS: pickChristmasDailyPosition(poolLength, specialPosition, year, day) --
@@ -47,7 +48,7 @@ bool IsChristmasSeason();
 // gets specialPosition (Luke 2:11), unless that is -1.
 int PickChristmasDailyPosition(int poolLength, int specialPosition, int year, int day);
 
-// JS: getDailySeed() -- hashStringToInt(today)
+// JS: getDailySeed() -- hashStringToInt(getLocalDateKey())
 int64_t GetDailySeed();
 
 // Generates a fresh, non-deterministic seed for a blank "Random" seed field.

@@ -9,7 +9,8 @@
 // colours on the guess boxes never change.
 namespace Theme {
 
-// December (the same day the Daily uses), checked once when the app starts.
+// December on the player's own calendar (the same local day the Daily uses),
+// checked once when the app starts.
 inline bool Christmas() {
     static const bool on = IsChristmasSeason();
     return on;

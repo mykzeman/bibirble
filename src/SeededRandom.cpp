@@ -52,22 +52,22 @@ int PickIndexFromSeed(int64_t seed, int length) {
     return static_cast<int>(std::floor(random.Next() * length));
 }
 
-void GetTodayUtcDate(int& year, int& month, int& day) {
+void GetTodayLocalDate(int& year, int& month, int& day) {
     std::time_t t = std::time(nullptr);
-    std::tm utcTm{};
+    std::tm localTm{};
 #if defined(_WIN32)
-    gmtime_s(&utcTm, &t);
+    localtime_s(&localTm, &t);
 #else
-    gmtime_r(&t, &utcTm);
+    localtime_r(&t, &localTm);
 #endif
-    year = utcTm.tm_year + 1900;
-    month = utcTm.tm_mon + 1;
-    day = utcTm.tm_mday;
+    year = localTm.tm_year + 1900;
+    month = localTm.tm_mon + 1;
+    day = localTm.tm_mday;
 }
 
-std::string GetTodayUtcDateString() {
+std::string GetTodayLocalDateString() {
     int year, month, day;
-    GetTodayUtcDate(year, month, day);
+    GetTodayLocalDate(year, month, day);
     char buf[40];
     std::snprintf(buf, sizeof(buf), "%04d-%02d-%02d", year, month, day);
     return std::string(buf);
@@ -75,7 +75,7 @@ std::string GetTodayUtcDateString() {
 
 bool IsChristmasSeason() {
     int year, month, day;
-    GetTodayUtcDate(year, month, day);
+    GetTodayLocalDate(year, month, day);
     return month == 12;
 }
 
@@ -95,7 +95,7 @@ int PickChristmasDailyPosition(int poolLength, int specialPosition, int year, in
 }
 
 int64_t GetDailySeed() {
-    return HashStringToInt(GetTodayUtcDateString());
+    return HashStringToInt(GetTodayLocalDateString());
 }
 
 int64_t GenerateRandomSeed() {

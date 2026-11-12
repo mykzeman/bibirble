@@ -49,8 +49,8 @@ void PersistenceManager::Save() const {
     file << data.dump(2);
 }
 
-void PersistenceManager::SetLastPlayedDaily(const std::string& utcDateString) {
-    m_lastPlayedDaily = utcDateString;
+void PersistenceManager::SetLastPlayedDaily(const std::string& localDateString) {
+    m_lastPlayedDaily = localDateString;
     Save();
 }
 
