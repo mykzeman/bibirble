@@ -1,5 +1,7 @@
 #include "BibirbleWindow.h"
+#include "Theme.h"
 #include "SeededRandom.h"
+#include "ChristmasVerses.h"
 #include <wx/msgdlg.h>
 #include <wx/scrolwin.h>
 #include <wx/clipbrd.h>
@@ -7,9 +9,10 @@
 #include <algorithm>
 
 namespace {
-wxArrayString ToArrayString(const std::vector<std::string>& items) {
+// Book keys to the tidy names the dropdowns show ("1samuel" -> "1 Samuel").
+wxArrayString ToBookNames(const std::vector<std::string>& books) {
     wxArrayString out;
-    for (const auto& item : items) out.Add(item);
+    for (const auto& book : books) out.Add(wxString::FromUTF8(BibleData::BookDisplayName(book)));
     return out;
 }
 }  // namespace
@@ -40,7 +43,7 @@ BibirbleWindow::BibirbleWindow(wxWindow* parent, const std::string& dataPath)
 
 
 void BibirbleWindow::SetupUi() {
-    wxColour bgColor(234, 229, 159);  // #eae59f
+    wxColour bgColor = Theme::Background();
 
     m_centralPanel = new wxPanel(this);
     m_centralPanel->SetBackgroundColour(bgColor);
@@ -49,9 +52,13 @@ void BibirbleWindow::SetupUi() {
     m_mainLayout->SetMinSize(wxSize(500, 850));
 
     // Header
-    wxStaticText* title = new wxStaticText(m_centralPanel, wxID_ANY, "Bibirble");
+    // December: Christmas trees around a red title.
+    wxStaticText* title = new wxStaticText(m_centralPanel, wxID_ANY, Theme::Christmas()
+        ? wxString::FromUTF8("\xF0\x9F\x8E\x84 Bibirble \xF0\x9F\x8E\x84")  // 🎄 Bibirble 🎄
+        : wxString("Bibirble"));
     wxFont titleFont(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
     title->SetFont(titleFont);
+    if (Theme::Christmas()) title->SetForegroundColour(Theme::Accent());
     m_mainLayout->Add(title, 0, wxALL | wxALIGN_CENTER, 10);
 
     wxStaticText* subtitle = new wxStaticText(m_centralPanel, wxID_ANY, "World English Bible Version");
@@ -79,7 +86,7 @@ void BibirbleWindow::SetupUi() {
 
 void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
     m_gamePanel = new wxPanel(m_centralPanel);
-    m_gamePanel->SetBackgroundColour(wxColour(234, 229, 159));
+    m_gamePanel->SetBackgroundColour(Theme::Background());
 
     wxBoxSizer* gameLayout = new wxBoxSizer(wxVERTICAL);
 
@@ -95,14 +102,14 @@ void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
     // Scroll Area for Game Rows
     wxScrolledWindow* scrollArea = new wxScrolledWindow(m_gamePanel);
     scrollArea->SetScrollRate(5, 5);
-    scrollArea->SetBackgroundColour(wxColour(234, 229, 159));
+    scrollArea->SetBackgroundColour(Theme::Background());
 
     m_rowsSizer = new wxBoxSizer(wxVERTICAL);
     scrollArea->SetSizer(m_rowsSizer);
 
     // 7 Game Rows
     m_allBooks = m_data.getAllBooks();
-    wxArrayString books = ToArrayString(m_allBooks);
+    wxArrayString books = ToBookNames(m_allBooks);
 
     for (int i = 0; i < 7; ++i) {
         GameRow* row = new GameRow(scrollArea, books);
@@ -125,8 +132,8 @@ void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
 
     // Submit Button
     m_submitBtn = new wxButton(scrollArea, wxID_OK, "Submit Answer");
-    m_submitBtn->SetBackgroundColour(wxColour(200, 100, 50));
-    m_submitBtn->SetForegroundColour(wxColour(235, 230, 157));
+    m_submitBtn->SetBackgroundColour(Theme::Accent());
+    m_submitBtn->SetForegroundColour(Theme::AccentText());
     m_submitBtn->SetMinSize(wxSize(-1, 50));
     wxFont btnFont(16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
     m_submitBtn->SetFont(btnFont);
@@ -152,8 +159,8 @@ void BibirbleWindow::SetupPostGameControls(wxBoxSizer* parentLayout) {
 
     wxFont postGameBtnFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
     for (wxButton* btn : {mainMenuBtn, playRandomBtn, viewSeedBtn}) {
-        btn->SetBackgroundColour(wxColour(200, 100, 50));
-        btn->SetForegroundColour(wxColour(235, 230, 157));
+        btn->SetBackgroundColour(Theme::Accent());
+        btn->SetForegroundColour(Theme::AccentText());
         btn->SetFont(postGameBtnFont);
     }
 
@@ -173,7 +180,7 @@ void BibirbleWindow::SetupPostGameControls(wxBoxSizer* parentLayout) {
 
 void BibirbleWindow::SetupKeyboard(wxBoxSizer* parentLayout) {
     wxPanel* kbPanel = new wxPanel(m_gamePanel);
-    kbPanel->SetBackgroundColour(wxColour(200, 100, 50));
+    kbPanel->SetBackgroundColour(Theme::Accent());
     kbPanel->SetMinSize(wxSize(-1, 200));
 
     wxBoxSizer* hLayout = new wxBoxSizer(wxHORIZONTAL);
@@ -183,8 +190,8 @@ void BibirbleWindow::SetupKeyboard(wxBoxSizer* parentLayout) {
         wxBoxSizer* col = new wxBoxSizer(wxVERTICAL);
         for (const auto& k : keys) {
             wxButton* btn = new wxButton(kbPanel, wxID_ANY, k);
-            btn->SetBackgroundColour(wxColour(200, 100, 50));
-            btn->SetForegroundColour(wxColour(235, 230, 157));
+            btn->SetBackgroundColour(Theme::Accent());
+            btn->SetForegroundColour(Theme::AccentText());
             wxFont btnFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
             btn->SetFont(btnFont);
             btn->SetMinSize(wxSize(60, 40));
@@ -316,13 +323,44 @@ void BibirbleWindow::StartNewGame(GameMode mode, bool hardMode, const wxString& 
         seed = GenerateRandomSeed();
     }
 
-    std::vector<int> candidates = m_data.getCandidateIndices(
-        m_settingsScreen->GetUsefulOnly(), m_settingsScreen->GetR18Mode());
-    int idx = candidates[PickIndexFromSeed(seed, (int)candidates.size())];
+    // December: the Daily is always a Christmas verse; Random games are too
+    // while the Christmas verses setting is on. Matches the web version.
+    bool christmas = IsChristmasSeason() &&
+        (mode == GameMode::Daily || m_settingsScreen->GetChristmasVerses());
+    std::vector<int> candidates;
+    if (christmas) {
+        for (int i : m_data.getChristmasVerseIndices()) {
+            if (!m_data.getVerseAtIndex(i).mature || m_settingsScreen->GetR18Mode()) {
+                candidates.push_back(i);
+            }
+        }
+        christmas = !candidates.empty();
+    }
+    if (!christmas) {
+        candidates = m_data.getCandidateIndices(
+            m_settingsScreen->GetUsefulOnly(), m_settingsScreen->GetR18Mode());
+    }
+    int idx;
+    if (christmas && mode == GameMode::Daily) {
+        int special = -1;
+        for (int k = 0; k < (int)candidates.size(); ++k) {
+            const Verse v = m_data.getVerseAtIndex(candidates[k]);
+            if (v.book == kChristmasDayVerse.book && v.chapter == kChristmasDayVerse.chapter &&
+                v.verse == kChristmasDayVerse.verse) {
+                special = k;
+                break;
+            }
+        }
+        int year, month, day;
+        GetTodayUtcDate(year, month, day);
+        idx = candidates[PickChristmasDailyPosition((int)candidates.size(), special, year, day)];
+    } else {
+        idx = candidates[PickIndexFromSeed(seed, (int)candidates.size())];
+    }
     // Only offer books that can be the answer in this game's verse pool.
     m_allBooks = m_data.getBooks(candidates);
     Verse verse = m_data.getVerseAtIndex(idx);
-    m_state.Reset(mode, seed, hardMode, m_settingsScreen->GetBookHints(), verse);
+    m_state.Reset(mode, seed, hardMode, m_settingsScreen->GetBookHints(), verse, christmas);
 
     if (mode == GameMode::Random) {
         wxString seedStr = wxString::Format("%lld", (long long)seed);
@@ -340,7 +378,7 @@ void BibirbleWindow::StartNewGame(GameMode mode, bool hardMode, const wxString& 
 
 
 void BibirbleWindow::ResetGameUi() {
-    wxArrayString books = ToArrayString(m_allBooks);
+    wxArrayString books = ToBookNames(m_allBooks);
     for (auto* row : m_rows) {
         row->Reset();
         row->SetBooks(books);
@@ -367,7 +405,8 @@ void BibirbleWindow::UpdateRevealText() {
     if (m_state.gameOver && m_state.currentStage == -1) {
         text = wxString::Format("%s\n\n- %s %d:%d",
                                m_data.getRevealedText(m_state.targetVerse, 7),
-                               m_state.targetVerse.book, m_state.targetVerse.chapter, m_state.targetVerse.verse);
+                               wxString::FromUTF8(BibleData::BookDisplayName(m_state.targetVerse.book)),
+                               m_state.targetVerse.chapter, m_state.targetVerse.verse);
     } else {
         text = m_data.getRevealedText(m_state.targetVerse, m_state.currentStage);
     }
@@ -480,7 +519,7 @@ void BibirbleWindow::OnSubmit(wxCommandEvent& event) {
     } else {
         m_state.currentStage = result;
         if (m_state.bookHints) {
-            wxArrayString hinted = ToArrayString(m_state.FilterBooksByClues(m_allBooks, m_data));
+            wxArrayString hinted = ToBookNames(m_state.FilterBooksByClues(m_allBooks, m_data));
             for (int i = result; i < (int)m_rows.size(); ++i) {
                 m_rows[i]->SetBooks(hinted);
             }
@@ -561,7 +600,8 @@ int BibirbleWindow::ProcessTurn() {
         wxString msg = wxString::Format(
             "You ran out of guesses. The correct answer was %s %d:%d. "
             "Maybe you should read your Bible to reflect on what you got wrong!",
-            m_state.targetVerse.book, m_state.targetVerse.chapter, m_state.targetVerse.verse);
+            wxString::FromUTF8(BibleData::BookDisplayName(m_state.targetVerse.book)),
+            m_state.targetVerse.chapter, m_state.targetVerse.verse);
         wxMessageBox(msg, "Game Over", wxOK | wxICON_INFORMATION);
         return -1;
     }

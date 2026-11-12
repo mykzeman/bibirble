@@ -3,7 +3,7 @@
 #include <wx/wx.h>
 #include <functional>
 
-// Hard Mode, Useful-verses-only, Book hints and R18 mode toggles + seed entry/randomize/readout, matching the web
+// Christmas verses (December only), Hard Mode, Useful-verses-only, Book hints and R18 mode toggles + seed entry/randomize/readout, matching the web
 // version's Settings screen. Seed and hard-mode apply to the next game
 // started, same as the web version.
 class SettingsScreen : public wxPanel {
@@ -18,6 +18,9 @@ public:
     bool GetBookHints() const;
     // R18 mode only turns on after a date-of-birth check (18 or older).
     bool GetR18Mode() const;
+    // December only: Random games pick Christmas verses too. (December's
+    // Daily is always a Christmas verse.)
+    bool GetChristmasVerses() const;
     wxString GetSeedText() const;
     void SetSeedText(const wxString& seed);
     void SetCurrentSeedDisplay(const wxString& seed);
@@ -32,6 +35,7 @@ private:
     wxCheckBox* m_usefulOnlyCheck = nullptr;
     wxCheckBox* m_bookHintsCheck = nullptr;
     wxCheckBox* m_r18Check = nullptr;
+    wxCheckBox* m_christmasCheck = nullptr;
     bool m_r18Verified = false;
 
     bool VerifyAge();

@@ -16,8 +16,10 @@ const char* EmojiFor(GuessColor color) {
 }
 }  // namespace
 
-void GameState::Reset(GameMode newMode, int64_t newSeed, bool newHardMode, bool newBookHints, const Verse& verse) {
+void GameState::Reset(GameMode newMode, int64_t newSeed, bool newHardMode, bool newBookHints, const Verse& verse,
+                      bool newChristmas) {
     mode = newMode;
+    christmas = newChristmas;
     seed = newSeed;
     hardMode = newHardMode;
     bookHints = newBookHints && !newHardMode;
@@ -81,8 +83,10 @@ std::string GameState::CheckHardModeViolation(const std::string& bookGuess,
 
 std::string GameState::BuildShareText() const {
     std::ostringstream out;
-    out << "Could you beat this score in Bibirble?\n\n";
-    out << "- " << targetVerse.book << " " << targetVerse.chapter << ":" << targetVerse.verse << "\n\n";
+    out << "Could you beat this score in Bibirble?";
+    if (christmas) out << " \xF0\x9F\x8E\x84";  // 🎄
+    out << "\n\n";
+    out << "- " << BibleData::BookDisplayName(targetVerse.book) << " " << targetVerse.chapter << ":" << targetVerse.verse << "\n\n";
 
     for (const auto& record : history) {
         out << EmojiFor(record.bookColor);

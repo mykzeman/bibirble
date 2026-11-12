@@ -1,4 +1,5 @@
 #include "SettingsScreen.h"
+#include "Theme.h"
 
 #include <wx/datectrl.h>
 #include <wx/datetime.h>
@@ -7,8 +8,8 @@
 
 namespace {
 void StyleButton(wxButton* btn) {
-    btn->SetBackgroundColour(wxColour(200, 100, 50));
-    btn->SetForegroundColour(wxColour(235, 230, 157));
+    btn->SetBackgroundColour(Theme::Accent());
+    btn->SetForegroundColour(Theme::AccentText());
     wxFont btnFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
     btn->SetFont(btnFont);
 }
@@ -19,7 +20,7 @@ SettingsScreen::SettingsScreen(wxWindow* parent) : wxPanel(parent) {
 }
 
 void SettingsScreen::SetupUi() {
-    wxColour bgColor(234, 229, 159);
+    wxColour bgColor = Theme::Background();
     SetBackgroundColour(bgColor);
 
     wxBoxSizer* layout = new wxBoxSizer(wxVERTICAL);
@@ -41,6 +42,20 @@ void SettingsScreen::SetupUi() {
     wxPanel* card = new wxPanel(this);
     card->SetBackgroundColour(*wxWHITE);
     wxBoxSizer* cardLayout = new wxBoxSizer(wxVERTICAL);
+
+    // December only: Christmas verses for Random games too.
+    if (Theme::Christmas()) {
+        wxBoxSizer* christmasRow = new wxBoxSizer(wxHORIZONTAL);
+        wxStaticText* christmasLabel = new wxStaticText(card, wxID_ANY, wxString::FromUTF8(
+            "\xF0\x9F\x8E\x84 Christmas verses (Random games pick Christmas verses too; "
+            "December's Daily is always one)"));
+        christmasLabel->Wrap(300);
+        christmasRow->Add(christmasLabel, 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
+        m_christmasCheck = new wxCheckBox(card, wxID_ANY, "");
+        m_christmasCheck->SetValue(true);
+        christmasRow->Add(m_christmasCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 8);
+        cardLayout->Add(christmasRow, 0, wxEXPAND);
+    }
 
     wxBoxSizer* hardModeRow = new wxBoxSizer(wxHORIZONTAL);
     hardModeRow->Add(new wxStaticText(card, wxID_ANY, "Hard mode"), 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
@@ -108,7 +123,7 @@ void SettingsScreen::SetupUi() {
     cardLayout->Add(randomizeBtn, 0, wxALIGN_CENTER | wxALL, 8);
 
     wxStaticText* note = new wxStaticText(card, wxID_ANY,
-        "Seed settings, hard mode, useful verses only, book hints, and R18 mode apply to the next game you start. "
+        "Seed settings, Christmas verses, hard mode, useful verses only, book hints, and R18 mode apply to the next game you start. "
         "You can return here anytime.");
     note->Wrap(400);
     cardLayout->Add(note, 0, wxALL, 8);
@@ -133,6 +148,10 @@ bool SettingsScreen::GetBookHints() const {
 
 bool SettingsScreen::GetR18Mode() const {
     return m_r18Check && m_r18Check->GetValue() && m_r18Verified;
+}
+
+bool SettingsScreen::GetChristmasVerses() const {
+    return m_christmasCheck && m_christmasCheck->GetValue();
 }
 
 bool SettingsScreen::VerifyAge() {

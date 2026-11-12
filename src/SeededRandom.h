@@ -35,6 +35,18 @@ int PickIndexFromSeed(int64_t seed, int length);
 // JS: new Date().toISOString().slice(0, 10), computed in UTC
 std::string GetTodayUtcDateString();
 
+// The same UTC day as GetTodayUtcDateString, as numbers (month 1-12).
+void GetTodayUtcDate(int& year, int& month, int& day);
+
+// JS: isChristmasSeason() -- December, on the same (UTC) day the Daily uses.
+bool IsChristmasSeason();
+
+// JS: pickChristmasDailyPosition(poolLength, specialPosition, year, day) --
+// the December Daily's position in the Christmas verse pool. Every day gets
+// a different verse (the pool is shuffled once per year) and Christmas Day
+// gets specialPosition (Luke 2:11), unless that is -1.
+int PickChristmasDailyPosition(int poolLength, int specialPosition, int year, int day);
+
 // JS: getDailySeed() -- hashStringToInt(today)
 int64_t GetDailySeed();
 
