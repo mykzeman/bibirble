@@ -249,7 +249,7 @@ void BibirbleWindow::ShowGamePanel() {
 
 
 void BibirbleWindow::OnStartDaily() {
-    if (m_persistence.GetLastPlayedDaily() == GetTodayUtcDateString()) {
+    if (m_persistence.GetLastPlayedDaily() == GetTodayLocalDateString()) {
         wxMessageBox("You already played today! Come back tomorrow.",
                     "Bibirble", wxOK | wxICON_INFORMATION);
         return;
@@ -352,7 +352,7 @@ void BibirbleWindow::StartNewGame(GameMode mode, bool hardMode, const wxString& 
             }
         }
         int year, month, day;
-        GetTodayUtcDate(year, month, day);
+        GetTodayLocalDate(year, month, day);
         idx = candidates[PickChristmasDailyPosition((int)candidates.size(), special, year, day)];
     } else {
         idx = candidates[PickIndexFromSeed(seed, (int)candidates.size())];
@@ -509,7 +509,7 @@ void BibirbleWindow::OnSubmit(wxCommandEvent& event) {
         Bind(wxEVT_BUTTON, &BibirbleWindow::OnShare, this, wxID_OK);
 
         if (m_state.mode == GameMode::Daily) {
-            m_persistence.SetLastPlayedDaily(GetTodayUtcDateString());
+            m_persistence.SetLastPlayedDaily(GetTodayLocalDateString());
         }
 
         if (m_postGameControls && m_postGameControls->GetContainingSizer()) {

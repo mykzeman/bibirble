@@ -6,7 +6,8 @@
 
 // Mode-select landing screen: Start Daily / Start Random / Settings, an
 // What's New card, an inline how-to-play card, and a live countdown to the
-// next UTC daily reset. Scrolls vertically when the cards don't fit.
+// next Daily, which resets at the player's local midnight. Scrolls
+// vertically when the cards don't fit.
 class StartScreen : public wxScrolledWindow {
 public:
     using Callback = std::function<void()>;

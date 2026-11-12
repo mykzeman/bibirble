@@ -6,16 +6,24 @@
 #include "SeededRandom.h"
 
 namespace {
-wxString FormatCountdownToNextUtcMidnight() {
-    std::time_t t = std::time(nullptr);
-    std::tm utcTm{};
+// Time left until the next Daily, which arrives at the player's local
+// midnight (the same day GetTodayLocalDateString uses). Like the web's
+// new Date(y, m, d + 1) - now: mktime rolls day 32 over into the next month
+// and gets 23- and 25-hour daylight-saving days right.
+wxString FormatCountdownToNextLocalMidnight() {
+    std::time_t now = std::time(nullptr);
+    std::tm nextMidnight{};
 #if defined(_WIN32)
-    gmtime_s(&utcTm, &t);
+    localtime_s(&nextMidnight, &now);
 #else
-    gmtime_r(&t, &utcTm);
+    localtime_r(&now, &nextMidnight);
 #endif
-    int secondsIntoDay = utcTm.tm_hour * 3600 + utcTm.tm_min * 60 + utcTm.tm_sec;
-    int secondsLeft = 24 * 3600 - secondsIntoDay;
+    nextMidnight.tm_mday += 1;
+    nextMidnight.tm_hour = 0;
+    nextMidnight.tm_min = 0;
+    nextMidnight.tm_sec = 0;
+    nextMidnight.tm_isdst = -1;  // let mktime work out daylight saving
+    int secondsLeft = static_cast<int>(std::difftime(std::mktime(&nextMidnight), now));
     if (secondsLeft < 0) secondsLeft = 0;
 
     int hrs = secondsLeft / 3600;
@@ -32,7 +40,7 @@ StartScreen::StartScreen(wxWindow* parent) : wxScrolledWindow(parent), m_timer(t
     Bind(wxEVT_TIMER, &StartScreen::UpdateCountdown, this, m_timer.GetId());
     m_timer.Start(1000);
     if (m_countdownText) {
-        m_countdownText->SetLabel(FormatCountdownToNextUtcMidnight());
+        m_countdownText->SetLabel(FormatCountdownToNextLocalMidnight());
     }
 }
 
@@ -45,7 +53,7 @@ void StartScreen::SetupUi() {
     // December: a Merry Christmas banner, like the web version.
     if (Theme::Christmas()) {
         int year, month, day;
-        GetTodayUtcDate(year, month, day);
+        GetTodayLocalDate(year, month, day);
         wxPanel* banner = new wxPanel(this);
         banner->SetBackgroundColour(*wxWHITE);
         wxBoxSizer* bannerLayout = new wxBoxSizer(wxVERTICAL);
@@ -120,6 +128,8 @@ void StartScreen::SetupUi() {
 
     addHeading("New in this update");
     addItems({
+        "Daily reset: a new Daily arrives at midnight your time, the same "
+        "as the web version.",
         "Christmas: all through December the app gets festive colours and "
         "every Daily is a Christmas verse, with Luke 2:11 on Christmas Day. "
         "Random games can pick Christmas verses too (a December setting).",
@@ -194,6 +204,6 @@ void StartScreen::SetupUi() {
 
 void StartScreen::UpdateCountdown(wxTimerEvent& event) {
     if (m_countdownText) {
-        m_countdownText->SetLabel(FormatCountdownToNextUtcMidnight());
+        m_countdownText->SetLabel(FormatCountdownToNextLocalMidnight());
     }
 }

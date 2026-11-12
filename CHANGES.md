@@ -88,7 +88,7 @@ Summary:
 - Removed the dead `menu_wireframe.h/cpp` stub (never wired into the app) and built real Start/Settings
   screens in its place.
 - Ported the web version's daily-hash/seeded-RNG algorithm bit-for-bit (`src/SeededRandom.h/cpp`), verified
-  against the actual JS via node for a range of inputs including today's UTC date.
+  against the actual JS via node for a range of inputs including today's date.
 - Fixed three real bugs while porting rather than replicating them:
   - Nehemiah was miscategorized under "Prophets Minor" instead of "Historical" in both
     `BibleData::getBookArea()` and `tools/sort.py`'s AREAS dict; regenerated `bible_sections.json` so the
@@ -109,7 +109,7 @@ Summary:
   book/area and revealed digits, and must reference a verse that exists in the dataset.
 - Added `PersistenceManager`: a small JSON file under `wxStandardPaths`' per-user data dir remembers the
   daily lockout date and last-used seed, standing in for the web version's `localStorage`.
-- Added `StartScreen` (Daily/Random/Settings, an info card, and a live countdown to next UTC midnight) and
+- Added `StartScreen` (Daily/Random/Settings, an info card, and a live countdown to the next Daily) and
   `SettingsScreen` (Hard Mode toggle, seed entry/randomize/readout), swapped in as `wxPanel`s within the
   existing `BibirbleWindow` frame. Games are now replayable (`GameRow::Reset()`), and post-game controls
   (Main Menu / Play Random / View-Set-Seed) are wired inline.
