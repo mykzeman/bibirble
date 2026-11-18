@@ -15,11 +15,14 @@
 #endif
 
 // Linux: CMake generates EmbeddedDataBlob.cpp, whose .incbin copies
-// bible_sections.json into the binary between these two symbols, and defines
-// BIBIRBLE_HAS_INCBIN, so the Linux build is a single file too.
+// bible_sections.json and icons/bibirble.png into the binary between these
+// symbols, and defines BIBIRBLE_HAS_INCBIN, so the Linux build is a single
+// file too.
 #if !defined(_WIN32) && defined(BIBIRBLE_HAS_INCBIN)
 extern "C" const char bibirble_data_start[];
 extern "C" const char bibirble_data_end[];
+extern "C" const char bibirble_icon_start[];
+extern "C" const char bibirble_icon_end[];
 #endif
 
 namespace {
@@ -62,6 +65,16 @@ bool ReadBibleDataText(const std::string& preferredPath, std::string& out) {
     out.assign(bibirble_data_start, bibirble_data_end);
     return !out.empty();
 #else
+    return false;
+#endif
+}
+
+bool ReadEmbeddedIconPng(std::string& out) {
+#if !defined(_WIN32) && defined(BIBIRBLE_HAS_INCBIN)
+    out.assign(bibirble_icon_start, bibirble_icon_end);
+    return !out.empty();
+#else
+    out.clear();
     return false;
 #endif
 }

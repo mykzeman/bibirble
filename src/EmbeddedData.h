@@ -9,3 +9,8 @@
 // a single file.
 // Returns false (out left empty) if neither is available.
 bool ReadBibleDataText(const std::string& preferredPath, std::string& out);
+
+// The app icon PNG (icons/bibirble.png) compiled into the Linux build, for the
+// window/taskbar icon. Windows loads its icon from Bibirble.rc instead, so
+// this returns false there (and on macOS).
+bool ReadEmbeddedIconPng(std::string& out);

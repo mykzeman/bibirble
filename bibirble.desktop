@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Bibirble
+Comment=Guess the Bible verse from a few words
+Exec=Bibirble
+Icon=bibirble
+Terminal=false
+Categories=Game;Education;
