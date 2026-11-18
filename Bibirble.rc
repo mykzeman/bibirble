@@ -1,0 +1,18 @@
+// Windows resources for Bibirble.exe.
+//
+// bible_sections.json is compiled into the exe so the game runs as a single
+// file (see src/EmbeddedData.cpp). A bible_sections.json next to the exe still
+// takes priority over this embedded copy.
+BIBLE_SECTIONS_JSON RCDATA "bible_sections.json"
+
+// App icon (same artwork as Bibirble-web's icons/). Explorer shows the icon
+// group whose name sorts first, so "appicon" also beats wx.rc's wxICON_AAA;
+// BibirbleWindow loads it by this name for the title bar and taskbar.
+appicon ICON "icons/bibirble.ico"
+
+// MinGW builds: pull in wxWidgets' standard resources, including the manifest
+// that turns on modern (Common Controls v6) widgets and DPI awareness. MSVC's
+// linker writes its own manifest, so including wx.rc there would clash.
+#ifdef __GNUC__
+#include "wx/msw/wx.rc"
+#endif

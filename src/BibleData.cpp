@@ -1,6 +1,7 @@
 #include "BibleData.h"
 #include "UsefulVerses.h"
 #include "ChristmasVerses.h"
+#include "EmbeddedData.h"
 #include <fstream>
 #include <cmath>
 #include <algorithm>
@@ -53,19 +54,13 @@ std::string BibleData::ResolveDataFilePath(const std::string& preferredPath) {
 }
 
 bool BibleData::loadData(const std::string& filePath) {
-    const std::string resolvedPath = ResolveDataFilePath(filePath);
-    if (resolvedPath.empty()) {
-        return false;
-    }
-
-    std::ifstream file(resolvedPath);
-    if (!file.is_open()) {
+    std::string text;
+    if (!ReadBibleDataText(filePath, text)) {
         return false;
     }
 
     try {
-        json arr;
-        file >> arr;
+        json arr = json::parse(text);
         
         if (!arr.is_array()) {
             return false;

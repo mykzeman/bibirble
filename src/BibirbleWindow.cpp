@@ -2,6 +2,10 @@
 #include "Theme.h"
 #include "SeededRandom.h"
 #include "ChristmasVerses.h"
+#include "EmbeddedData.h"
+#include <wx/iconbndl.h>
+#include <wx/image.h>
+#include <wx/mstream.h>
 #include <wx/msgdlg.h>
 #include <wx/scrolwin.h>
 #include <wx/clipbrd.h>
@@ -14,6 +18,27 @@ wxArrayString ToBookNames(const std::vector<std::string>& books) {
     wxArrayString out;
     for (const auto& book : books) out.Add(wxString::FromUTF8(BibleData::BookDisplayName(book)));
     return out;
+}
+// The app icon for the title bar/taskbar: from Bibirble.rc's "appicon" on
+// Windows, or decoded from the PNG compiled into the Linux build.
+wxIconBundle LoadAppIcons() {
+#ifdef __WXMSW__
+    return wxIconBundle("appicon", nullptr);
+#else
+    wxIconBundle bundle;
+    std::string png;
+    if (!ReadEmbeddedIconPng(png)) return bundle;
+    if (!wxImage::FindHandler(wxBITMAP_TYPE_PNG)) wxImage::AddHandler(new wxPNGHandler);
+    wxMemoryInputStream stream(png.data(), png.size());
+    wxImage image;
+    if (!image.LoadFile(stream, wxBITMAP_TYPE_PNG)) return bundle;
+    for (int size : {16, 24, 32, 48, 64, 128, 256}) {
+        wxIcon icon;
+        icon.CopyFromBitmap(wxBitmap(image.Scale(size, size, wxIMAGE_QUALITY_HIGH)));
+        bundle.AddIcon(icon);
+    }
+    return bundle;
+#endif
 }
 }  // namespace
 
@@ -29,6 +54,9 @@ BibirbleWindow::BibirbleWindow(wxWindow* parent, const std::string& dataPath)
     m_data.loadData(resolvedPath);
 
     m_persistence.Load();
+
+    const wxIconBundle icons = LoadAppIcons();
+    if (!icons.IsEmpty()) SetIcons(icons);
 
     SetupUi();
 

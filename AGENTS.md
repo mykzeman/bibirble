@@ -59,7 +59,9 @@ python sort.py  # Reads *.json, outputs bible_sections.json
 cd ..
 ```
 
-The application expects `bible_sections.json` in the working directory at runtime. Pre-packaged data or auto-load mechanism may exist (check `BibirbleWindow` constructor).
+`bible_sections.json` is compiled into the program (`Bibirble.rc` on Windows, a CMake-generated `.incbin` blob on Linux) so the game ships as a single file; `src/EmbeddedData.cpp` reads it. A `bible_sections.json` found on disk (see `BibleData::ResolveDataFilePath()`) still wins, so new `tools/sort.py` output can be tested without rebuilding. macOS has no embedded copy yet and still needs the file next to the app.
+
+The app icon lives in `icons/` (artwork copied from Bibirble-web's `icons/`): `bibirble.ico` is the `appicon` resource in `Bibirble.rc` (Explorer icon + title bar on Windows), and `bibirble.png` is `.incbin`'d on Linux and set as the window icon by `LoadAppIcons()` in `BibirbleWindow.cpp`. `bibirble.desktop` adds it to a Linux app menu.
 
 ## Key Patterns & Conventions
 
