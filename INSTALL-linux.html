@@ -1,11 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Installing Bibirble on Linux</title>
-</head>
-<body>
 <h1>Installing Bibirble on Linux</h1>
-<p>Bibirble for Linux is a single file with the verses and icon built in. It needs a 64-bit Linux with glibc 2.38 or newer (Ubuntu 24.04+, Mint 22+, Debian 13+ or Fedora 39+; check with <code>ldd --version</code>), plus GTK 3 and libSM, which most desktops already have. If one is missing, install it with <code>sudo apt install libgtk-3-0 libsm6</code> (Ubuntu/Mint/Debian), <code>sudo dnf install gtk3 libSM</code> (Fedora) or <code>sudo pacman -S --needed gtk3 libsm</code> (Arch). To play, unpack it with <code>tar xzf Bibirble-Linux-x86_64.tar.gz</code> and run <code>./Bibirble/Bibirble</code>. If it won't start, <code>ldd ./Bibirble/Bibirble | grep "not found"</code> shows what's missing. To add it to your app menu, copy <code>Bibirble</code> to <code>~/.local/bin/</code>, <code>bibirble.png</code> to <code>~/.local/share/icons/hicolor/512x512/apps/</code> and <code>bibirble.desktop</code> to <code>~/.local/share/applications/</code>. On older Linux versions or ARM computers, build from source instead: install <code>build-essential cmake libwxgtk3.2-dev nlohmann-json3-dev</code>, then run <code>./build.sh Release</code>.</p>
-</body>
-</html>
+
+<p>Bibirble for Linux is one file called <code>Bibirble</code>. The Bible verses and the icon are built into it, so you don't need any data files next to it.</p>
+
+<h2>1. Check your Linux is new enough</h2>
+
+<p>You need a 64-bit (x86_64) Linux with glibc 2.38 or newer. That means roughly:</p>
+
+<ul>
+<li>Ubuntu, Kubuntu, Xubuntu: 24.04 or newer</li>
+<li>Linux Mint: 22 or newer</li>
+<li>Pop!_OS: 24.04 or newer</li>
+<li>Debian: 13 (trixie) or newer</li>
+<li>Fedora: 39 or newer</li>
+<li>Arch, Manjaro, EndeavourOS, openSUSE Tumbleweed: any current install</li>
+</ul>
+
+<p>Not sure? Run this and check that the number is 2.38 or higher:</p>
+
+<pre>ldd --version | head -1</pre>
+
+<p>On an older system, build it from source instead (see the last section).</p>
+
+<h2>2. Install the libraries it needs</h2>
+
+<p>Bibirble has wxWidgets and the C++ runtime built in. It only needs GTK 3 and libSM from your system. Most desktops already have these, so this step usually just says "already installed".</p>
+
+<p>Ubuntu, Mint, Pop!_OS, Debian:</p>
+<pre>sudo apt install libgtk-3-0 libsm6</pre>
+
+<p>Fedora:</p>
+<pre>sudo dnf install gtk3 libSM</pre>
+
+<p>Arch, Manjaro, EndeavourOS:</p>
+<pre>sudo pacman -S --needed gtk3 libsm</pre>
+
+<p>openSUSE:</p>
+<pre>sudo zypper install libgtk-3-0 libSM6</pre>
+
+<h2>3. Unpack and run</h2>
+
+<p>From the folder where you downloaded <code>Bibirble-Linux-x86_64.tar.gz</code>:</p>
+
+<pre>tar xzf Bibirble-Linux-x86_64.tar.gz</pre>
+<pre>./Bibirble/Bibirble</pre>
+
+<p>If it says "Permission denied", make it runnable first:</p>
+<pre>chmod +x Bibirble/Bibirble</pre>
+
+<p>If it won't start at all, this shows any library that's missing:</p>
+<pre>ldd ./Bibirble/Bibirble | grep "not found"</pre>
+
+<h2>4. Add it to your app menu (optional)</h2>
+
+<p>This copies Bibirble into your home folder and adds a menu entry with its icon. It doesn't need <code>sudo</code>. Run these from the folder you unpacked into:</p>
+
+<pre>cd Bibirble</pre>
+<pre>mkdir -p ~/.local/bin ~/.local/share/applications ~/.local/share/icons/hicolor/512x512/apps</pre>
+<pre>cp Bibirble ~/.local/bin/ &amp;&amp; cp bibirble.png ~/.local/share/icons/hicolor/512x512/apps/ &amp;&amp; cp bibirble.desktop ~/.local/share/applications/</pre>
+
+<p>Bibirble should now be in your app menu, under Games or Education. If it doesn't show up, log out and back in.</p>
+
+<p>To uninstall:</p>
+<pre>rm ~/.local/bin/Bibirble ~/.local/share/applications/bibirble.desktop ~/.local/share/icons/hicolor/512x512/apps/bibirble.png</pre>
+
+<p>Your Daily progress is saved in <code>~/.Bibirble</code>. Delete that folder too if you want a completely clean slate.</p>
+
+<h2>Building from source instead</h2>
+
+<p>Use this for older Linux versions or ARM computers (like a Raspberry Pi). Install the build tools and libraries first.</p>
+
+<p>Ubuntu, Mint, Debian:</p>
+<pre>sudo apt install build-essential cmake libwxgtk3.2-dev nlohmann-json3-dev</pre>
+
+<p>Fedora:</p>
+<pre>sudo dnf install gcc-c++ cmake wxGTK-devel json-devel</pre>
+
+<p>Arch:</p>
+<pre>sudo pacman -S --needed base-devel cmake wxwidgets-gtk3 nlohmann-json</pre>
+
+<p>Then build from the repository folder and run it:</p>
+<pre>./build.sh Release</pre>
+<pre>./build/Bibirble</pre>
