@@ -40,8 +40,6 @@ CMakeLists.txt              # Build configuration
 - **MinGW-w64** (g++ 8.0+)
 
 ### Ubuntu/Linux
-> Just want to play? See **[INSTALL-linux.md](INSTALL-linux.md)** for installing the ready-made Linux download.
-
 - `sudo apt install libwxgtk3.2-dev`
 - `sudo apt install nlohmann-json3-dev`
 - `sudo apt install cmake build-essential`
