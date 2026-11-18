@@ -59,7 +59,7 @@ python sort.py  # Reads *.json, outputs bible_sections.json
 cd ..
 ```
 
-The application expects `bible_sections.json` in the working directory at runtime. Pre-packaged data or auto-load mechanism may exist (check `BibirbleWindow` constructor).
+`bible_sections.json` is compiled into the program (`Bibirble.rc` on Windows, a CMake-generated `.incbin` blob on Linux) so the game ships as a single file; `src/EmbeddedData.cpp` reads it. A `bible_sections.json` found on disk (see `BibleData::ResolveDataFilePath()`) still wins, so new `tools/sort.py` output can be tested without rebuilding. macOS has no embedded copy yet and still needs the file next to the app.
 
 ## Key Patterns & Conventions
 

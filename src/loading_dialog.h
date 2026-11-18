@@ -9,6 +9,7 @@
 #include <string>
 #include <nlohmann/json.hpp>
 #include "BibleData.h"
+#include "EmbeddedData.h"
 
 // A loader that reads a local JSON array of objects and extracts the "text" fields using nlohmann::json.
 // It runs on a background thread, animates the gauge via wxEvtHandler::CallAfter(), and stores the
@@ -52,18 +53,8 @@ private:
         constexpr auto kMinLoadVisible = std::chrono::milliseconds(1500);
 
         const std::string preferredPath = std::string(m_path.mb_str(wxConvUTF8));
-        const std::string resolvedPath = BibleData::ResolveDataFilePath(preferredPath);
-
         std::string fileContent;
-        if (!resolvedPath.empty()) {
-            std::ifstream ifs(resolvedPath, std::ios::binary);
-            if (ifs) {
-                std::ostringstream ss;
-                ss << ifs.rdbuf();
-                fileContent = ss.str();
-                m_foundFile = true;
-            }
-        }
+        m_foundFile = ReadBibleDataText(preferredPath, fileContent);
 
         // Parse using nlohmann::json
         std::vector<std::string> texts;
