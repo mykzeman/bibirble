@@ -61,7 +61,7 @@ cd ..
 
 `bible_sections.json` is compiled into the program (`Bibirble.rc` on Windows, a CMake-generated `.incbin` blob on Linux) so the game ships as a single file; `src/EmbeddedData.cpp` reads it. A `bible_sections.json` found on disk (see `BibleData::ResolveDataFilePath()`) still wins, so new `tools/sort.py` output can be tested without rebuilding. macOS has no embedded copy yet and still needs the file next to the app.
 
-The app icon lives in `icons/` (artwork copied from Bibirble-web's `icons/`): `bibirble.ico` is the `appicon` resource in `Bibirble.rc` (Explorer icon + title bar on Windows), and `bibirble.png` is `.incbin`'d on Linux and set as the window icon by `LoadAppIcons()` in `BibirbleWindow.cpp`. `bibirble.desktop` adds it to a Linux app menu. `INSTALL-linux.md` is the end-user Linux install guide (runtime libraries per distro, app-menu setup, building from source); it ships in the Linux download, so keep its library list in sync with `objdump -p Bibirble | grep NEEDED` when dependencies change.
+The app icon lives in `icons/` (artwork copied from Bibirble-web's `icons/`): `bibirble.ico` is the `appicon` resource in `Bibirble.rc` (Explorer icon + title bar on Windows), and `bibirble.png` is `.incbin`'d on Linux and set as the window icon by `LoadAppIcons()` in `BibirbleWindow.cpp`. `bibirble.desktop` adds it to a Linux app menu. `INSTALL-linux.md` is the end-user Linux install guide; it ships in the Linux download, so keep its library list in sync with `objdump -p Bibirble | grep NEEDED` when dependencies change.
 
 ## Key Patterns & Conventions
 
