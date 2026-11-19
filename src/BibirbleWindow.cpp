@@ -3,6 +3,9 @@
 #include "SeededRandom.h"
 #include "ChristmasVerses.h"
 #include "EmbeddedData.h"
+#include "WrappingText.h"
+#include <wx/display.h>
+#include <wx/wrapsizer.h>
 #include <wx/iconbndl.h>
 #include <wx/image.h>
 #include <wx/mstream.h>
@@ -46,7 +49,7 @@ wxBEGIN_EVENT_TABLE(BibirbleWindow, wxFrame)
 wxEND_EVENT_TABLE()
 
 BibirbleWindow::BibirbleWindow(wxWindow* parent, const std::string& dataPath)
-    : wxFrame(parent, wxID_ANY, "Bibirble", wxDefaultPosition, wxSize(500, 850)) {
+    : wxFrame(parent, wxID_ANY, "Bibirble") {
 
     const std::string resolvedPath = dataPath.empty()
         ? BibleData::ResolveDataFilePath("bible_sections.json")
@@ -66,6 +69,16 @@ BibirbleWindow::BibirbleWindow(wxWindow* parent, const std::string& dataPath)
         m_settingsScreen->SetCurrentSeedDisplay(seedStr);
     }
 
+    // Open at 500x850 when the screen has room, otherwise as much of the
+    // screen as is free (e.g. 1366x768 laptops); every part of the layout
+    // stretches or scrolls, so the window can be resized freely.
+    const wxRect workArea = wxDisplay(this).GetClientArea();
+    SetMinSize(FromDIP(wxSize(360, 520)));
+    wxSize initial = FromDIP(wxSize(500, 850));
+    initial.DecTo(workArea.GetSize() * 95 / 100);
+    SetSize(initial);
+    Centre();
+
     ShowStartScreen();
 }
 
@@ -77,7 +90,6 @@ void BibirbleWindow::SetupUi() {
     m_centralPanel->SetBackgroundColour(bgColor);
 
     m_mainLayout = new wxBoxSizer(wxVERTICAL);
-    m_mainLayout->SetMinSize(wxSize(500, 850));
 
     // Header
     // December: Christmas trees around a red title.
@@ -119,17 +131,16 @@ void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
     wxBoxSizer* gameLayout = new wxBoxSizer(wxVERTICAL);
 
     // Reveal Panel
-    m_revealPanel = new wxStaticText(m_gamePanel, wxID_ANY, "");
+    m_revealPanel = new WrappingText(m_gamePanel, "");
     m_revealPanel->SetBackgroundColour(*wxWHITE);
     m_revealPanel->SetMinSize(wxSize(-1, 100));
-    m_revealPanel->Wrap(400);
     gameLayout->Add(m_revealPanel, 0, wxALL | wxEXPAND, 10);
 
     SetupPostGameControls(gameLayout);
 
     // Scroll Area for Game Rows
     wxScrolledWindow* scrollArea = new wxScrolledWindow(m_gamePanel);
-    scrollArea->SetScrollRate(5, 5);
+    scrollArea->SetScrollRate(0, 5);  // vertical only: rows shrink to fit the width
     scrollArea->SetBackgroundColour(Theme::Background());
 
     m_rowsSizer = new wxBoxSizer(wxVERTICAL);
@@ -179,7 +190,8 @@ void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
 
 void BibirbleWindow::SetupPostGameControls(wxBoxSizer* parentLayout) {
     m_postGameControls = new wxPanel(m_gamePanel);
-    wxBoxSizer* layout = new wxBoxSizer(wxHORIZONTAL);
+    // Wraps onto a second line in a narrow window (see StartScreen).
+    wxWrapSizer* layout = new wxWrapSizer(wxHORIZONTAL, wxEXTEND_LAST_ON_EACH_LINE);
 
     wxButton* mainMenuBtn = new wxButton(m_postGameControls, wxID_ANY, "Main Menu");
     wxButton* playRandomBtn = new wxButton(m_postGameControls, wxID_ANY, "Play Random");
@@ -209,10 +221,7 @@ void BibirbleWindow::SetupPostGameControls(wxBoxSizer* parentLayout) {
 void BibirbleWindow::SetupKeyboard(wxBoxSizer* parentLayout) {
     wxPanel* kbPanel = new wxPanel(m_gamePanel);
     kbPanel->SetBackgroundColour(Theme::Accent());
-    kbPanel->SetMinSize(wxSize(-1, 200));
-
     wxBoxSizer* hLayout = new wxBoxSizer(wxHORIZONTAL);
-    hLayout->SetMinSize(wxSize(-1, 200));
 
     auto createCol = [&](const wxArrayString& keys) {
         wxBoxSizer* col = new wxBoxSizer(wxVERTICAL);
@@ -222,7 +231,7 @@ void BibirbleWindow::SetupKeyboard(wxBoxSizer* parentLayout) {
             btn->SetForegroundColour(Theme::AccentText());
             wxFont btnFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
             btn->SetFont(btnFont);
-            btn->SetMinSize(wxSize(60, 40));
+            btn->SetMinSize(FromDIP(wxSize(40, 36)));
 
             btn->Bind(wxEVT_BUTTON, [this, k](wxCommandEvent&) {
                 HandleKeyPress(k);
@@ -432,14 +441,15 @@ void BibirbleWindow::UpdateRevealText() {
     wxString text;
     if (m_state.gameOver && m_state.currentStage == -1) {
         text = wxString::Format("%s\n\n- %s %d:%d",
-                               m_data.getRevealedText(m_state.targetVerse, 7),
+                               wxString::FromUTF8(m_data.getRevealedText(m_state.targetVerse, 7)),
                                wxString::FromUTF8(BibleData::BookDisplayName(m_state.targetVerse.book)),
                                m_state.targetVerse.chapter, m_state.targetVerse.verse);
     } else {
-        text = m_data.getRevealedText(m_state.targetVerse, m_state.currentStage);
+        // The verse text is UTF-8; a plain std::string -> wxString conversion
+        // uses the system code page on Windows and garbles curly quotes.
+        text = wxString::FromUTF8(m_data.getRevealedText(m_state.targetVerse, m_state.currentStage));
     }
-    m_revealPanel->SetLabel(text);
-    m_revealPanel->Wrap(400);
+    m_revealPanel->SetLabel(text);  // WrappingText wraps it to the panel width
 }
 
 

@@ -85,6 +85,9 @@ wxWidgets uses parent-child ownership (constructor parameter `wxWindow* parent`)
 ### Async calls from background threads
 `LoadingDialog` (`src/loading_dialog.h`) runs its JSON parse on a background `std::thread` and needs to touch the gauge/end the modal from the main thread. Use the real `wxEvtHandler::CallAfter()` **member function** (e.g. `this->CallAfter([this]{...})`), not a free `wxCallAfter(fn)` -- this wx 3.2 packaging has no `<wx/callafter.h>`, and a handler-less shim that queues onto `wxTheApp` will never be dispatched while the dialog is shown via `ShowModal()` from inside `wxApp::OnInit()` (before the main loop starts drains `wxTheApp`'s pending events). `CallAfter()` on the dialog itself queues onto the dialog's own pending-event list, which the nested modal loop does drain correctly.
 
+### Flexible layout
+The window opens at 500x850 (shrunk to fit smaller screens) and can be resized down to 360x520, so nothing may rely on a fixed width. Use `WrappingText` (`src/WrappingText.h`) instead of `wxStaticText` + `Wrap(N)` for any multi-line text, and add it with `wxEXPAND` (or a proportion in a horizontal sizer) so it re-wraps to the width it's given. Rows of buttons use `wxWrapSizer` so they move onto a second line rather than overflow. Text from `bible_sections.json` is UTF-8: convert it with `wxString::FromUTF8()`, never the implicit `std::string` -> `wxString` conversion (that uses the Windows code page and garbles curly quotes).
+
 ### Color Feedback
 `GameRow::setDigitColors()` and `setBookColor()` apply validation feedback, taking a `GuessColor` (Gray/Yellow/Green -- see `src/GuessColor.h`), not string literals. Integration with game logic in `BibirbleWindow::ProcessTurn()`, which also records a `GuessRecord` onto `GameState::history`.
 

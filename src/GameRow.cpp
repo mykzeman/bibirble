@@ -9,7 +9,8 @@ GameRow::GameRow(wxWindow* parent, const wxArrayString& books)
 }
 wxTextCtrl* GameRow::CreateDigitInput() {
     wxTextCtrl* edit = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, 
-                                      wxSize(40, 40));
+                                      wxDefaultSize);
+    edit->SetMinSize(FromDIP(wxSize(30, 36)));
     edit->SetMaxLength(1);
     wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     edit->SetFont(font);
@@ -17,12 +18,11 @@ wxTextCtrl* GameRow::CreateDigitInput() {
 }
 void GameRow::SetupUi(const wxArrayString& books) {
     wxBoxSizer* layout = new wxBoxSizer(wxHORIZONTAL);
-    layout->SetMinSize(wxSize(-1, 50));
     
     // Book Dropdown
     m_bookSelect = new wxComboBox(this, wxID_ANY, "", wxDefaultPosition, 
-                                   wxSize(150, -1), books, wxCB_READONLY);
-    m_bookSelect->SetMinSize(wxSize(150, 40));
+                                   wxDefaultSize, books, wxCB_READONLY);
+    m_bookSelect->SetMinSize(FromDIP(wxSize(110, 36)));
     m_bookSelect->Bind(wxEVT_COMBOBOX, [this](wxCommandEvent& event) {
         if (m_isBookLocked) {
             m_bookSelect->SetStringSelection(m_lockedBookSelection);
@@ -31,14 +31,16 @@ void GameRow::SetupUi(const wxArrayString& books) {
         m_lockedBookSelection = m_bookSelect->GetStringSelection();
         event.Skip();
     });
-    layout->Add(m_bookSelect, 2, wxEXPAND | wxALL, 4);
+    // Everything stretches with the window: the book list gets the most
+    // room, and the four digit boxes share the rest equally.
+    layout->Add(m_bookSelect, 4, wxEXPAND | wxALL, 4);
     
     // Chapter inputs
     m_c1 = CreateDigitInput();
-    layout->Add(m_c1, 0, wxEXPAND | wxALL, 4);
+    layout->Add(m_c1, 1, wxEXPAND | wxALL, 4);
     
     m_c2 = CreateDigitInput();
-    layout->Add(m_c2, 0, wxEXPAND | wxALL, 4);
+    layout->Add(m_c2, 1, wxEXPAND | wxALL, 4);
     
     // Colon separator
     wxStaticText* sep = new wxStaticText(this, wxID_ANY, ":");
@@ -48,10 +50,10 @@ void GameRow::SetupUi(const wxArrayString& books) {
     
     // Verse inputs
     m_v1 = CreateDigitInput();
-    layout->Add(m_v1, 0, wxEXPAND | wxALL, 4);
+    layout->Add(m_v1, 1, wxEXPAND | wxALL, 4);
     
     m_v2 = CreateDigitInput();
-    layout->Add(m_v2, 0, wxEXPAND | wxALL, 4);
+    layout->Add(m_v2, 1, wxEXPAND | wxALL, 4);
     
     SetSizer(layout);
 }

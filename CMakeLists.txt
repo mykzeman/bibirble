@@ -49,6 +49,7 @@ set(SOURCES
     src/SettingsScreen.cpp
     src/SettingsScreen.h
     src/loading_dialog.h
+    src/WrappingText.h
 )
 
 # Compile bible_sections.json and the app icon into the program (Bibirble.rc
