@@ -18,7 +18,8 @@ not the C++.
 **Goals**
 - A story the player reads as they go: every level carries its own part of the story.
 - Replayable levels: the game picks a fresh random set of verses from the level's pool.
-- A 7-star scoring system that rewards accuracy, Hard Mode, first-try guesses, clean runs and speed.
+- A 7-star scoring system that rewards accuracy, Hard Mode, first-try guesses, clean runs and
+  mastering a level's whole verse pool.
 - Fully data-driven areas, so the author can add, remove, rename, reorder and regroup them freely.
 - Automatic saving.
 
@@ -72,13 +73,18 @@ path. A bonus level unlocks only when **both** of these are true:
 
 Bonus levels are never required to move forward on the main path.
 
+**Locked bonus levels are a mystery:** on the map they show only a locked 🔮 tile with **no text at
+all**, so no title, no story and no unlock requirements. Everything appears once it unlocks.
+
 ## 4. Level Flow
 
-1. Player picks an unlocked level on the map.
+1. Player picks an unlocked level on the map, or presses that level's **Retry** button to replay
+   it (§7.1). Hard Mode can be toggled here only if it's unlocked for this level (§5.3).
 2. The **intro** story text is shown.
-3. The game randomly draws **3 distinct verses** from the pool.
+3. The game randomly draws **3 distinct verses** from the pool. Draws are **not seeded**, so
+   every attempt is a fresh random pick.
 4. The player guesses each verse with the normal game (same `GameRow` input, reveal stages and
-   color feedback as Random/Daily). The level timer runs across all 3 verses.
+   color feedback as Random/Daily).
 5. **All 3 solved** → level passed → stars are awarded (§5), the **outro** is shown, and progress
    auto-saves.
 6. **Any verse failed** (out of guesses) → the level fails, and the player **retries this level**
@@ -94,7 +100,7 @@ Stars are only ever earned for **passing the whole level**, never per verse.
 | ⭐ | **Hard Mode** | The whole level was played with Hard Mode on. |
 | ⭐ | **First try** | At least one verse was guessed exactly right on the first guess. |
 | ⭐ | **No retry** | The level was passed on the first attempt (no failed attempts before it). |
-| ⭐ | **Speedrun** | The level was passed within its target time. |
+| ⭐ | **Perfect** | Every verse in the level's pool has been solved, counted across all plays of the level. |
 
 ### 5.1 Guess-count stars
 Each level sets the most total guesses (across the 3 verses) allowed for each star tier:
@@ -106,17 +112,29 @@ Each level sets the most total guesses (across the 3 verses) allowed for each st
 
 If a level leaves `guessStars` out, it uses the map-wide `defaults.guessStars`.
 
+**Tiers scale in Hard Mode.** Hard Mode is tougher, so its tiers allow more guesses. A level can set
+its own `hardGuessStars`. If it doesn't, each normal limit is multiplied by
+`defaults.hardModeScale` (default `1.25`) and rounded up, e.g. `{6, 9, 12}` → `{8, 12, 15}`.
+
 ### 5.2 Bonus stars
 - **Hard Mode** uses the existing Hard Mode constraint checks in `GameState`. Turning Hard Mode
   on/off mid-level isn't allowed: it's set when the level starts.
 - **First try**: a verse whose first `GuessRecord` is all green (book + all digits).
-- **No retry**: the attempt counter for this level (since its last pass) is 1.
-- **Speedrun**: elapsed time ≤ `speedrunSeconds`. The timer pauses while story text is on screen.
+- **No retry**: the level was passed without failing a verse during that attempt (§6).
+- **Perfect**: each verse solved in a passed attempt is added to the level's saved
+  `solvedVerses` set. The star is earned once that set covers **every verse in the pool**. Since
+  draws are random, replaying with **Retry** (§7.1) is how players work toward it. Big pools =
+  a real challenge. 🏆
 
 Any bonus star can be turned off for a level with `"bonus": [...]` listing only the ones it allows.
 By default all four are on.
 
-### 5.3 Best score is kept
+### 5.3 Hard Mode unlock
+Hard Mode is **locked per level** until the player has earned **4 or more stars** on that level.
+After that, the Hard Mode toggle is available when starting or retrying that level. So the usual
+path is: pass the level → collect 4+ stars → hit **Retry** in Hard Mode for the Hard Mode star.
+
+### 5.4 Best score is kept
 A level's saved stars are the **best** result ever, per category. Replaying a passed level can only
 add stars, never remove them. For example, an earlier Hard Mode star stays even if a later run is
 played in normal mode.
@@ -129,7 +147,8 @@ When any verse in a level is failed:
 - The attempt ends and the player retries **the same level**.
 - The retry draws a **new random set of verses**, but **the verse the player failed on is always
   included** so they get a shot at it again. The other 2 are re-rolled from the rest of the pool.
-- The level's attempt counter goes up, so the **No retry** star is lost for this pass.
+- The **No retry** star can't be earned on the attempt that eventually passes after a fail.
+  It can still be earned later by replaying the level with **Retry** (§7.1) and passing cleanly.
 
 ## 7. Unlocking
 
@@ -138,6 +157,12 @@ When any verse in a level is failed:
   `unlockStars`.
 - **Levels within an area:** unlock in order. Passing level N unlocks level N+1.
 - **Bonus levels:** see §3.3 (`requiresArea` + `requiresStars`).
+- **Hard Mode:** per level, at 4+ stars (§5.3).
+
+### 7.1 Retry button
+Every **passed** level on the map has a **Retry** button 🔁 to play it again from scratch. A new
+random draw, new attempt, and a chance to raise its stars (best score is kept, §5.4). This is how
+players earn the Hard Mode, No retry and Perfect stars they missed the first time.
 
 ## 8. Saving
 
@@ -157,8 +182,8 @@ There is no manual save button.
   "levels": {
     "exodus.red-sea": {
       "passed": true,
-      "attempts": 0,
-      "stars": { "guess": 2, "hard": true, "firstTry": true, "noRetry": false, "speedrun": true }
+      "stars": { "guess": 2, "hard": true, "firstTry": true, "noRetry": false, "perfect": false },
+      "solvedVerses": ["Exodus 14:21", "Exodus 14:22", "Exodus 15:2"]
     }
   },
   "inProgress": {
@@ -166,7 +191,7 @@ There is no manual save button.
     "verses": ["Exodus 12:13", "Exodus 12:23", "Exodus 12:27"],
     "solved": 1,
     "guessesSoFar": 3,
-    "elapsedSeconds": 41,
+    "failedThisAttempt": false,
     "hardMode": false
   }
 }
@@ -184,7 +209,7 @@ Saved progress is keyed by `areaId.levelId`, so:
   "version": 1,
   "defaults": {
     "guessStars": { "3": 6, "2": 9, "1": 12 },
-    "speedrunSeconds": 180
+    "hardModeScale": 1.25
   },
   "areas": [
     {
@@ -212,8 +237,8 @@ Saved progress is keyed by `areaId.levelId`, so:
           "intro": "Pharaoh's army thundered behind them. Moses raised his staff...",
           "pool": ["Exodus 14:13-31", "Exodus 15:1-3"],
           "guessStars": { "3": 5, "2": 8, "1": 11 },
-          "speedrunSeconds": 120,
-          "bonus": ["hard", "firstTry", "noRetry", "speedrun"]
+          "hardGuessStars": { "3": 7, "2": 10, "1": 14 },
+          "bonus": ["hard", "firstTry", "noRetry", "perfect"]
         }
       ],
       "bonusLevels": [
@@ -236,7 +261,7 @@ When the map loads, the game checks it and reports clear errors (area/level id +
 - duplicate area ids, or duplicate level ids within an area,
 - a pool reference that doesn't exist in `bible_sections.json` (uses `BibleData::verseExists()`),
 - a pool with fewer than 3 distinct verses,
-- `guessStars` tiers that aren't increasing (`3` ≤ `2` ≤ `1`),
+- `guessStars` / `hardGuessStars` tiers that aren't increasing (`3` ≤ `2` ≤ `1`),
 - a `requiresArea` that points at an unknown area.
 
 ### 9.2 Where the file lives
@@ -251,11 +276,14 @@ story and test it **without rebuilding**.
   `StartScreen`/`SettingsScreen`):
   - areas listed in order, with locked areas greyed out and showing their unlock requirement 🔒,
   - levels in each area showing their best stars (e.g. ⭐⭐⭐⭐⭐☆☆),
-  - bonus levels marked separately (🔮), showing what's needed to unlock them,
+  - a **Retry** 🔁 button on every passed level, plus a Hard Mode toggle once it has 4+ stars,
+  - Perfect progress per level (e.g. "Pool 9 / 14"),
+  - unlocked bonus levels marked with 🔮, while locked ones are a **text-free** locked 🔮 tile,
   - the player's star total at the top.
 - **Story card:** intro/outro text with a Continue button.
-- **In-level HUD:** "Verse 2 / 3", a timer (⏱️), and the speedrun target.
-- **Level result:** stars earned in each category, with any new bests highlighted.
+- **In-level HUD:** "Verse 2 / 3".
+- **Level result:** stars earned in each category, with any new bests highlighted (and "Hard
+  Mode unlocked!" the first time a level reaches 4 stars 💪).
 
 ## 11. Code changes (planned)
 
@@ -263,15 +291,16 @@ story and test it **without rebuilding**.
 |---|---|
 | `src/StoryMap.h/cpp` (new) | Loads + validates `story_map.json`; expands pool references into verse indices. |
 | `src/StoryProgress.h/cpp` (new) | Attempts, best stars, in-progress level, star total, unlock checks. |
-| `src/StoryMapScreen.h/cpp` (new) | Map UI panel. |
-| `GameState` | Add `GameMode::Story` plus level context (level id, verse 1–3 of 3, timer). |
+| `src/StoryMapScreen.h/cpp` (new) | Map UI panel, including Retry buttons and the per-level Hard Mode toggle. |
+| `GameState` | Add `GameMode::Story` plus level context (level id, verse 1–3 of 3). |
 | `BibirbleWindow` | Runs the 3-verse level loop, retry logic, and story cards. |
 | `PersistenceManager` | Read/write the `story` key. |
 | `StartScreen` | Story button. |
 | `CMakeLists.txt` / `Bibirble.rc` | Embed `story_map.json`. |
 | `tools/` (optional) | A small validator script for the JSON so the author can check edits fast. |
 
-## 12. Open questions
-- Random draws: truly random each attempt, or seeded (e.g. so a level's verses could be shared)?
-- What text is shown for a locked bonus level before it's unlocked: its title, or a mystery "???"
-- Should the guess-count tiers scale automatically when Hard Mode is on?
+## 12. Decisions
+- Random draws are **not seeded**. Each attempt is a fresh random pick.
+- Locked bonus levels show **no text**, only a locked 🔮 tile.
+- Guess-count tiers **scale in Hard Mode** (`hardGuessStars` or `hardModeScale`).
+- Hard Mode unlocks per level at **4+ stars**, and every passed level has a **Retry** button.
