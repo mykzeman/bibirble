@@ -71,7 +71,7 @@ path. Each area lists its own in `bonusLevels`, and they're picked by **theme**,
 area's bonus prophecies are about the same thing as the area. For example:
 - **Promises** → the new covenant (Jeremiah 31) and God's oath to Abraham (Isaiah 51, Micah 7)
 - **Wilderness** → the desert blooming (Isaiah 35) and "I will allure her into the wilderness" (Hosea 2)
-- **Kings** → the coming Son of David (Isaiah 9 and 11, Jeremiah 23) and the kingdoms of Daniel 7–12
+- **Kings** → the coming Son of David (Isaiah 9 and 11, Jeremiah 23) and prophets confronting kings (Jeremiah 36)
 - **Messiah** → the Suffering Servant (Isaiah 53), prophecies fulfilled in Jesus, and the sign of Jonah
 
 A bonus level unlocks when **both** of these are true:
@@ -84,11 +84,17 @@ Bonus levels are never required to move forward on the main path. Their stars co
 no title, no hint and no unlock requirements. A bonus level shows up (🔮) only once it unlocks,
 as a surprise. ✨
 
-### 3.4 The perfect-unlock bonus area (Ezekiel & Revelation)
-**Ezekiel's prophecies** and **Revelation** don't go in a normal area. They form a hidden bonus area
-(`"bonusArea": true, "unlock": "perfect"`, "The End Times"). It unlocks only when **every non-bonus
-level has all 7 stars**, Perfect included. Like other bonus content, it's completely hidden until
-then. Its levels unlock in order with no star check.
+### 3.4 The perfect-unlock bonus area: The End Times
+**All prophecy about the future / end times** goes here instead of in a themed bonus level:
+Ezekiel's prophecies, Revelation, and the other end-time passages (Isaiah's "last days" and new
+heavens and new earth, Daniel 7–8 and 10–12, the Day of the Lord in Joel/Obadiah/Zephaniah/Malachi,
+Zechariah 12–14, the Olivet Discourse in Matthew 24–25 / Mark 13 / Luke 21, and Paul's and Peter's
+letters on Christ's return). Those Gospel chapters are left out of the regular Messiah levels so they
+only appear here.
+
+It's a hidden bonus area (`"bonusArea": true, "unlock": "perfect"`). It unlocks only when **every
+non-bonus level has all 7 stars**, Perfect included. Like other bonus content, it's completely
+hidden until then. Its levels unlock in order with no star check.
 
 ## 4. Level Flow
 

@@ -30,14 +30,16 @@
             ],
             "bonusLevels": [
                 {
-                    "id": "new-creation",
-                    "title": "New Heavens and a New Earth",
+                    "id": "formed-to-be-inhabited",
+                    "title": "Formed to Be Inhabited",
                     "pool": [
-                        "isaiah 65:17-25",
-                        "isaiah 11:6-9"
+                        "isaiah 45:7-12",
+                        "isaiah 45:18-19",
+                        "isaiah 42:5",
+                        "zechariah 12:1"
                     ],
                     "requiresStars": "2x+2",
-                    "intro": "The wolf will dwell with the lamb. God will make all things new, like Eden again."
+                    "intro": "He did not create the earth empty. He formed it to be inhabited."
                 },
                 {
                     "id": "the-creator",
@@ -366,10 +368,10 @@
                     "pool": [
                         "malachi 1:6-14",
                         "malachi 3:6-12",
-                        "isaiah 2:1-5"
+                        "isaiah 58"
                     ],
                     "requiresStars": "3x+12",
-                    "intro": "Bring the full tithe into the storehouse and see if I will not open the windows of heaven."
+                    "intro": "Bring the full tithe into the storehouse. Is not this the fast that I choose: to loose the bonds of wickedness?"
                 }
             ]
         },
@@ -506,14 +508,16 @@
                     "intro": "A shoot from the stump of Jesse: a King who will reign in righteousness forever."
                 },
                 {
-                    "id": "kingdoms-rise-and-fall",
-                    "title": "Kingdoms Rise and Fall",
+                    "id": "prophets-and-kings",
+                    "title": "Prophets and Kings",
                     "pool": [
-                        "daniel 7-8",
-                        "daniel 10-12"
+                        "isaiah 7:1-13",
+                        "jeremiah 22",
+                        "jeremiah 36",
+                        "amos 7:10-17"
                     ],
                     "requiresStars": "4x+20",
-                    "intro": "Beasts from the sea, empires that crumble, and a kingdom that will never end."
+                    "intro": "Prophets stood before kings and said hard things. One king burned the scroll, but God's word stood."
                 }
             ]
         },
@@ -664,7 +668,10 @@
                 {
                     "id": "matthew-passion",
                     "title": "He Is Risen",
-                    "pool": "matthew 21-28",
+                    "pool": [
+                        "matthew 21-23",
+                        "matthew 26-28"
+                    ],
                     "minStars": 0,
                     "intro": "Palm branches, a cross, and an empty tomb. Go and make disciples."
                 },
@@ -678,7 +685,10 @@
                 {
                     "id": "mark-ransom",
                     "title": "A Ransom for Many",
-                    "pool": "mark 9-16",
+                    "pool": [
+                        "mark 9-12",
+                        "mark 14-16"
+                    ],
                     "minStars": 0,
                     "intro": "The Son of Man came not to be served but to serve."
                 },
@@ -706,7 +716,12 @@
                 {
                     "id": "emmaus",
                     "title": "The Road to Emmaus",
-                    "pool": "luke 20-24",
+                    "pool": [
+                        "luke 20",
+                        "luke 21:1-4",
+                        "luke 21:37-38",
+                        "luke 22-24"
+                    ],
                     "minStars": 0,
                     "intro": "Did not our hearts burn within us while He talked with us on the road?"
                 },
@@ -812,7 +827,7 @@
                 {
                     "id": "spirit-poured-out",
                     "title": "I Will Pour Out My Spirit",
-                    "pool": "joel",
+                    "pool": "joel 2:12-32",
                     "requiresStars": 80,
                     "intro": "Your sons and daughters will prophesy. Peter said: this is what was spoken by the prophet Joel."
                 },
@@ -835,8 +850,28 @@
             "title": "The End Times",
             "bonusArea": true,
             "unlock": "perfect",
-            "note": "Hidden until every non-bonus level has all 7 stars.",
+            "note": "All future / end-time prophecy. Hidden until every non-bonus level has all 7 stars.",
             "levels": [
+                {
+                    "id": "last-days",
+                    "title": "In the Last Days",
+                    "pool": [
+                        "isaiah 2:1-5",
+                        "isaiah 24-27",
+                        "micah 4:1-8"
+                    ],
+                    "intro": "In the last days the mountain of the Lord will be lifted high, and swords beaten into plowshares."
+                },
+                {
+                    "id": "new-heavens",
+                    "title": "New Heavens and a New Earth",
+                    "pool": [
+                        "isaiah 11:6-9",
+                        "isaiah 65:17-25",
+                        "isaiah 66:15-24"
+                    ],
+                    "intro": "The wolf will dwell with the lamb, and the former things will not be remembered."
+                },
                 {
                     "id": "watchman",
                     "title": "The Watchman",
@@ -870,6 +905,67 @@
                     "title": "The River from the Temple",
                     "pool": "ezekiel 40-48",
                     "intro": "A new temple, and a river flowing out that brings life wherever it goes."
+                },
+                {
+                    "id": "son-of-man",
+                    "title": "One Like a Son of Man",
+                    "pool": [
+                        "daniel 7-8"
+                    ],
+                    "intro": "Four beasts rise from the sea, then one like a son of man comes with the clouds of heaven."
+                },
+                {
+                    "id": "time-of-the-end",
+                    "title": "The Time of the End",
+                    "pool": [
+                        "daniel 10-12"
+                    ],
+                    "intro": "Many who sleep in the dust will awake, and the wise will shine like the stars forever."
+                },
+                {
+                    "id": "day-of-the-lord",
+                    "title": "The Day of the Lord",
+                    "pool": [
+                        "joel 1",
+                        "joel 2:1-11",
+                        "joel 3",
+                        "obadiah 1:15-21",
+                        "zephaniah 1:14-18",
+                        "zephaniah 3:8-20",
+                        "malachi 4:1-3"
+                    ],
+                    "intro": "The great and terrible day of the Lord is near. Yet the Lord will rejoice over you with singing."
+                },
+                {
+                    "id": "zechariah-14",
+                    "title": "The Lord Will Be King",
+                    "pool": [
+                        "zechariah 12:1-9",
+                        "zechariah 14"
+                    ],
+                    "intro": "His feet will stand on the Mount of Olives, and the Lord will be king over all the earth."
+                },
+                {
+                    "id": "olivet",
+                    "title": "Signs of His Coming",
+                    "pool": [
+                        "matthew 24-25",
+                        "mark 13",
+                        "luke 21:5-36"
+                    ],
+                    "intro": "On the Mount of Olives the disciples asked: what will be the sign of your coming?"
+                },
+                {
+                    "id": "lord-will-come",
+                    "title": "The Lord Will Come",
+                    "pool": [
+                        "1corinthians 15:50-58",
+                        "1thessalonians 4:13-18",
+                        "1thessalonians 5:1-11",
+                        "2thessalonians 2",
+                        "2peter 3"
+                    ],
+                    "intro": "In the twinkling of an eye, the trumpet will sound. Be ready: the day of the Lord comes like a thief."
                 },
                 {
                     "id": "seven-churches",
