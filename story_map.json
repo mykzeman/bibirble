@@ -1,7 +1,11 @@
 {
     "version": 1,
     "defaults": {
-        "guessStars": { "3": 6, "2": 9, "1": 12 },
+        "guessStars": {
+            "3": 6,
+            "2": 9,
+            "1": 12
+        },
         "hardModeScale": 1.25
     },
     "areas": [
@@ -9,132 +13,389 @@
             "id": "creation",
             "title": "Creation",
             "levels": [
-                { "id": "eden", "title": "In the Beginning", "pool": "genesis 1-2", "minStars": 0,
-                  "intro": "Before anything was, God was. He spoke, and light broke through the dark." },
-                { "id": "fall", "title": "The Fall", "pool": "genesis 3-5", "minStars": 0,
-                  "intro": "A serpent, a question, and a bite that changed everything." }
+                {
+                    "id": "eden",
+                    "title": "In the Beginning",
+                    "pool": "genesis 1-2",
+                    "minStars": 0,
+                    "intro": "Before anything was, God was. He spoke, and light broke through the dark."
+                },
+                {
+                    "id": "fall",
+                    "title": "The Fall",
+                    "pool": "genesis 3-5",
+                    "minStars": 0,
+                    "intro": "A serpent, a question, and a bite that changed everything."
+                }
             ]
         },
         {
             "id": "promises",
             "title": "Promises",
             "levels": [
-                { "id": "noah-to-abram", "title": "Noah to Abram", "pool": "genesis 6-12", "minStars": 2,
-                  "intro": "The world grew wicked, but Noah found favor. After the flood, God called a man named Abram." },
-                { "id": "abraham", "title": "Father of Many", "pool": "genesis 13-21", "minStars": "2x",
-                  "intro": "Count the stars, God told Abram. So shall your offspring be." },
-                { "id": "isaac", "title": "The Promised Son", "pool": "genesis 22-26", "minStars": "2x",
-                  "intro": "On Mount Moriah, a father and son climbed together. God would provide." },
-                { "id": "jacob", "title": "Jacob the Wrestler", "pool": "genesis 27-36", "minStars": "2x",
-                  "intro": "A stolen blessing, a ladder to heaven, and a wrestling match with God." },
-                { "id": "joseph-dreams", "title": "Joseph the Dreamer", "pool": "genesis 37-41", "minStars": "2x",
-                  "intro": "Sold by his brothers, jailed in Egypt, but God was with Joseph." },
-                { "id": "joseph-family", "title": "Joseph's Family", "pool": "genesis 42-50", "minStars": "2x",
-                  "intro": "You meant evil against me, but God meant it for good." },
-                { "id": "job", "title": "The Trials of Job", "pool": "job", "minStars": "2x",
-                  "intro": "A blameless man loses everything, and still he will not curse God." },
-                { "id": "moses", "title": "The Burning Bush", "pool": "exodus 1-4", "minStars": "2x",
-                  "intro": "Israel cried out in slavery. In the desert, a bush burned but was not consumed." },
-                { "id": "plagues", "title": "Let My People Go", "pool": "exodus 5-12", "minStars": "2x",
-                  "intro": "Ten plagues, one hard heart, and the blood of a lamb on the doorposts." },
-                { "id": "red-sea", "title": "The Red Sea", "pool": "exodus 13-18", "minStars": "2x",
-                  "intro": "Pharaoh's army thundered behind them. Moses raised his staff..." },
-                { "id": "sinai", "title": "Mount Sinai", "pool": "exodus 19-20", "minStars": "2x",
-                  "intro": "Thunder, smoke, and the voice of God giving His people ten words." }
+                {
+                    "id": "noah-to-abram",
+                    "title": "Noah to Abram",
+                    "pool": "genesis 6-12",
+                    "minStars": 2,
+                    "intro": "The world grew wicked, but Noah found favor. After the flood, God called a man named Abram."
+                },
+                {
+                    "id": "abraham",
+                    "title": "Father of Many",
+                    "pool": "genesis 13-21",
+                    "minStars": "2x",
+                    "intro": "Count the stars, God told Abram. So shall your offspring be."
+                },
+                {
+                    "id": "isaac",
+                    "title": "The Promised Son",
+                    "pool": "genesis 22-26",
+                    "minStars": "2x",
+                    "intro": "On Mount Moriah, a father and son climbed together. God would provide."
+                },
+                {
+                    "id": "jacob",
+                    "title": "Jacob the Wrestler",
+                    "pool": "genesis 27-36",
+                    "minStars": "2x",
+                    "intro": "A stolen blessing, a ladder to heaven, and a wrestling match with God."
+                },
+                {
+                    "id": "joseph-dreams",
+                    "title": "Joseph the Dreamer",
+                    "pool": "genesis 37-41",
+                    "minStars": "2x",
+                    "intro": "Sold by his brothers, jailed in Egypt, but God was with Joseph."
+                },
+                {
+                    "id": "joseph-family",
+                    "title": "Joseph's Family",
+                    "pool": "genesis 42-50",
+                    "minStars": "2x",
+                    "intro": "You meant evil against me, but God meant it for good."
+                },
+                {
+                    "id": "job",
+                    "title": "The Trials of Job",
+                    "pool": "job",
+                    "minStars": "2x",
+                    "intro": "A blameless man loses everything, and still he will not curse God."
+                },
+                {
+                    "id": "moses",
+                    "title": "The Burning Bush",
+                    "pool": "exodus 1-4",
+                    "minStars": "2x",
+                    "intro": "Israel cried out in slavery. In the desert, a bush burned but was not consumed."
+                },
+                {
+                    "id": "plagues",
+                    "title": "Let My People Go",
+                    "pool": "exodus 5-12",
+                    "minStars": "2x",
+                    "intro": "Ten plagues, one hard heart, and the blood of a lamb on the doorposts."
+                },
+                {
+                    "id": "red-sea",
+                    "title": "The Red Sea",
+                    "pool": "exodus 13-18",
+                    "minStars": "2x",
+                    "intro": "Pharaoh's army thundered behind them. Moses raised his staff..."
+                },
+                {
+                    "id": "sinai",
+                    "title": "Mount Sinai",
+                    "pool": "exodus 19-20",
+                    "minStars": "2x",
+                    "intro": "Thunder, smoke, and the voice of God giving His people ten words."
+                }
             ]
         },
         {
             "id": "wilderness",
             "title": "Wilderness",
             "levels": [
-                { "id": "covenant", "title": "The Book of the Covenant", "pool": "exodus 21-31", "minStars": "3x",
-                  "intro": "God gave Moses laws for living and plans for a tent where He would dwell." },
-                { "id": "golden-calf", "title": "The Golden Calf", "pool": "exodus 32-34", "minStars": "3x",
-                  "intro": "While Moses was on the mountain, the people made a god of gold." },
-                { "id": "tabernacle", "title": "The Tabernacle", "pool": "exodus 35-40", "minStars": "3x",
-                  "intro": "Every willing heart gave, and the glory of the Lord filled the tabernacle." },
-                { "id": "census", "title": "Counted and Camped", "pool": "numbers 1-10", "minStars": "3x+1",
-                  "intro": "Twelve tribes, counted and camped around the presence of God." },
-                { "id": "spies", "title": "The Twelve Spies", "pool": "numbers 11-14", "minStars": "3x+1",
-                  "intro": "Ten spies saw giants. Two saw God's promise." },
-                { "id": "rebellion", "title": "Rebellion in the Desert", "pool": "numbers 15-21", "minStars": "3x+1",
-                  "intro": "Korah rebelled, water flowed from a rock, and a bronze serpent brought healing." },
-                { "id": "balaam", "title": "Balaam's Donkey", "pool": "numbers 22-25", "minStars": "3x+1",
-                  "intro": "A king hired a prophet to curse Israel, but even his donkey knew better." },
-                { "id": "new-generation", "title": "A New Generation", "pool": "numbers 26-36", "minStars": "3x+1",
-                  "intro": "Forty years passed. A new generation stood at the edge of the Promised Land." }
+                {
+                    "id": "covenant",
+                    "title": "The Book of the Covenant",
+                    "pool": "exodus 21-31",
+                    "minStars": "3x",
+                    "intro": "God gave Moses laws for living and plans for a tent where He would dwell."
+                },
+                {
+                    "id": "golden-calf",
+                    "title": "The Golden Calf",
+                    "pool": "exodus 32-34",
+                    "minStars": "3x",
+                    "intro": "While Moses was on the mountain, the people made a god of gold."
+                },
+                {
+                    "id": "tabernacle",
+                    "title": "The Tabernacle",
+                    "pool": "exodus 35-40",
+                    "minStars": "3x",
+                    "intro": "Every willing heart gave, and the glory of the Lord filled the tabernacle."
+                },
+                {
+                    "id": "census",
+                    "title": "Counted and Camped",
+                    "pool": "numbers 1-10",
+                    "minStars": "3x+1",
+                    "intro": "Twelve tribes, counted and camped around the presence of God."
+                },
+                {
+                    "id": "spies",
+                    "title": "The Twelve Spies",
+                    "pool": "numbers 11-14",
+                    "minStars": "3x+1",
+                    "intro": "Ten spies saw giants. Two saw God's promise."
+                },
+                {
+                    "id": "rebellion",
+                    "title": "Rebellion in the Desert",
+                    "pool": "numbers 15-21",
+                    "minStars": "3x+1",
+                    "intro": "Korah rebelled, water flowed from a rock, and a bronze serpent brought healing."
+                },
+                {
+                    "id": "balaam",
+                    "title": "Balaam's Donkey",
+                    "pool": "numbers 22-25",
+                    "minStars": "3x+1",
+                    "intro": "A king hired a prophet to curse Israel, but even his donkey knew better."
+                },
+                {
+                    "id": "new-generation",
+                    "title": "A New Generation",
+                    "pool": "numbers 26-36",
+                    "minStars": "3x+1",
+                    "intro": "Forty years passed. A new generation stood at the edge of the Promised Land."
+                }
             ]
         },
         {
             "id": "law",
             "title": "Law and Land",
             "levels": [
-                { "id": "remember", "title": "Remember the Way", "pool": "deuteronomy 1-11", "minStars": "3x+1",
-                  "intro": "Hear, O Israel: the Lord our God, the Lord is one." },
-                { "id": "statutes", "title": "Statutes and Rules", "pool": "deuteronomy 12-26", "minStars": "3x+1",
-                  "intro": "Moses taught the people how to live in the land God was giving them." },
-                { "id": "choose-life", "title": "Choose Life", "pool": "deuteronomy 27-34", "minStars": "3x+1",
-                  "intro": "Blessings and curses, a final song, and Moses climbs Mount Nebo." },
-                { "id": "jericho", "title": "The Walls of Jericho", "pool": "joshua 1-6", "minStars": "3x+2",
-                  "intro": "Be strong and courageous. Then march, shout, and watch the walls fall." },
-                { "id": "conquest", "title": "Taking the Land", "pool": "joshua 7-12", "minStars": "3x+2",
-                  "intro": "Sin in the camp, the sun stands still, and city after city falls." },
-                { "id": "inheritance", "title": "As for Me and My House", "pool": "joshua 13-24", "minStars": "3x+2",
-                  "intro": "The land was divided, and Joshua made his choice: we will serve the Lord." },
-                { "id": "deborah", "title": "Deborah", "pool": "judges 1-5", "minStars": "3x+4",
-                  "intro": "Israel forgot God again and again. Then a judge named Deborah arose." },
-                { "id": "gideon", "title": "Gideon's Three Hundred", "pool": "judges 6-8", "minStars": "3x+4",
-                  "intro": "The least in his family, and God called him a mighty man of valor." },
-                { "id": "dark-days", "title": "Dark Days", "pool": "judges 9-12", "minStars": "3x+4",
-                  "intro": "Kings who weren't kings and vows that should never have been made." },
-                { "id": "samson", "title": "Samson", "pool": "judges 13-16", "minStars": "3x+4",
-                  "intro": "The strongest man alive, and his weakness was his heart." },
-                { "id": "no-king", "title": "No King in Israel", "pool": "judges 17-21", "minStars": "3x+4",
-                  "intro": "Everyone did what was right in his own eyes." },
-                { "id": "offerings", "title": "Offerings and Priests", "pool": "leviticus 1-10", "minStars": "6x-10",
-                  "intro": "How can sinful people come near a holy God? Through sacrifice." },
-                { "id": "clean", "title": "Clean and Unclean", "pool": "leviticus 11-17", "minStars": "6x-10",
-                  "intro": "Once a year, the high priest entered the Most Holy Place for the Day of Atonement." },
-                { "id": "holiness", "title": "Be Holy", "pool": "leviticus 18-27", "minStars": "6x-10",
-                  "intro": "You shall be holy, for I the Lord your God am holy." }
+                {
+                    "id": "remember",
+                    "title": "Remember the Way",
+                    "pool": "deuteronomy 1-11",
+                    "minStars": "3x+1",
+                    "intro": "Hear, O Israel: the Lord our God, the Lord is one."
+                },
+                {
+                    "id": "statutes",
+                    "title": "Statutes and Rules",
+                    "pool": "deuteronomy 12-26",
+                    "minStars": "3x+1",
+                    "intro": "Moses taught the people how to live in the land God was giving them."
+                },
+                {
+                    "id": "choose-life",
+                    "title": "Choose Life",
+                    "pool": "deuteronomy 27-34",
+                    "minStars": "3x+1",
+                    "intro": "Blessings and curses, a final song, and Moses climbs Mount Nebo."
+                },
+                {
+                    "id": "jericho",
+                    "title": "The Walls of Jericho",
+                    "pool": "joshua 1-6",
+                    "minStars": "3x+2",
+                    "intro": "Be strong and courageous. Then march, shout, and watch the walls fall."
+                },
+                {
+                    "id": "conquest",
+                    "title": "Taking the Land",
+                    "pool": "joshua 7-12",
+                    "minStars": "3x+2",
+                    "intro": "Sin in the camp, the sun stands still, and city after city falls."
+                },
+                {
+                    "id": "inheritance",
+                    "title": "As for Me and My House",
+                    "pool": "joshua 13-24",
+                    "minStars": "3x+2",
+                    "intro": "The land was divided, and Joshua made his choice: we will serve the Lord."
+                },
+                {
+                    "id": "deborah",
+                    "title": "Deborah",
+                    "pool": "judges 1-5",
+                    "minStars": "3x+4",
+                    "intro": "Israel forgot God again and again. Then a judge named Deborah arose."
+                },
+                {
+                    "id": "gideon",
+                    "title": "Gideon's Three Hundred",
+                    "pool": "judges 6-8",
+                    "minStars": "3x+4",
+                    "intro": "The least in his family, and God called him a mighty man of valor."
+                },
+                {
+                    "id": "dark-days",
+                    "title": "Dark Days",
+                    "pool": "judges 9-12",
+                    "minStars": "3x+4",
+                    "intro": "Kings who weren't kings and vows that should never have been made."
+                },
+                {
+                    "id": "samson",
+                    "title": "Samson",
+                    "pool": "judges 13-16",
+                    "minStars": "3x+4",
+                    "intro": "The strongest man alive, and his weakness was his heart."
+                },
+                {
+                    "id": "no-king",
+                    "title": "No King in Israel",
+                    "pool": "judges 17-21",
+                    "minStars": "3x+4",
+                    "intro": "Everyone did what was right in his own eyes."
+                },
+                {
+                    "id": "offerings",
+                    "title": "Offerings and Priests",
+                    "pool": "leviticus 1-10",
+                    "minStars": "4x-10",
+                    "intro": "How can sinful people come near a holy God? Through sacrifice."
+                },
+                {
+                    "id": "clean",
+                    "title": "Clean and Unclean",
+                    "pool": "leviticus 11-17",
+                    "minStars": "4x-10",
+                    "intro": "Once a year, the high priest entered the Most Holy Place for the Day of Atonement."
+                },
+                {
+                    "id": "holiness",
+                    "title": "Be Holy",
+                    "pool": "leviticus 18-27",
+                    "minStars": "4x-10",
+                    "intro": "You shall be holy, for I the Lord your God am holy."
+                }
             ]
         },
         {
             "id": "kings",
             "title": "Kings",
             "levels": [
-                { "id": "ruth", "title": "Ruth", "pool": "ruth", "minStars": "3x+4",
-                  "intro": "Where you go I will go, and your God will be my God." },
-                { "id": "samuel", "title": "Speak, Lord", "pool": "1samuel 1-7", "minStars": "4x+3",
-                  "intro": "A barren woman prayed, and God answered with a boy named Samuel." },
-                { "id": "saul", "title": "Saul the First King", "pool": "1samuel 8-15", "minStars": "4x+3",
-                  "intro": "Israel wanted a king like the nations. They got one: tall, handsome, and disobedient." },
-                { "id": "goliath", "title": "David and Goliath", "pool": "1samuel 16-20", "minStars": "4x+3",
-                  "intro": "The Lord looks at the heart. A shepherd boy faces a giant." },
-                { "id": "on-the-run", "title": "David on the Run", "pool": "1samuel 21-31", "minStars": "4x+3",
-                  "intro": "Anointed but hunted, David hid in caves and spared his enemy's life." },
-                { "id": "king-david", "title": "King David", "pool": "2samuel 1-10", "minStars": "4x+6",
-                  "intro": "David became king, danced before the ark, and received an everlasting promise." },
-                { "id": "bathsheba", "title": "David's Sin", "pool": "2samuel 11-12", "minStars": "4x+6",
-                  "intro": "A rooftop, a lie, and a prophet saying: You are the man." },
-                { "id": "absalom", "title": "Absalom", "pool": "2samuel 13-24", "minStars": "4x+6",
-                  "intro": "David's own son turned against him. O Absalom, my son, my son!" },
-                { "id": "solomon", "title": "Solomon's Wisdom", "pool": "1kings 1-11", "minStars": "4x+7",
-                  "intro": "Ask what I shall give you, God said. Solomon asked for wisdom." },
-                { "id": "divided", "title": "A Kingdom Divided", "pool": "1kings 12-16", "minStars": "4x+7",
-                  "intro": "One kingdom split in two, and golden calves returned." },
-                { "id": "elijah", "title": "Elijah", "pool": "1kings 17-22", "minStars": "4x+7",
-                  "intro": "Fire from heaven on Mount Carmel, then a still, small voice." },
-                { "id": "elisha", "title": "Elisha", "pool": "2kings 1-8", "minStars": "4x+10",
-                  "intro": "A chariot of fire, a double portion, and miracles from oil to healing." },
-                { "id": "kings-of-israel", "title": "Kings of Israel and Judah", "pool": "2kings 9-16", "minStars": "4x+10",
-                  "intro": "Jehu's wild chariot ride, and king after king who did evil in God's sight." },
-                { "id": "hezekiah-josiah", "title": "Hezekiah and Josiah", "pool": ["2kings 18-23"], "minStars": "4x+10",
-                  "intro": "Two good kings who trusted God and found His forgotten Book." },
-                { "id": "family-tree", "title": "The Family Tree", "pool": "1chronicles 1-9", "minStars": "4x+12",
-                  "intro": "From Adam to the exiles: every name is part of God's story." },
-                { "id": "davids-reign", "title": "David's Reign Remembered", "pool": "1chronicles 10-29", "minStars": "4x+12",
-                  "intro": "David gathered the gold and the plans so his son could build God's temple." }
+                {
+                    "id": "ruth",
+                    "title": "Ruth",
+                    "pool": "ruth",
+                    "minStars": "3x+4",
+                    "intro": "Where you go I will go, and your God will be my God."
+                },
+                {
+                    "id": "samuel",
+                    "title": "Speak, Lord",
+                    "pool": "1samuel 1-7",
+                    "minStars": "4x+3",
+                    "intro": "A barren woman prayed, and God answered with a boy named Samuel."
+                },
+                {
+                    "id": "saul",
+                    "title": "Saul the First King",
+                    "pool": "1samuel 8-15",
+                    "minStars": "4x+3",
+                    "intro": "Israel wanted a king like the nations. They got one: tall, handsome, and disobedient."
+                },
+                {
+                    "id": "goliath",
+                    "title": "David and Goliath",
+                    "pool": "1samuel 16-20",
+                    "minStars": "4x+3",
+                    "intro": "The Lord looks at the heart. A shepherd boy faces a giant."
+                },
+                {
+                    "id": "on-the-run",
+                    "title": "David on the Run",
+                    "pool": "1samuel 21-31",
+                    "minStars": "4x+3",
+                    "intro": "Anointed but hunted, David hid in caves and spared his enemy's life."
+                },
+                {
+                    "id": "king-david",
+                    "title": "King David",
+                    "pool": "2samuel 1-10",
+                    "minStars": "4x+6",
+                    "intro": "David became king, danced before the ark, and received an everlasting promise."
+                },
+                {
+                    "id": "bathsheba",
+                    "title": "David's Sin",
+                    "pool": "2samuel 11-12",
+                    "minStars": "4x+6",
+                    "intro": "A rooftop, a lie, and a prophet saying: You are the man."
+                },
+                {
+                    "id": "absalom",
+                    "title": "Absalom",
+                    "pool": "2samuel 13-24",
+                    "minStars": "4x+6",
+                    "intro": "David's own son turned against him. O Absalom, my son, my son!"
+                },
+                {
+                    "id": "solomon",
+                    "title": "Solomon's Wisdom",
+                    "pool": "1kings 1-11",
+                    "minStars": "4x+7",
+                    "intro": "Ask what I shall give you, God said. Solomon asked for wisdom."
+                },
+                {
+                    "id": "divided",
+                    "title": "A Kingdom Divided",
+                    "pool": "1kings 12-16",
+                    "minStars": "4x+7",
+                    "intro": "One kingdom split in two, and golden calves returned."
+                },
+                {
+                    "id": "elijah",
+                    "title": "Elijah",
+                    "pool": "1kings 17-22",
+                    "minStars": "4x+7",
+                    "intro": "Fire from heaven on Mount Carmel, then a still, small voice."
+                },
+                {
+                    "id": "elisha",
+                    "title": "Elisha",
+                    "pool": "2kings 1-8",
+                    "minStars": "4x+10",
+                    "intro": "A chariot of fire, a double portion, and miracles from oil to healing."
+                },
+                {
+                    "id": "kings-of-israel",
+                    "title": "Kings of Israel and Judah",
+                    "pool": "2kings 9-16",
+                    "minStars": "4x+10",
+                    "intro": "Jehu's wild chariot ride, and king after king who did evil in God's sight."
+                },
+                {
+                    "id": "hezekiah-josiah",
+                    "title": "Hezekiah and Josiah",
+                    "pool": [
+                        "2kings 18-23"
+                    ],
+                    "minStars": "4x+10",
+                    "intro": "Two good kings who trusted God and found His forgotten Book."
+                },
+                {
+                    "id": "family-tree",
+                    "title": "The Family Tree",
+                    "pool": "1chronicles 1-9",
+                    "minStars": "4x+12",
+                    "intro": "From Adam to the exiles: every name is part of God's story."
+                },
+                {
+                    "id": "davids-reign",
+                    "title": "David's Reign Remembered",
+                    "pool": "1chronicles 10-29",
+                    "minStars": "4x+12",
+                    "intro": "David gathered the gold and the plans so his son could build God's temple."
+                }
             ]
         },
         {
@@ -142,26 +403,83 @@
             "title": "Exile and Return",
             "note": "No prophecy, and only the fall of Israel.",
             "levels": [
-                { "id": "return", "title": "Return and Rebuild", "pool": "ezra 1-6", "minStars": "6x+2",
-                  "intro": "King Cyrus let God's people go home, and they rebuilt the temple." },
-                { "id": "ezra", "title": "Ezra the Scribe", "pool": "ezra 7-10", "minStars": "6x+2",
-                  "intro": "Ezra set his heart to study, do, and teach God's law." },
-                { "id": "walls", "title": "Rebuilding the Walls", "pool": "nehemiah 1-7", "minStars": "6x+4",
-                  "intro": "A trowel in one hand, a sword in the other. The wall was done in 52 days." },
-                { "id": "renewal", "title": "The Joy of the Lord", "pool": "nehemiah 8-13", "minStars": "6x+4",
-                  "intro": "The people wept as the law was read. Do not grieve, for the joy of the Lord is your strength." },
-                { "id": "esther", "title": "For Such a Time as This", "pool": "esther", "minStars": "6x",
-                  "intro": "An orphan became queen, and her courage saved her people." },
-                { "id": "ezekiel", "title": "Ezekiel by the River", "pool": ["ezekiel 1-3", "ezekiel 24:15-27", "ezekiel 33:21-33"], "minStars": "6x-1",
-                  "intro": "Among the exiles by the river Chebar, the heavens opened." },
-                { "id": "babylon", "title": "Daniel in Babylon", "pool": "daniel 1-3", "minStars": "6x+4",
-                  "intro": "Vegetables, a dream of a statue, and three friends in a fiery furnace." },
-                { "id": "lions", "title": "The Lions' Den", "pool": "daniel 4-6", "minStars": "6x+4",
-                  "intro": "Writing on the wall, and a night with the lions." },
-                { "id": "jerusalem-falls", "title": "Jerusalem Falls", "pool": "2chronicles 36", "minStars": "6x-1",
-                  "intro": "God sent messengers again and again, until there was no remedy." },
-                { "id": "fall-of-israel", "title": "The Fall of Israel", "pool": ["2kings 17", "2kings 24-25"], "minStars": "6x-2",
-                  "intro": "Samaria fell to Assyria, and then Jerusalem to Babylon." }
+                {
+                    "id": "fall-of-israel",
+                    "title": "The Fall of Israel",
+                    "pool": [
+                        "2kings 17",
+                        "2kings 24-25"
+                    ],
+                    "minStars": "4x-2",
+                    "intro": "Samaria fell to Assyria, and then Jerusalem to Babylon."
+                },
+                {
+                    "id": "jerusalem-falls",
+                    "title": "Jerusalem Falls",
+                    "pool": "2chronicles 36",
+                    "minStars": "4x-1",
+                    "intro": "God sent messengers again and again, until there was no remedy."
+                },
+                {
+                    "id": "ezekiel",
+                    "title": "Ezekiel by the River",
+                    "pool": [
+                        "ezekiel 1-3",
+                        "ezekiel 24:15-27",
+                        "ezekiel 33:21-33"
+                    ],
+                    "minStars": "4x-1",
+                    "intro": "Among the exiles by the river Chebar, the heavens opened."
+                },
+                {
+                    "id": "babylon",
+                    "title": "Daniel in Babylon",
+                    "pool": "daniel 1-3",
+                    "minStars": "4x+4",
+                    "intro": "Vegetables, a dream of a statue, and three friends in a fiery furnace."
+                },
+                {
+                    "id": "lions",
+                    "title": "The Lions' Den",
+                    "pool": "daniel 4-6",
+                    "minStars": "4x+4",
+                    "intro": "Writing on the wall, and a night with the lions."
+                },
+                {
+                    "id": "return",
+                    "title": "Return and Rebuild",
+                    "pool": "ezra 1-6",
+                    "minStars": "4x+2",
+                    "intro": "King Cyrus let God's people go home, and they rebuilt the temple."
+                },
+                {
+                    "id": "esther",
+                    "title": "For Such a Time as This",
+                    "pool": "esther",
+                    "minStars": "4x",
+                    "intro": "An orphan became queen, and her courage saved her people."
+                },
+                {
+                    "id": "ezra",
+                    "title": "Ezra the Scribe",
+                    "pool": "ezra 7-10",
+                    "minStars": "4x+2",
+                    "intro": "Ezra set his heart to study, do, and teach God's law."
+                },
+                {
+                    "id": "walls",
+                    "title": "Rebuilding the Walls",
+                    "pool": "nehemiah 1-7",
+                    "minStars": "4x+4",
+                    "intro": "A trowel in one hand, a sword in the other. The wall was done in 52 days."
+                },
+                {
+                    "id": "renewal",
+                    "title": "The Joy of the Lord",
+                    "pool": "nehemiah 8-13",
+                    "minStars": "4x+4",
+                    "intro": "The people wept as the law was read. Do not grieve, for the joy of the Lord is your strength."
+                }
             ]
         },
         {
@@ -169,48 +487,138 @@
             "title": "The Messiah",
             "openFromStart": true,
             "levels": [
-                { "id": "matthew-birth", "title": "The King Is Born", "pool": "matthew 1-4", "minStars": 0,
-                  "intro": "Wise men followed a star to find the newborn King of the Jews." },
-                { "id": "sermon", "title": "The Sermon on the Mount", "pool": "matthew 5-7", "minStars": 0,
-                  "intro": "Blessed are the poor in spirit, for theirs is the kingdom of heaven." },
-                { "id": "matthew-ministry", "title": "Follow Me", "pool": "matthew 8-20", "minStars": 0,
-                  "intro": "Storms stilled, crowds fed, and twelve ordinary men called." },
-                { "id": "matthew-passion", "title": "He Is Risen", "pool": "matthew 21-28", "minStars": 0,
-                  "intro": "Palm branches, a cross, and an empty tomb. Go and make disciples." },
-                { "id": "mark-servant", "title": "The Servant", "pool": "mark 1-8", "minStars": 0,
-                  "intro": "Immediately! Jesus heals, teaches, and asks: Who do you say that I am?" },
-                { "id": "mark-ransom", "title": "A Ransom for Many", "pool": "mark 9-16", "minStars": 0,
-                  "intro": "The Son of Man came not to be served but to serve." },
-                { "id": "luke-birth", "title": "Good News of Great Joy", "pool": "luke 1-2", "minStars": 0,
-                  "intro": "Shepherds, angels, and a baby lying in a manger." },
-                { "id": "luke-ministry", "title": "Today This Is Fulfilled", "pool": "luke 3-9", "minStars": 0,
-                  "intro": "The Spirit of the Lord is upon me, to proclaim good news to the poor." },
-                { "id": "parables", "title": "Lost and Found", "pool": "luke 10-19", "minStars": 0,
-                  "intro": "A good Samaritan, a lost sheep, and a prodigal son running home." },
-                { "id": "emmaus", "title": "The Road to Emmaus", "pool": "luke 20-24", "minStars": 0,
-                  "intro": "Did not our hearts burn within us while He talked with us on the road?" },
-                { "id": "word", "title": "The Word Became Flesh", "pool": "john 1-4", "minStars": 0,
-                  "intro": "In the beginning was the Word. Water became wine, and a woman met Him at a well." },
-                { "id": "i-am", "title": "I Am", "pool": "john 5-12", "minStars": 0,
-                  "intro": "The Bread of Life, the Light of the World, the Resurrection and the Life." },
-                { "id": "upper-room", "title": "The Upper Room", "pool": "john 13-17", "minStars": 0,
-                  "intro": "He washed their feet and said: I am the way, the truth, and the life." },
-                { "id": "it-is-finished", "title": "It Is Finished", "pool": "john 18-21", "minStars": 0,
-                  "intro": "A cross, a garden tomb, and breakfast on the beach." }
+                {
+                    "id": "matthew-birth",
+                    "title": "The King Is Born",
+                    "pool": "matthew 1-4",
+                    "minStars": 0,
+                    "intro": "Wise men followed a star to find the newborn King of the Jews."
+                },
+                {
+                    "id": "sermon",
+                    "title": "The Sermon on the Mount",
+                    "pool": "matthew 5-7",
+                    "minStars": 0,
+                    "intro": "Blessed are the poor in spirit, for theirs is the kingdom of heaven."
+                },
+                {
+                    "id": "matthew-ministry",
+                    "title": "Follow Me",
+                    "pool": "matthew 8-20",
+                    "minStars": 0,
+                    "intro": "Storms stilled, crowds fed, and twelve ordinary men called."
+                },
+                {
+                    "id": "matthew-passion",
+                    "title": "He Is Risen",
+                    "pool": "matthew 21-28",
+                    "minStars": 0,
+                    "intro": "Palm branches, a cross, and an empty tomb. Go and make disciples."
+                },
+                {
+                    "id": "mark-servant",
+                    "title": "The Servant",
+                    "pool": "mark 1-8",
+                    "minStars": 0,
+                    "intro": "Immediately! Jesus heals, teaches, and asks: Who do you say that I am?"
+                },
+                {
+                    "id": "mark-ransom",
+                    "title": "A Ransom for Many",
+                    "pool": "mark 9-16",
+                    "minStars": 0,
+                    "intro": "The Son of Man came not to be served but to serve."
+                },
+                {
+                    "id": "luke-birth",
+                    "title": "Good News of Great Joy",
+                    "pool": "luke 1-2",
+                    "minStars": 0,
+                    "intro": "Shepherds, angels, and a baby lying in a manger."
+                },
+                {
+                    "id": "luke-ministry",
+                    "title": "Today This Is Fulfilled",
+                    "pool": "luke 3-9",
+                    "minStars": 0,
+                    "intro": "The Spirit of the Lord is upon me, to proclaim good news to the poor."
+                },
+                {
+                    "id": "parables",
+                    "title": "Lost and Found",
+                    "pool": "luke 10-19",
+                    "minStars": 0,
+                    "intro": "A good Samaritan, a lost sheep, and a prodigal son running home."
+                },
+                {
+                    "id": "emmaus",
+                    "title": "The Road to Emmaus",
+                    "pool": "luke 20-24",
+                    "minStars": 0,
+                    "intro": "Did not our hearts burn within us while He talked with us on the road?"
+                },
+                {
+                    "id": "word",
+                    "title": "The Word Became Flesh",
+                    "pool": "john 1-4",
+                    "minStars": 0,
+                    "intro": "In the beginning was the Word. Water became wine, and a woman met Him at a well."
+                },
+                {
+                    "id": "i-am",
+                    "title": "I Am",
+                    "pool": "john 5-12",
+                    "minStars": 0,
+                    "intro": "The Bread of Life, the Light of the World, the Resurrection and the Life."
+                },
+                {
+                    "id": "upper-room",
+                    "title": "The Upper Room",
+                    "pool": "john 13-17",
+                    "minStars": 0,
+                    "intro": "He washed their feet and said: I am the way, the truth, and the life."
+                },
+                {
+                    "id": "it-is-finished",
+                    "title": "It Is Finished",
+                    "pool": "john 18-21",
+                    "minStars": 0,
+                    "intro": "A cross, a garden tomb, and breakfast on the beach."
+                }
             ]
         },
         {
             "id": "acts",
             "title": "The Church",
             "levels": [
-                { "id": "pentecost", "title": "Pentecost", "pool": "acts 1-7", "minStars": 64,
-                  "intro": "Tongues of fire, three thousand saved, and the church is born." },
-                { "id": "spreading", "title": "To Samaria and Beyond", "pool": "acts 8-12", "minStars": 64,
-                  "intro": "A persecutor named Saul met Jesus on the road to Damascus." },
-                { "id": "journeys", "title": "Paul's Journeys", "pool": "acts 13-20", "minStars": 64,
-                  "intro": "Ships, shipwrecks-to-be, and churches planted across the world." },
-                { "id": "rome", "title": "All the Way to Rome", "pool": "acts 21-28", "minStars": 64,
-                  "intro": "Arrested, shipwrecked, and still preaching boldly in Rome." }
+                {
+                    "id": "pentecost",
+                    "title": "Pentecost",
+                    "pool": "acts 1-7",
+                    "minStars": 64,
+                    "intro": "Tongues of fire, three thousand saved, and the church is born."
+                },
+                {
+                    "id": "spreading",
+                    "title": "To Samaria and Beyond",
+                    "pool": "acts 8-12",
+                    "minStars": 64,
+                    "intro": "A persecutor named Saul met Jesus on the road to Damascus."
+                },
+                {
+                    "id": "journeys",
+                    "title": "Paul's Journeys",
+                    "pool": "acts 13-20",
+                    "minStars": 64,
+                    "intro": "Ships, shipwrecks-to-be, and churches planted across the world."
+                },
+                {
+                    "id": "rome",
+                    "title": "All the Way to Rome",
+                    "pool": "acts 21-28",
+                    "minStars": 64,
+                    "intro": "Arrested, shipwrecked, and still preaching boldly in Rome."
+                }
             ]
         }
     ],

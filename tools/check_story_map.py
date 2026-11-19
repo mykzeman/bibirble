@@ -97,7 +97,7 @@ def main():
                 continue
             need = min_stars(lvl.get("minStars", 0), unlocked)
             avg = need / passed if passed else 0
-            flag = "  <-- impossible" if avg > MAX_STARS else ("  <-- very hard" if avg > 6 else "")
+            flag = "  <-- impossible" if avg > MAX_STARS else ("  <-- needs Perfect stars" if avg > 6 else ("  <-- very hard" if avg > 5 else ""))
             print(f"{key:32} {lvl['_size']:>5} {unlocked:>3} {need:>5} {avg:>9.2f}{flag}")
             unlocked += 1
             passed += 1
