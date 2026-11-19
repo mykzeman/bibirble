@@ -25,6 +25,9 @@ public:
     void SetBooks(const wxArrayString& books);
     void setDigitColors(const std::vector<GuessColor>& colors);
     void lockSubmitted();
+    // Fills in a guess made earlier (book key + 4 digits), e.g. when resuming
+    // a saved Story Mode verse. Colours/locking are applied separately.
+    void SetGuess(const std::string& bookKey, const std::vector<std::string>& digits);
 
     // Clears the row back to its pre-game state (empty book/digits, default
     // colors, unlocked, disabled) so a finished game can be replayed.

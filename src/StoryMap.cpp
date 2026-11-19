@@ -1,0 +1,350 @@
+#include "StoryMap.h"
+
+#include "EmbeddedData.h"
+
+#include <algorithm>
+#include <array>
+#include <map>
+#include <cctype>
+#include <cmath>
+#include <fstream>
+#include <regex>
+#include <set>
+#include <sstream>
+
+namespace {
+
+std::string Lower(std::string s) {
+    for (char& c : s) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    return s;
+}
+
+std::string Trim(const std::string& s) {
+    size_t b = s.find_first_not_of(" \t");
+    if (b == std::string::npos) return "";
+    size_t e = s.find_last_not_of(" \t");
+    return s.substr(b, e - b + 1);
+}
+
+bool ParseTiers(const json& j, GuessTiers& out) {
+    if (!j.is_object()) return false;
+    try {
+        out.tier3 = j.at("3").get<int>();
+        out.tier2 = j.at("2").get<int>();
+        out.tier1 = j.at("1").get<int>();
+    } catch (...) {
+        return false;
+    }
+    return out.tier3 <= out.tier2 && out.tier2 <= out.tier1;
+}
+
+GuessTiers ScaleTiers(const GuessTiers& t, double scale) {
+    GuessTiers out;
+    out.tier3 = static_cast<int>(std::ceil(t.tier3 * scale));
+    out.tier2 = static_cast<int>(std::ceil(t.tier2 * scale));
+    out.tier1 = static_cast<int>(std::ceil(t.tier1 * scale));
+    return out;
+}
+
+}  // namespace
+
+int StarFormula::Eval(int x) const {
+    return std::max(0, a * x + b);
+}
+
+bool StarFormula::Parse(const json& value, StarFormula& out) {
+    out = StarFormula{};
+    if (value.is_null()) return true;
+    if (value.is_number_integer()) {
+        out.b = value.get<int>();
+        return true;
+    }
+    if (!value.is_string()) return false;
+    static const std::regex kNumber(R"(^\s*(-?\d+)\s*$)");
+    static const std::regex kFormula(R"(^\s*(\d*)\s*x\s*(?:([+-])\s*(\d+))?\s*$)");
+    const std::string s = Lower(value.get<std::string>());
+    std::smatch m;
+    if (std::regex_match(s, m, kNumber)) {
+        out.b = std::stoi(m[1].str());
+        return true;
+    }
+    if (std::regex_match(s, m, kFormula)) {
+        out.a = m[1].str().empty() ? 1 : std::stoi(m[1].str());
+        if (m[3].matched) out.b = std::stoi(m[3].str()) * (m[2].str() == "-" ? -1 : 1);
+        return true;
+    }
+    return false;
+}
+
+int GuessTiers::StarsFor(int totalGuesses) const {
+    if (totalGuesses <= tier3) return 3;
+    if (totalGuesses <= tier2) return 2;
+    if (totalGuesses <= tier1) return 1;
+    return 0;
+}
+
+bool StoryLevel::Allows(BonusStar star) const {
+    switch (star) {
+        case BonusStar::Hard: return allowHard;
+        case BonusStar::FirstTry: return allowFirstTry;
+        case BonusStar::NoRetry: return allowNoRetry;
+        case BonusStar::Perfect: return allowPerfect;
+    }
+    return false;
+}
+
+int StoryLevel::MaxStars() const {
+    return 3 + (allowHard ? 1 : 0) + (allowFirstTry ? 1 : 0) + (allowNoRetry ? 1 : 0) + (allowPerfect ? 1 : 0);
+}
+
+namespace {
+// book -> (chapter, verse, BibleData index) for every verse, built once per
+// load so expanding ~200 pool references stays fast.
+using BookIndex = std::map<std::string, std::vector<std::array<int, 3>>>;
+
+BookIndex BuildBookIndex(const BibleData& bible) {
+    BookIndex index;
+    const int count = bible.getVerseCount();
+    for (int i = 0; i < count; ++i) {
+        const Verse v = bible.getVerseAtIndex(i);
+        index[v.book].push_back({v.chapter, v.verse, i});
+    }
+    return index;
+}
+
+bool ExpandPoolRefIndexed(const std::string& ref, const BookIndex& index,
+                          std::vector<int>& out, std::string& error) {
+    static const std::regex kRef(R"(^\s*(\w+)(?:\s+(\d+)(?:-(\d+))?(?::(\d+)(?:-(\d+))?)?)?\s*$)");
+    std::smatch m;
+    const std::string lower = Lower(ref);
+    if (!std::regex_match(lower, m, kRef)) {
+        error = "can't read pool reference \"" + ref + "\"";
+        return false;
+    }
+    const std::string book = m[1].str();
+    const bool hasChapter = m[2].matched;
+    const int c1 = hasChapter ? std::stoi(m[2].str()) : 0;
+    const int c2 = m[3].matched ? std::stoi(m[3].str()) : c1;
+    const bool hasVerse = m[4].matched;
+    const int v1 = hasVerse ? std::stoi(m[4].str()) : 0;
+    const int v2 = m[5].matched ? std::stoi(m[5].str()) : v1;
+
+    const auto it = index.find(book);
+    if (it == index.end()) {
+        error = "unknown book \"" + book + "\" in \"" + ref + "\"";
+        return false;
+    }
+    const size_t before = out.size();
+    for (const auto& [chapter, verse, i] : it->second) {
+        bool ok;
+        if (!hasChapter) {
+            ok = true;
+        } else if (hasVerse) {
+            ok = chapter == c1 && verse >= v1 && verse <= v2;
+        } else {
+            ok = chapter >= c1 && chapter <= c2;
+        }
+        if (ok) out.push_back(i);
+    }
+    if (out.size() == before) {
+        error = "\"" + ref + "\" matches no verses";
+        return false;
+    }
+    return true;
+}
+
+// Set by LoadFromText for the duration of a load.
+const BookIndex* g_loadIndex = nullptr;
+}  // namespace
+
+bool ExpandPoolRef(const std::string& ref, const BibleData& bible,
+                   std::vector<int>& out, std::string& error) {
+    if (g_loadIndex) return ExpandPoolRefIndexed(ref, *g_loadIndex, out, error);
+    const BookIndex index = BuildBookIndex(bible);
+    return ExpandPoolRefIndexed(ref, index, out, error);
+}
+
+bool StoryMap::ParseLevel(const json& j, const std::string& areaId, bool isBonus,
+                          const GuessTiers& defaultTiers, double hardScale,
+                          const BibleData& bible, StoryLevel& out) {
+    out = StoryLevel{};
+    out.id = j.value("id", "");
+    out.areaId = areaId;
+    out.key = areaId + "." + out.id;
+    out.title = j.value("title", out.id);
+    out.intro = j.value("intro", "");
+    out.outro = j.value("outro", "");
+    out.isBonus = isBonus;
+    bool ok = true;
+    auto fail = [&](const std::string& msg) {
+        m_errors.push_back(out.key + ": " + msg);
+        ok = false;
+    };
+    if (out.id.empty()) fail("level has no id");
+
+    std::vector<std::string> refs;
+    if (j.contains("pool") && j["pool"].is_string()) {
+        refs.push_back(j["pool"].get<std::string>());
+    } else if (j.contains("pool") && j["pool"].is_array()) {
+        for (const auto& r : j["pool"]) {
+            if (r.is_string()) refs.push_back(r.get<std::string>());
+        }
+    }
+    if (refs.empty()) fail("level has no pool");
+    for (const auto& r : refs) {
+        std::string err;
+        if (!ExpandPoolRef(r, bible, out.pool, err)) fail(err);
+    }
+    std::sort(out.pool.begin(), out.pool.end());
+    out.pool.erase(std::unique(out.pool.begin(), out.pool.end()), out.pool.end());
+    if (ok && out.pool.size() < 3) {
+        fail("pool has only " + std::to_string(out.pool.size()) + " verses (needs 3+)");
+    }
+
+    if (!StarFormula::Parse(j.value("minStars", json()), out.minStars)) fail("can't read minStars");
+    if (!StarFormula::Parse(j.value("requiresStars", json()), out.requiresStars)) fail("can't read requiresStars");
+
+    out.guessTiers = defaultTiers;
+    if (j.contains("guessStars") && !ParseTiers(j["guessStars"], out.guessTiers)) {
+        fail("guessStars needs increasing \"3\", \"2\", \"1\" limits");
+    }
+    out.hardGuessTiers = ScaleTiers(out.guessTiers, hardScale);
+    if (j.contains("hardGuessStars") && !ParseTiers(j["hardGuessStars"], out.hardGuessTiers)) {
+        fail("hardGuessStars needs increasing \"3\", \"2\", \"1\" limits");
+    }
+
+    if (j.contains("bonus") && j["bonus"].is_array()) {
+        out.allowHard = out.allowFirstTry = out.allowNoRetry = out.allowPerfect = false;
+        for (const auto& b : j["bonus"]) {
+            const std::string name = b.is_string() ? b.get<std::string>() : "";
+            if (name == "hard") out.allowHard = true;
+            else if (name == "firstTry") out.allowFirstTry = true;
+            else if (name == "noRetry") out.allowNoRetry = true;
+            else if (name == "perfect") out.allowPerfect = true;
+            else fail("unknown bonus star \"" + name + "\"");
+        }
+    }
+    return ok;
+}
+
+bool StoryMap::LoadFromText(const std::string& text, const BibleData& bible) {
+    m_areas.clear();
+    m_errors.clear();
+    m_loaded = false;
+
+    json root;
+    try {
+        root = json::parse(text);
+    } catch (const std::exception& e) {
+        m_errors.push_back(std::string("story_map.json isn't valid JSON: ") + e.what());
+        return false;
+    }
+    if (!root.is_object() || !root.contains("areas") || !root["areas"].is_array()) {
+        m_errors.push_back("story_map.json needs an \"areas\" list");
+        return false;
+    }
+
+    const BookIndex bookIndex = BuildBookIndex(bible);
+    g_loadIndex = &bookIndex;
+    struct ClearIndex { ~ClearIndex() { g_loadIndex = nullptr; } } clearIndex;
+
+    GuessTiers defaultTiers;
+    double hardScale = 1.25;
+    if (root.contains("defaults") && root["defaults"].is_object()) {
+        const json& d = root["defaults"];
+        if (d.contains("guessStars") && !ParseTiers(d["guessStars"], defaultTiers)) {
+            m_errors.push_back("defaults.guessStars needs increasing \"3\", \"2\", \"1\" limits");
+        }
+        if (d.contains("hardModeScale") && d["hardModeScale"].is_number()) {
+            hardScale = d["hardModeScale"].get<double>();
+        }
+    }
+
+    std::set<std::string> areaIds;
+    for (const auto& a : root["areas"]) {
+        StoryArea area;
+        area.id = a.value("id", "");
+        area.title = a.value("title", area.id);
+        area.intro = a.value("intro", "");
+        area.openFromStart = a.value("openFromStart", false);
+        area.bonusArea = a.value("bonusArea", false);
+        if (area.id.empty()) {
+            m_errors.push_back("an area has no id");
+            continue;
+        }
+        if (!areaIds.insert(area.id).second) m_errors.push_back("duplicate area id \"" + area.id + "\"");
+        if (area.bonusArea && a.value("unlock", "") != "perfect") {
+            m_errors.push_back(area.id + ": bonus area needs \"unlock\": \"perfect\"");
+        }
+
+        std::set<std::string> levelIds;
+        auto parseList = [&](const char* field, bool isBonus, std::vector<StoryLevel>& into) {
+            if (!a.contains(field) || !a[field].is_array()) return;
+            for (const auto& lj : a[field]) {
+                StoryLevel lvl;
+                if (!lj.is_object()) {
+                    m_errors.push_back(area.id + ": every level must be an object with an id and pool");
+                    continue;
+                }
+                ParseLevel(lj, area.id, isBonus, defaultTiers, hardScale, bible, lvl);
+                if (!lvl.id.empty() && !levelIds.insert(lvl.id).second) {
+                    m_errors.push_back(lvl.key + ": duplicate level id");
+                }
+                into.push_back(std::move(lvl));
+            }
+        };
+        parseList("levels", false, area.levels);
+        parseList("bonusLevels", true, area.bonusLevels);
+        if (area.levels.empty()) m_errors.push_back(area.id + ": area has no levels");
+        m_areas.push_back(std::move(area));
+    }
+    if (m_areas.empty()) m_errors.push_back("story_map.json has no areas");
+    if (!m_areas.empty() && (m_areas.front().bonusArea)) {
+        m_errors.push_back("the first area can't be a bonus area");
+    }
+
+    m_loaded = m_errors.empty();
+    return m_loaded;
+}
+
+bool StoryMap::Load(const BibleData& bible) {
+    std::string text;
+    if (!ReadStoryMapText(text)) {
+        m_areas.clear();
+        m_errors = {"Couldn't find story_map.json."};
+        m_loaded = false;
+        return false;
+    }
+    return LoadFromText(text, bible);
+}
+
+const StoryLevel* StoryMap::FindLevel(const std::string& key) const {
+    for (const auto& area : m_areas) {
+        for (const auto& l : area.levels) if (l.key == key) return &l;
+        for (const auto& l : area.bonusLevels) if (l.key == key) return &l;
+    }
+    return nullptr;
+}
+
+const StoryArea* StoryMap::FindArea(const std::string& id) const {
+    for (const auto& area : m_areas) if (area.id == id) return &area;
+    return nullptr;
+}
+
+std::vector<std::vector<std::string>> StoryMap::Paths() const {
+    std::vector<std::vector<std::string>> paths;
+    bool inPath = false;
+    for (size_t i = 0; i < m_areas.size(); ++i) {
+        const StoryArea& area = m_areas[i];
+        if (area.bonusArea) {
+            inPath = false;
+            continue;
+        }
+        if (i == 0 || area.openFromStart || !inPath) {
+            paths.emplace_back();
+            inPath = true;
+        }
+        for (const auto& l : area.levels) paths.back().push_back(l.key);
+    }
+    return paths;
+}

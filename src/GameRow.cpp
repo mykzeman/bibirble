@@ -190,3 +190,11 @@ void GameRow::lockSubmitted() {
     m_v1->SetEditable(false);
     m_v2->SetEditable(false);
 }
+
+void GameRow::SetGuess(const std::string& bookKey, const std::vector<std::string>& digits) {
+    const wxString name = wxString::FromUTF8(BibleData::BookDisplayName(bookKey));
+    if (m_bookSelect->FindString(name) == wxNOT_FOUND) m_bookSelect->Append(name);
+    m_bookSelect->SetStringSelection(name);
+    wxTextCtrl* ctrls[] = {m_c1, m_c2, m_v1, m_v2};
+    for (size_t i = 0; i < 4 && i < digits.size(); ++i) ctrls[i]->ChangeValue(digits[i]);
+}

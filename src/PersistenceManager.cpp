@@ -32,6 +32,7 @@ void PersistenceManager::Load() {
             m_lastSeed = data["lastSeed"].get<int64_t>();
             m_hasLastSeed = true;
         }
+        if (data.contains("story")) m_story = data["story"];
     } catch (...) {
         // Corrupt or unreadable state file: start fresh rather than crash.
     }
@@ -43,6 +44,7 @@ void PersistenceManager::Save() const {
     if (m_hasLastSeed) {
         data["lastSeed"] = m_lastSeed;
     }
+    if (!m_story.is_null()) data["story"] = m_story;
 
     std::ofstream file(m_filePath);
     if (!file.is_open()) return;
@@ -57,5 +59,10 @@ void PersistenceManager::SetLastPlayedDaily(const std::string& localDateString) 
 void PersistenceManager::SetLastSeed(int64_t seed) {
     m_lastSeed = seed;
     m_hasLastSeed = true;
+    Save();
+}
+
+void PersistenceManager::SetStory(const nlohmann::json& story) {
+    m_story = story;
     Save();
 }

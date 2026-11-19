@@ -132,3 +132,18 @@ Testing guidance:
 5. Deliberately violate a Hard Mode constraint and confirm the guess is rejected without being consumed.
 6. Finish a game, Share, and confirm the clipboard has the correct emoji grid (only played rows) + citation.
 7. Guess "Nehemiah" against a different Historical-area target verse and confirm yellow, not gray.
+
+## Story Mode
+
+A new mode on the start screen: a journey through the Bible in levels of 3 random verses each, with
+up to 7 stars per level, star-gated unlocks, hidden prophecy bonus levels and a hidden End Times
+area. Design: `docs/STORY_MODE.md`; map: `story_map.json`.
+
+- New: `StoryMap` (loads/validates the map), `StoryProgress` (stars, unlocks, retries, save data),
+  `StoryMapScreen` (the map UI), `tests/story_tests.cpp` (logic tests, `story_tests` target).
+- `BibirbleWindow`: Story bar, 3-verse level loop, fail -> retry prompt, results box.
+- `story_map.json` is embedded (Linux `.incbin`, Windows `STORY_MAP_JSON`); a copy on disk wins.
+- `PersistenceManager` saves Story progress under `story`; `GameRow::SetGuess` restores a
+  half-played verse.
+- Fix found while testing: a `wxString::Format` string containing a raw non-ASCII character
+  crashed in the C locale, so non-ASCII text is now joined in with `wxString::FromUTF8`.

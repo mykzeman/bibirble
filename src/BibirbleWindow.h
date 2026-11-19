@@ -7,6 +7,11 @@
 #include "PersistenceManager.h"
 #include "SettingsScreen.h"
 #include "StartScreen.h"
+#include "StoryMap.h"
+#include "StoryMapScreen.h"
+#include "StoryProgress.h"
+
+#include <random>
 
 class BibirbleWindow : public wxFrame {
 public:
@@ -21,6 +26,7 @@ private:
     void ShowStartScreen();
     void ShowSettingsScreen();
     void ShowGamePanel();
+    void ShowOnly(wxWindow* screen);
 
     void StartNewGame(GameMode mode, bool hardMode, const wxString& seedText);
     void ResetGameUi();
@@ -40,6 +46,16 @@ private:
     void OnPlayRandom();
     void OnViewSetSeed();
 
+    // Story Mode (docs/STORY_MODE.md)
+    void OnOpenStory();
+    void ShowStoryMap();
+    void OnStoryPlay(const std::string& levelKey, bool hardMode);
+    void StartStoryVerse();
+    void HandleStoryVerseEnd(bool won);
+    void UpdateStoryHud();
+    void SaveStory();
+    bool AllowMature() const;
+
     void OnVirtualKeyClicked(wxCommandEvent& event);
     void OnSubmit(wxCommandEvent& event);
     void OnShare(wxCommandEvent& event);
@@ -56,7 +72,14 @@ private:
 
     StartScreen* m_startScreen;
     SettingsScreen* m_settingsScreen;
+    StoryMapScreen* m_storyMapScreen;
     wxPanel* m_gamePanel;
+
+    StoryMap m_storyMap;
+    StoryProgress m_story;
+    std::mt19937 m_rng{std::random_device{}()};  // Story draws are not seeded
+    wxPanel* m_storyHud = nullptr;
+    wxStaticText* m_storyHudText = nullptr;
 
     wxStaticText* m_revealPanel;
     wxPanel* m_postGameControls;

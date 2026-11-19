@@ -100,7 +100,13 @@ void StartScreen::SetupUi() {
     actions->Add(startDailyBtn, 1, wxEXPAND | wxALL, 5);
     actions->Add(startRandomBtn, 1, wxEXPAND | wxALL, 5);
     actions->Add(settingsBtn, 1, wxEXPAND | wxALL, 5);
-    layout->Add(actions, 0, wxEXPAND | wxALL, 10);
+    layout->Add(actions, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
+
+    wxButton* storyBtn = makeButton(wxString::FromUTF8("\xF0\x9F\x93\x96 Story Mode"));  // 📖
+    storyBtn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+        if (m_onOpenStory) m_onOpenStory();
+    });
+    layout->Add(storyBtn, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 15);
 
     wxPanel* newsCard = new wxPanel(this);
     newsCard->SetBackgroundColour(*wxWHITE);
@@ -128,6 +134,10 @@ void StartScreen::SetupUi() {
 
     addHeading("New in this update");
     addItems({
+        "Story Mode: journey through the Bible from Creation to the early "
+        "church. Each level tells part of the story and asks you 3 verses. "
+        "Earn up to 7 stars per level to unlock what comes next, and look "
+        "out for hidden prophecy levels.",
         "Daily reset: a new Daily arrives at midnight your time, the same "
         "as the web version.",
         "Christmas: all through December the app gets festive colours and "

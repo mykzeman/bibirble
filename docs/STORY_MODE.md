@@ -1,6 +1,6 @@
 # Story Mode — Design Doc
 
-**Status:** Design (not yet implemented)
+**Status:** Implemented (see §11). Story cards are plain message boxes for now, ready for cinematic content.
 
 ## 1. Summary
 
@@ -325,19 +325,31 @@ story and test it **without rebuilding**.
 - **Level result:** stars earned in each category, with any new bests highlighted (and "Hard
   Mode unlocked!" the first time a level reaches 4 stars 💪).
 
-## 11. Code changes (planned)
+## 11. Code
 
-| Piece | Change |
+| Piece | What it does |
 |---|---|
-| `src/StoryMap.h/cpp` (new) | Loads + validates `story_map.json`; expands pool references into verse indices. |
-| `src/StoryProgress.h/cpp` (new) | Attempts, best stars, in-progress level, star total, unlock checks. |
-| `src/StoryMapScreen.h/cpp` (new) | Map UI panel, including Retry buttons and the per-level Hard Mode toggle. |
-| `GameState` | Add `GameMode::Story` plus level context (level id, verse 1–3 of 3). |
-| `BibirbleWindow` | Runs the 3-verse level loop, retry logic, and story cards. |
-| `PersistenceManager` | Read/write the `story` key. |
-| `StartScreen` | Story button. |
-| `CMakeLists.txt` / `Bibirble.rc` | Embed `story_map.json`. |
-| `tools/check_story_map.py` | Validates `story_map.json` and previews the star unlock curve (done). |
+| `src/StoryMap.h/cpp` | Loads + validates `story_map.json` (disk copy first, then the embedded one) and expands pool references into verse indices. |
+| `src/StoryProgress.h/cpp` | Best stars, Perfect progress, unlocks (never re-lock), retries, the attempt in progress, and its JSON save format. No wx. |
+| `src/StoryMapScreen.h/cpp` | The map: areas, levels, stars, Play / Retry / Continue, the per-level Hard Mode toggle, and "Needs N ★" on the next locked level. |
+| `GameState` | `GameMode::Story`. |
+| `BibirbleWindow` | The Story button, the Story bar above the verse (level, verse 1–3 of 3, Story Map button), the 3-verse level loop, the fail → retry prompt, and the results box. |
+| `GameRow::SetGuess` | Puts saved guesses back when a verse is resumed. |
+| `PersistenceManager` | Reads/writes the `story` key. |
+| `StartScreen` | Story Mode button. |
+| `CMakeLists.txt` / `Bibirble.rc` / `EmbeddedData` | Embed `story_map.json` (Linux `.incbin`, Windows `STORY_MAP_JSON` resource). |
+| `tests/story_tests.cpp` | Logic tests (`story_tests` target, run with `ctest`): formulas, the real map, unlocks, stars, retries, save/load. |
+| `tools/check_story_map.py` | Validates `story_map.json` and previews the star unlock curve. |
+
+Details settled while building it:
+- Every guess is saved as it's made, so closing the app or going back to the map mid-verse resumes
+  exactly where the player was.
+- Starting a different level while one is half-played counts as a retry for the abandoned level, so
+  the No retry star can't be kept by walking away from a bad attempt.
+- The book list offers **all** books (limiting it to the level's pool would give the answer away).
+- Mature (R18) verses are left out of pools unless R18 mode is on, and Perfect only counts the
+  verses the player can actually be shown.
+- The intro is skipped when retrying straight after a fail.
 
 ## 12. Decisions
 - Random draws are **not seeded**. Each attempt is a fresh random pick.

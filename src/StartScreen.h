@@ -4,7 +4,8 @@
 #include <wx/scrolwin.h>
 #include <functional>
 
-// Mode-select landing screen: Start Daily / Start Random / Settings, an
+// Mode-select landing screen: Start Daily / Start Random / Settings, a
+// Story Mode button, an
 // What's New card, an inline how-to-play card, and a live countdown to the
 // next Daily, which resets at the player's local midnight. Scrolls
 // vertically when the cards don't fit.
@@ -17,6 +18,7 @@ public:
     void SetOnStartDaily(Callback cb) { m_onStartDaily = std::move(cb); }
     void SetOnStartRandom(Callback cb) { m_onStartRandom = std::move(cb); }
     void SetOnOpenSettings(Callback cb) { m_onOpenSettings = std::move(cb); }
+    void SetOnOpenStory(Callback cb) { m_onOpenStory = std::move(cb); }
 
 private:
     void SetupUi();
@@ -28,4 +30,5 @@ private:
     Callback m_onStartDaily;
     Callback m_onStartRandom;
     Callback m_onOpenSettings;
+    Callback m_onOpenStory;
 };

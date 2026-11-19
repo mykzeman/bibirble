@@ -23,15 +23,17 @@ extern "C" const char bibirble_data_start[];
 extern "C" const char bibirble_data_end[];
 extern "C" const char bibirble_icon_start[];
 extern "C" const char bibirble_icon_end[];
+extern "C" const char bibirble_story_start[];
+extern "C" const char bibirble_story_end[];
 #endif
 
 namespace {
 
 #ifdef _WIN32
 // Must match the resource name/type in Bibirble.rc.
-bool ReadEmbeddedResource(std::string& out) {
+bool ReadEmbeddedResource(std::string& out, const wchar_t* name = L"BIBLE_SECTIONS_JSON") {
     HMODULE module = GetModuleHandleW(nullptr);
-    HRSRC res = FindResourceW(module, L"BIBLE_SECTIONS_JSON", MAKEINTRESOURCEW(10) /* RT_RCDATA */);
+    HRSRC res = FindResourceW(module, name, MAKEINTRESOURCEW(10) /* RT_RCDATA */);
     if (!res) return false;
     HGLOBAL handle = LoadResource(module, res);
     if (!handle) return false;
@@ -75,6 +77,28 @@ bool ReadEmbeddedIconPng(std::string& out) {
     return !out.empty();
 #else
     out.clear();
+    return false;
+#endif
+}
+
+bool ReadStoryMapText(std::string& out) {
+    out.clear();
+    for (const char* path : {"story_map.json", "../story_map.json", "../../story_map.json",
+                             "build/story_map.json", "Release/story_map.json", "Debug/story_map.json"}) {
+        std::ifstream ifs(path, std::ios::binary);
+        if (!ifs) continue;
+        std::ostringstream ss;
+        ss << ifs.rdbuf();
+        out = ss.str();
+        if (!out.empty()) return true;
+    }
+
+#ifdef _WIN32
+    return ReadEmbeddedResource(out, L"STORY_MAP_JSON");
+#elif defined(BIBIRBLE_HAS_INCBIN)
+    out.assign(bibirble_story_start, bibirble_story_end);
+    return !out.empty();
+#else
     return false;
 #endif
 }

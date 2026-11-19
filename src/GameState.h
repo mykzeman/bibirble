@@ -7,7 +7,7 @@
 #include "BibleData.h"
 #include "GuessColor.h"
 
-enum class GameMode { Daily, Random };
+enum class GameMode { Daily, Random, Story };
 
 struct GuessRecord {
     std::string bookGuess;
