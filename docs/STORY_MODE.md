@@ -73,8 +73,9 @@ path. A bonus level unlocks only when **both** of these are true:
 
 Bonus levels are never required to move forward on the main path.
 
-**Locked bonus levels are a mystery:** on the map they show only a locked 🔮 tile with **no text at
-all**, so no title, no story and no unlock requirements. Everything appears once it unlocks.
+**Locked bonus levels are hidden completely:** they don't appear on the map at all, with no tile,
+no title, no hint and no unlock requirements. A bonus level shows up (🔮) only once it unlocks,
+as a surprise. ✨
 
 ## 4. Level Flow
 
@@ -278,7 +279,7 @@ story and test it **without rebuilding**.
   - levels in each area showing their best stars (e.g. ⭐⭐⭐⭐⭐☆☆),
   - a **Retry** 🔁 button on every passed level, plus a Hard Mode toggle once it has 4+ stars,
   - Perfect progress per level (e.g. "Pool 9 / 14"),
-  - unlocked bonus levels marked with 🔮, while locked ones are a **text-free** locked 🔮 tile,
+  - unlocked bonus levels marked with 🔮 (locked ones are not shown at all),
   - the player's star total at the top.
 - **Story card:** intro/outro text with a Continue button.
 - **In-level HUD:** "Verse 2 / 3".
@@ -301,6 +302,6 @@ story and test it **without rebuilding**.
 
 ## 12. Decisions
 - Random draws are **not seeded**. Each attempt is a fresh random pick.
-- Locked bonus levels show **no text**, only a locked 🔮 tile.
+- Locked bonus levels are **hidden completely**, and appear only once unlocked.
 - Guess-count tiers **scale in Hard Mode** (`hardGuessStars` or `hardModeScale`).
 - Hard Mode unlocks per level at **4+ stars**, and every passed level has a **Retry** button.
