@@ -344,3 +344,5 @@ story and test it **without rebuilding**.
 - Locked bonus levels are **hidden completely**, and appear only once unlocked.
 - Guess-count tiers **scale in Hard Mode** (`hardGuessStars` or `hardModeScale`).
 - Hard Mode unlocks per level at **4+ stars**, and every passed level has a **Retry** button.
+- The End Times unlock stays the **ultimate challenge**: all 7 stars (Perfect included) on every
+  non-bonus level. That means every verse of every regular pool solved (~17,700 verses).
