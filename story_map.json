@@ -27,6 +27,30 @@
                     "minStars": 0,
                     "intro": "A serpent, a question, and a bite that changed everything."
                 }
+            ],
+            "bonusLevels": [
+                {
+                    "id": "new-creation",
+                    "title": "New Heavens and a New Earth",
+                    "pool": [
+                        "isaiah 65:17-25",
+                        "isaiah 11:6-9"
+                    ],
+                    "requiresStars": "2x+2",
+                    "intro": "The wolf will dwell with the lamb. God will make all things new, like Eden again."
+                },
+                {
+                    "id": "the-creator",
+                    "title": "The Everlasting Creator",
+                    "pool": [
+                        "isaiah 40:12-31",
+                        "jeremiah 10:10-16",
+                        "amos 4:13",
+                        "amos 5:8"
+                    ],
+                    "requiresStars": "2x+2",
+                    "intro": "Lift up your eyes and see: who created these? He calls the stars each by name."
+                }
             ]
         },
         {
@@ -110,6 +134,29 @@
                     "minStars": "2x",
                     "intro": "Thunder, smoke, and the voice of God giving His people ten words."
                 }
+            ],
+            "bonusLevels": [
+                {
+                    "id": "new-covenant",
+                    "title": "A New Covenant",
+                    "pool": [
+                        "jeremiah 31:31-37",
+                        "jeremiah 33:14-26"
+                    ],
+                    "requiresStars": "2x+10",
+                    "intro": "I will write my law on their hearts. As sure as day and night, God keeps His promises."
+                },
+                {
+                    "id": "children-of-abraham",
+                    "title": "Children of Abraham",
+                    "pool": [
+                        "isaiah 41:8-14",
+                        "isaiah 51:1-3",
+                        "micah 7:18-20"
+                    ],
+                    "requiresStars": "2x+10",
+                    "intro": "Look to Abraham your father. God remembers the oath He swore."
+                }
             ]
         },
         {
@@ -171,6 +218,29 @@
                     "pool": "numbers 26-36",
                     "minStars": "3x+1",
                     "intro": "Forty years passed. A new generation stood at the edge of the Promised Land."
+                }
+            ],
+            "bonusLevels": [
+                {
+                    "id": "desert-blooms",
+                    "title": "The Desert Will Bloom",
+                    "pool": [
+                        "isaiah 35",
+                        "isaiah 43:16-21"
+                    ],
+                    "requiresStars": "3x+10",
+                    "intro": "Streams in the wasteland and a highway called the Way of Holiness."
+                },
+                {
+                    "id": "into-the-wilderness",
+                    "title": "Back to the Wilderness",
+                    "pool": [
+                        "hosea 2:14-23",
+                        "jeremiah 2:1-13",
+                        "isaiah 40:1-11"
+                    ],
+                    "requiresStars": "3x+10",
+                    "intro": "I will allure her into the wilderness and speak tenderly to her."
                 }
             ]
         },
@@ -275,6 +345,31 @@
                     "pool": "leviticus 18-27",
                     "minStars": "4x-10",
                     "intro": "You shall be holy, for I the Lord your God am holy."
+                }
+            ],
+            "bonusLevels": [
+                {
+                    "id": "what-god-requires",
+                    "title": "What God Requires",
+                    "pool": [
+                        "micah 6:6-8",
+                        "isaiah 1:10-20",
+                        "hosea 6:4-6",
+                        "amos 5:21-24"
+                    ],
+                    "requiresStars": "3x+12",
+                    "intro": "Do justice, love mercy, and walk humbly with your God."
+                },
+                {
+                    "id": "pure-offerings",
+                    "title": "Pure Offerings",
+                    "pool": [
+                        "malachi 1:6-14",
+                        "malachi 3:6-12",
+                        "isaiah 2:1-5"
+                    ],
+                    "requiresStars": "3x+12",
+                    "intro": "Bring the full tithe into the storehouse and see if I will not open the windows of heaven."
                 }
             ]
         },
@@ -396,6 +491,30 @@
                     "minStars": "4x+12",
                     "intro": "David gathered the gold and the plans so his son could build God's temple."
                 }
+            ],
+            "bonusLevels": [
+                {
+                    "id": "son-of-david",
+                    "title": "The Son of David",
+                    "pool": [
+                        "isaiah 9:1-7",
+                        "isaiah 11:1-5",
+                        "jeremiah 23:1-8",
+                        "amos 9:11-15"
+                    ],
+                    "requiresStars": "4x+20",
+                    "intro": "A shoot from the stump of Jesse: a King who will reign in righteousness forever."
+                },
+                {
+                    "id": "kingdoms-rise-and-fall",
+                    "title": "Kingdoms Rise and Fall",
+                    "pool": [
+                        "daniel 7-8",
+                        "daniel 10-12"
+                    ],
+                    "requiresStars": "4x+20",
+                    "intro": "Beasts from the sea, empires that crumble, and a kingdom that will never end."
+                }
             ]
         },
         {
@@ -410,14 +529,14 @@
                         "2kings 17",
                         "2kings 24-25"
                     ],
-                    "minStars": "4x-2",
+                    "minStars": "4x+18",
                     "intro": "Samaria fell to Assyria, and then Jerusalem to Babylon."
                 },
                 {
                     "id": "jerusalem-falls",
                     "title": "Jerusalem Falls",
                     "pool": "2chronicles 36",
-                    "minStars": "4x-1",
+                    "minStars": "4x+19",
                     "intro": "God sent messengers again and again, until there was no remedy."
                 },
                 {
@@ -428,57 +547,91 @@
                         "ezekiel 24:15-27",
                         "ezekiel 33:21-33"
                     ],
-                    "minStars": "4x-1",
+                    "minStars": "4x+19",
                     "intro": "Among the exiles by the river Chebar, the heavens opened."
                 },
                 {
                     "id": "babylon",
                     "title": "Daniel in Babylon",
                     "pool": "daniel 1-3",
-                    "minStars": "4x+4",
+                    "minStars": "4x+24",
                     "intro": "Vegetables, a dream of a statue, and three friends in a fiery furnace."
                 },
                 {
                     "id": "lions",
                     "title": "The Lions' Den",
                     "pool": "daniel 4-6",
-                    "minStars": "4x+4",
+                    "minStars": "4x+24",
                     "intro": "Writing on the wall, and a night with the lions."
                 },
                 {
                     "id": "return",
                     "title": "Return and Rebuild",
                     "pool": "ezra 1-6",
-                    "minStars": "4x+2",
+                    "minStars": "4x+22",
                     "intro": "King Cyrus let God's people go home, and they rebuilt the temple."
                 },
                 {
                     "id": "esther",
                     "title": "For Such a Time as This",
                     "pool": "esther",
-                    "minStars": "4x",
+                    "minStars": "4x+20",
                     "intro": "An orphan became queen, and her courage saved her people."
                 },
                 {
                     "id": "ezra",
                     "title": "Ezra the Scribe",
                     "pool": "ezra 7-10",
-                    "minStars": "4x+2",
+                    "minStars": "4x+22",
                     "intro": "Ezra set his heart to study, do, and teach God's law."
                 },
                 {
                     "id": "walls",
                     "title": "Rebuilding the Walls",
                     "pool": "nehemiah 1-7",
-                    "minStars": "4x+4",
+                    "minStars": "4x+24",
                     "intro": "A trowel in one hand, a sword in the other. The wall was done in 52 days."
                 },
                 {
                     "id": "renewal",
                     "title": "The Joy of the Lord",
                     "pool": "nehemiah 8-13",
-                    "minStars": "4x+4",
+                    "minStars": "4x+24",
                     "intro": "The people wept as the law was read. Do not grieve, for the joy of the Lord is your strength."
+                }
+            ],
+            "bonusLevels": [
+                {
+                    "id": "seventy-years",
+                    "title": "Seventy Years",
+                    "pool": [
+                        "jeremiah 29:1-14",
+                        "jeremiah 25:1-14",
+                        "daniel 9"
+                    ],
+                    "requiresStars": "4x+30",
+                    "intro": "I know the plans I have for you: plans for a future and a hope."
+                },
+                {
+                    "id": "comfort",
+                    "title": "Comfort, Comfort My People",
+                    "pool": [
+                        "isaiah 44:24-28",
+                        "isaiah 45:1-13",
+                        "lamentations 3:19-33"
+                    ],
+                    "requiresStars": "4x+30",
+                    "intro": "God named Cyrus before he was born. His mercies are new every morning."
+                },
+                {
+                    "id": "rebuild",
+                    "title": "Rebuild My House",
+                    "pool": [
+                        "haggai",
+                        "zechariah 8"
+                    ],
+                    "requiresStars": "4x+30",
+                    "intro": "Be strong, all you people of the land, and work, for I am with you."
                 }
             ]
         },
@@ -585,6 +738,41 @@
                     "minStars": 0,
                     "intro": "A cross, a garden tomb, and breakfast on the beach."
                 }
+            ],
+            "bonusLevels": [
+                {
+                    "id": "suffering-servant",
+                    "title": "The Suffering Servant",
+                    "pool": [
+                        "isaiah 52:13-15",
+                        "isaiah 53",
+                        "isaiah 42:1-9"
+                    ],
+                    "requiresStars": "2x+10",
+                    "intro": "He was pierced for our transgressions; by His wounds we are healed."
+                },
+                {
+                    "id": "foretold",
+                    "title": "Foretold",
+                    "pool": [
+                        "isaiah 7:14",
+                        "micah 5:2-5",
+                        "zechariah 9:9-10",
+                        "zechariah 12:10",
+                        "malachi 3:1",
+                        "malachi 4:5-6",
+                        "isaiah 61:1-3"
+                    ],
+                    "requiresStars": "2x+10",
+                    "intro": "A virgin's son, a ruler from Bethlehem, a King on a donkey: all written long before."
+                },
+                {
+                    "id": "jonah",
+                    "title": "The Sign of Jonah",
+                    "pool": "jonah",
+                    "requiresStars": "2x+10",
+                    "intro": "Three days in the belly of a fish, a picture of the Son of Man three days in the earth."
+                }
             ]
         },
         {
@@ -619,8 +807,95 @@
                     "minStars": 64,
                     "intro": "Arrested, shipwrecked, and still preaching boldly in Rome."
                 }
+            ],
+            "bonusLevels": [
+                {
+                    "id": "spirit-poured-out",
+                    "title": "I Will Pour Out My Spirit",
+                    "pool": "joel",
+                    "requiresStars": 80,
+                    "intro": "Your sons and daughters will prophesy. Peter said: this is what was spoken by the prophet Joel."
+                },
+                {
+                    "id": "light-to-the-nations",
+                    "title": "A Light to the Nations",
+                    "pool": [
+                        "isaiah 49:1-6",
+                        "isaiah 60:1-3",
+                        "zechariah 8:20-23",
+                        "malachi 1:11"
+                    ],
+                    "requiresStars": 80,
+                    "intro": "Salvation to the ends of the earth: every nation will seek the Lord."
+                }
+            ]
+        },
+        {
+            "id": "end-times",
+            "title": "The End Times",
+            "bonusArea": true,
+            "unlock": "perfect",
+            "note": "Hidden until every non-bonus level has all 7 stars.",
+            "levels": [
+                {
+                    "id": "watchman",
+                    "title": "The Watchman",
+                    "pool": [
+                        "ezekiel 4-23",
+                        "ezekiel 24:1-14",
+                        "ezekiel 33:1-20"
+                    ],
+                    "intro": "Son of man, I have made you a watchman. Sound the warning."
+                },
+                {
+                    "id": "nations-judged",
+                    "title": "The Nations Judged",
+                    "pool": "ezekiel 25-32",
+                    "intro": "Tyre, Egypt, and the proud nations: they will know that I am the Lord."
+                },
+                {
+                    "id": "dry-bones",
+                    "title": "Dry Bones Live",
+                    "pool": "ezekiel 34-37",
+                    "intro": "A new heart, a new spirit, and a valley of bones rattling to life."
+                },
+                {
+                    "id": "gog",
+                    "title": "Gog and Magog",
+                    "pool": "ezekiel 38-39",
+                    "intro": "In the latter days, a great army comes against the land."
+                },
+                {
+                    "id": "new-temple",
+                    "title": "The River from the Temple",
+                    "pool": "ezekiel 40-48",
+                    "intro": "A new temple, and a river flowing out that brings life wherever it goes."
+                },
+                {
+                    "id": "seven-churches",
+                    "title": "The Seven Churches",
+                    "pool": "revelation 1-3",
+                    "intro": "I am the Alpha and the Omega. Write what you see, and send it to the seven churches."
+                },
+                {
+                    "id": "seals-trumpets",
+                    "title": "Seals and Trumpets",
+                    "pool": "revelation 4-11",
+                    "intro": "Worthy is the Lamb who was slain! He opens the scroll."
+                },
+                {
+                    "id": "beast-babylon",
+                    "title": "The Beast and Babylon",
+                    "pool": "revelation 12-18",
+                    "intro": "A dragon, a beast, and the fall of Babylon the great."
+                },
+                {
+                    "id": "new-jerusalem",
+                    "title": "All Things New",
+                    "pool": "revelation 19-22",
+                    "intro": "Behold, I am making all things new. Come, Lord Jesus!"
+                }
             ]
         }
-    ],
-    "bonusLevels": []
+    ]
 }

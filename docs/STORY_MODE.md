@@ -67,15 +67,28 @@ Each level has:
 
 ### 3.3 Bonus levels (prophetic scriptures)
 Prophetic scriptures are **bonus levels**. They play exactly like normal levels but sit off the main
-path. A bonus level unlocks only when **both** of these are true:
-1. the player has reached a certain area (its `requiresArea`), **and**
-2. the player has a certain star total (its `requiresStars`).
+path. Each area lists its own in `bonusLevels`, and they're picked by **theme**, not by time: an
+area's bonus prophecies are about the same thing as the area. For example:
+- **Promises** → the new covenant (Jeremiah 31) and God's oath to Abraham (Isaiah 51, Micah 7)
+- **Wilderness** → the desert blooming (Isaiah 35) and "I will allure her into the wilderness" (Hosea 2)
+- **Kings** → the coming Son of David (Isaiah 9 and 11, Jeremiah 23) and the kingdoms of Daniel 7–12
+- **Messiah** → the Suffering Servant (Isaiah 53), prophecies fulfilled in Jesus, and the sign of Jonah
 
-Bonus levels are never required to move forward on the main path.
+A bonus level unlocks when **both** of these are true:
+1. the player has reached the area it belongs to, **and**
+2. the player's total stars ≥ its `requiresStars` (a number or an `ax+b` formula, like `minStars`).
+
+Bonus levels are never required to move forward on the main path. Their stars count toward the total.
 
 **Locked bonus levels are hidden completely:** they don't appear on the map at all, with no tile,
 no title, no hint and no unlock requirements. A bonus level shows up (🔮) only once it unlocks,
 as a surprise. ✨
+
+### 3.4 The perfect-unlock bonus area (Ezekiel & Revelation)
+**Ezekiel's prophecies** and **Revelation** don't go in a normal area. They form a hidden bonus area
+(`"bonusArea": true, "unlock": "perfect"`, "The End Times"). It unlocks only when **every non-bonus
+level has all 7 stars**, Perfect included. Like other bonus content, it's completely hidden until
+then. Its levels unlock in order with no star check.
 
 ## 4. Level Flow
 
