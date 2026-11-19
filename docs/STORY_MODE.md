@@ -52,16 +52,16 @@ assumptions about which areas exist, how many there are, or what they're called.
   books any way the author likes (e.g. "Joseph" spanning Genesis 37–50, or "Psalms of David"
   hand-picked across Psalms).
 
-The examples in this doc (Creation, Exodus, ...) are placeholders, not a fixed list.
+The real map is in `story_map.json`. The examples in this doc are just examples, and the real areas can change anytime.
 
 ### 3.2 Levels
 Each level has:
 - **Story text**: shown before the first verse (an `intro`), and optionally after the level is
   passed (an `outro`).
 - **Verse pool**: the verses the level can ask about. Defined as any mix of:
-  - single references: `"Exodus 14:21"`
-  - ranges: `"Exodus 14:21-31"`
-  - whole chapters: `"Exodus 14"`
+  - whole books: `"ruth"`
+  - chapters or chapter ranges: `"exodus 14"`, `"genesis 6-12"`
+  - single verses or verse ranges: `"exodus 14:21"`, `"ezekiel 24:15-27"`
   The pool must resolve to **at least 3 distinct verses** (checked at load, see §9).
 - **Star rules** (§5).
 
@@ -153,12 +153,26 @@ When any verse in a level is failed:
 
 ## 7. Unlocking
 
-- **Main path:** each area has an optional `unlockStars`. The first area is always unlocked. An
-  area unlocks when the previous area's levels are all passed **and** the star total ≥
-  `unlockStars`.
-- **Levels within an area:** unlock in order. Passing level N unlocks level N+1.
+Levels unlock **one at a time, in map order**. A level unlocks when:
+1. the level before it on the path is passed, **and**
+2. the player's **total stars in the whole game** ≥ that level's `minStars`.
+
+`minStars` is either a plain number (`64`) or a formula `ax+b` (`"2x"`, `"3x+1"`, `"6x-10"`), where
+**x = the number of levels unlocked in the whole game so far**. That way the bar rises as the player
+goes deeper. A formula below 0 counts as 0. Each level has its own `minStars`, so when a book is split
+into several smaller levels, every piece uses the book's formula (and x keeps going up).
+
+Example: with 37 levels unlocked, `"4x+3"` needs 4 × 37 + 3 = **151** total stars.
+
+- **Start:** the first level of the first area is always unlocked.
+- **Open-from-start areas:** an area with `"openFromStart": true` (e.g. the Gospels) is its own
+  path. Its first level is unlocked from the start, and its levels then unlock in order as usual.
+- **Next area:** the first level of an area follows on from the last level of the area before it.
 - **Bonus levels:** see §3.3 (`requiresArea` + `requiresStars`).
 - **Hard Mode:** per level, at 4+ stars (§5.3).
+
+`tools/check_story_map.py` prints the star total each level needs along the main path, plus the
+average stars per level that implies, so the curve can be tuned.
 
 ### 7.1 Retry button
 Every **passed** level on the map has a **Retry** button 🔁 to play it again from scratch. A new
@@ -223,20 +237,21 @@ Saved progress is keyed by `areaId.levelId`, so:
           "title": "Six Days",
           "intro": "God spoke, and light broke through the dark...",
           "outro": "And God saw that it was very good.",
-          "pool": ["Genesis 1", "Genesis 2:1-3"]
+          "pool": ["genesis 1", "genesis 2:1-3"],
+          "minStars": 0
         }
       ]
     },
     {
       "id": "exodus",
       "title": "Out of Egypt",
-      "unlockStars": 10,
       "levels": [
         {
           "id": "red-sea",
           "title": "The Red Sea",
           "intro": "Pharaoh's army thundered behind them. Moses raised his staff...",
-          "pool": ["Exodus 14:13-31", "Exodus 15:1-3"],
+          "pool": ["exodus 14:13-31", "exodus 15:1-3"],
+          "minStars": "2x",
           "guessStars": { "3": 5, "2": 8, "1": 11 },
           "hardGuessStars": { "3": 7, "2": 10, "1": 14 },
           "bonus": ["hard", "firstTry", "noRetry", "perfect"]
@@ -249,7 +264,7 @@ Saved progress is keyed by `areaId.levelId`, so:
           "requiresArea": "exodus",
           "requiresStars": 20,
           "intro": "Moses spoke of One who would come...",
-          "pool": ["Deuteronomy 18:15-19"]
+          "pool": "deuteronomy 18:15-19"
         }
       ]
     }
@@ -257,11 +272,16 @@ Saved progress is keyed by `areaId.levelId`, so:
 }
 ```
 
+Pool references are lowercase book names as in `bible_sections.json` (`1samuel`, `2kings`), in
+any of these forms: `"ruth"` (whole book), `"genesis 6-12"`, `"2chronicles 36"`, `"ezekiel 24:15-27"`.
+A pool can be one string or a list. The real map lives in `story_map.json` at the repo root.
+
 ### 9.1 Load-time validation
 When the map loads, the game checks it and reports clear errors (area/level id + problem) for:
 - duplicate area ids, or duplicate level ids within an area,
 - a pool reference that doesn't exist in `bible_sections.json` (uses `BibleData::verseExists()`),
 - a pool with fewer than 3 distinct verses,
+- a `minStars` that isn't a number or an `ax+b` formula,
 - `guessStars` / `hardGuessStars` tiers that aren't increasing (`3` ≤ `2` ≤ `1`),
 - a `requiresArea` that points at an unknown area.
 
@@ -298,7 +318,7 @@ story and test it **without rebuilding**.
 | `PersistenceManager` | Read/write the `story` key. |
 | `StartScreen` | Story button. |
 | `CMakeLists.txt` / `Bibirble.rc` | Embed `story_map.json`. |
-| `tools/` (optional) | A small validator script for the JSON so the author can check edits fast. |
+| `tools/check_story_map.py` | Validates `story_map.json` and previews the star unlock curve (done). |
 
 ## 12. Decisions
 - Random draws are **not seeded**. Each attempt is a fresh random pick.
