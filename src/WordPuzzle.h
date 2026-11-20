@@ -43,7 +43,8 @@ std::vector<GuessColor> ScoreWord(const std::string& guess, const std::string& a
 // Lowercases and trims; returns "" if anything but letters is left.
 std::string NormalizeWord(const std::string& word);
 
-// The English words a guess may be (data/words.txt, from SCOWL), plus extras
+// The English words a guess may be (data/words.txt: the public-domain ENABLE
+// list, 172,823 words, no names), plus extras
 // such as every puzzle answer in the map, so Bible names that aren't in the
 // dictionary can still be guessed.
 class WordList {

@@ -3,7 +3,6 @@
 #include "SeededRandom.h"
 #include "ChristmasVerses.h"
 #include "EmbeddedData.h"
-#include "StoryPuzzleDialog.h"
 #include <wx/iconbndl.h>
 #include <wx/image.h>
 #include <wx/mstream.h>
@@ -125,6 +124,10 @@ void BibirbleWindow::SetupUi() {
     m_storyMapScreen->SetOnBack([this]() { ShowStartScreen(); });
     m_storyMapScreen->SetOnPlay([this](const std::string& key, bool hard) { OnStoryPlay(key, hard); });
     m_mainLayout->Add(m_storyMapScreen, 1, wxEXPAND | wxALL, 5);
+
+    // Story Mode story pages (with their puzzles)
+    m_storyScreen = new StoryScreen(m_centralPanel);
+    m_mainLayout->Add(m_storyScreen, 1, wxEXPAND | wxALL, 5);
 
     // Game panel (reveal text, post-game controls, rows, keyboard)
     SetupGamePanel(m_mainLayout);
@@ -296,7 +299,8 @@ void BibirbleWindow::SetupKeyboard(wxBoxSizer* parentLayout) {
 
 void BibirbleWindow::ShowOnly(wxWindow* screen) {
     for (wxWindow* w : {static_cast<wxWindow*>(m_startScreen), static_cast<wxWindow*>(m_settingsScreen),
-                        static_cast<wxWindow*>(m_storyMapScreen), static_cast<wxWindow*>(m_gamePanel)}) {
+                        static_cast<wxWindow*>(m_storyMapScreen), static_cast<wxWindow*>(m_storyScreen),
+                        static_cast<wxWindow*>(m_gamePanel)}) {
         m_mainLayout->Show(w, w == screen);
     }
     if (m_gamePanel->GetSizer()) {
@@ -767,31 +771,32 @@ void BibirbleWindow::OnStoryPlay(const std::string& levelKey, bool hardMode) {
     ContinueStoryRun();
 }
 
-bool BibirbleWindow::ShowStoryText(const StoryLevel& level, const StoryText& text) {
-    if (text.Empty()) return true;
-    StoryPuzzleDialog dlg(this, wxString::FromUTF8(level.title), text, m_words);
-    return dlg.ShowModal() == wxID_OK;
-}
-
 // Shows the story due before the next verse (the intro, or the "between"
-// text after verse 1 or 2) -- its blanks must be solved to go on -- then
-// starts that verse. "Back to map" in the story leaves the attempt saved
+// text after verse 1 or 2) as a full screen -- its blanks must be solved to
+// go on -- then starts that verse. "Back to map" leaves the attempt saved
 // with the story still to do.
 void BibirbleWindow::ContinueStoryRun() {
     StoryRun& run = m_story.Run();
     const StoryLevel* level = m_storyMap.FindLevel(run.levelKey);
     if (!run.active || !level) return;
-    if (!run.storyDone) {
-        const StoryText* text = level->StoryBefore(run.solvedCount);
-        if (text && !ShowStoryText(*level, *text)) {
-            SaveStory();
-            ShowStoryMap();
-            return;
-        }
+    const StoryText* text = run.storyDone ? nullptr : level->StoryBefore(run.solvedCount);
+    if (!text || text->Empty()) {
         run.storyDone = true;
         SaveStory();
+        StartStoryVerse();
+        return;
     }
-    StartStoryVerse();
+    m_storyScreen->ShowStory(wxString::FromUTF8(level->title), wxString(), *text, m_words,
+        [this]() {
+            m_story.Run().storyDone = true;
+            SaveStory();
+            StartStoryVerse();
+        },
+        [this]() {
+            SaveStory();
+            ShowStoryMap();
+        });
+    ShowOnly(m_storyScreen);
 }
 
 void BibirbleWindow::StartStoryVerse() {
@@ -886,7 +891,7 @@ void BibirbleWindow::HandleStoryVerseEnd(bool won) {
     auto line = [&](bool got, const wxString& what) {
         return (got ? star : wxString("-")) + " " + what + "\n";
     };
-    wxString msg = wxString::Format("Level complete! %s\n\n", StarString(r.earned.Total(), level ? level->MaxStars() : 7));
+    wxString msg = wxString::Format("Level complete!  %s\n\n", StarString(r.earned.Total(), level ? level->MaxStars() : 7));
     msg += wxString::Format("%s Guesses: %d of 3\n", star, r.earned.guess);
     if (level && level->allowHard) msg += line(r.earned.hard, "Hard Mode");
     if (level && level->allowFirstTry) msg += line(r.earned.firstTry, "A verse on the first try");
@@ -903,9 +908,13 @@ void BibirbleWindow::HandleStoryVerseEnd(bool won) {
     }
     if (newBonus > 0) msg += wxString::FromUTF8("\n\n\xF0\x9F\x94\xAE A hidden prophecy level has appeared!");  // 🔮
 
-    wxMessageBox(msg, level ? wxString::FromUTF8(level->title) : wxString("Story Mode"),
-                 wxOK | wxICON_INFORMATION, this);
-    // The rest of the story, with any puzzles. Leaving it just goes to the map.
-    if (level) ShowStoryText(*level, level->outro);
-    ShowStoryMap();
+    if (!level) {
+        ShowStoryMap();
+        return;
+    }
+    // Results and the rest of the story (with any puzzles) on one full
+    // screen. Leaving it just goes to the map.
+    m_storyScreen->ShowStory(wxString::FromUTF8(level->title), msg, level->outro, m_words,
+                             [this]() { ShowStoryMap(); }, [this]() { ShowStoryMap(); });
+    ShowOnly(m_storyScreen);
 }

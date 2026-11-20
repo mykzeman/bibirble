@@ -10,6 +10,7 @@
 #include "StoryMap.h"
 #include "StoryMapScreen.h"
 #include "StoryProgress.h"
+#include "StoryScreen.h"
 
 #include <random>
 
@@ -51,7 +52,6 @@ private:
     void ShowStoryMap();
     void OnStoryPlay(const std::string& levelKey, bool hardMode);
     void ContinueStoryRun();
-    bool ShowStoryText(const StoryLevel& level, const StoryText& text);
     void StartStoryVerse();
     void HandleStoryVerseEnd(bool won);
     void UpdateStoryHud();
@@ -75,6 +75,7 @@ private:
     StartScreen* m_startScreen;
     SettingsScreen* m_settingsScreen;
     StoryMapScreen* m_storyMapScreen;
+    StoryScreen* m_storyScreen;  // story text + fill-in-the-blank puzzles, full screen
     wxPanel* m_gamePanel;
 
     StoryMap m_storyMap;

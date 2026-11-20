@@ -119,8 +119,8 @@ How a puzzle plays:
 - **Unlimited guesses**, and the puzzle is **required to continue**: Continue only appears once
   every blank is solved. "Back to map" leaves the attempt saved, and the same story comes back on
   Continue.
-- Guesses must be **real English words** (`data/words.txt`, about 64,000 words from SCOWL; see
-  `data/WORDLIST-LICENSE.txt`). The dictionary doesn't need Bible names: every answer used anywhere
+- Guesses must be **real English words** (`data/words.txt`: the ENABLE word list, 172,823 words,
+  public domain, so no license notice is needed). The dictionary doesn't need Bible names: every answer used anywhere
   in the map is also accepted as a guess, so names like NOAH or ABRAM work.
 - After **6 wrong guesses** on a blank, its **hint** appears. Without a hint, it says "It starts with
   A and has 5 letters."
@@ -354,10 +354,10 @@ story and test it **without rebuilding**.
   - Perfect progress per level (e.g. "Pool 9 / 14"),
   - unlocked bonus levels marked with 🔮 (locked ones are not shown at all),
   - the player's star total at the top.
-- **Story card:** a window with the story text, its fill-in-the-blank puzzles (§3.5), Back to map,
-  and Continue.
+- **Story screen:** a full screen (not a pop-up) with the story text, its fill-in-the-blank puzzles
+  (§3.5), Back to map, and Continue. After a pass, the level's results and its outro share this screen.
 - **In-level HUD:** "Verse 2 / 3".
-- **Level result:** stars earned in each category, with any new bests highlighted (and "Hard
+- **Level result:** on the story screen, above the outro: stars earned in each category (and "Hard
   Mode unlocked!" the first time a level reaches 4 stars 💪).
 
 ## 11. Code
@@ -374,7 +374,7 @@ story and test it **without rebuilding**.
 | `StartScreen` | Story Mode button. |
 | `CMakeLists.txt` / `Bibirble.rc` / `EmbeddedData` | Embed `story_map.json` (Linux `.incbin`, Windows `STORY_MAP_JSON` resource). |
 | `src/WordPuzzle.h/cpp` | Story text + blank parsing, Wordle colouring, the word list. No wx. |
-| `src/StoryPuzzleDialog.h/cpp` | The story card with its puzzles (letter tiles, hint, Continue / Back to map). |
+| `src/StoryScreen.h/cpp` | The full-screen story page with its puzzles (letter tiles, hint, Continue / Back to map), also used for a level's results + outro. |
 | `data/words.txt` | The English word list for puzzle guesses, embedded like `story_map.json` (Windows `WORD_LIST_TXT`). |
 | `tests/story_tests.cpp` | Logic tests (`story_tests` target, run with `ctest`): formulas, the real map, unlocks, stars, retries, save/load. |
 | `tools/check_story_map.py` | Validates `story_map.json` and previews the star unlock curve. |

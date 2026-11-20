@@ -156,8 +156,15 @@ answer in the map), green/yellow/gray letters, a hint after 6 misses, and they m
 continue. See `docs/STORY_MODE.md` §3.5.
 
 - New: `src/WordPuzzle.*` (parsing, colouring, word list), `src/StoryPuzzleDialog.*` (the story
-  card), `data/words.txt` + `data/WORDLIST-LICENSE.txt` (SCOWL English words, embedded).
+  card), `data/words.txt` (the public-domain ENABLE English word list, embedded).
 - `StoryRun::storyDone` remembers an unfinished story, so it comes back on Continue.
 - `tools/check_story_map.py` checks blanks.
 - Fix: verses with curly quotes or other non-ASCII text showed "(null)" in the verse panel at the end
   of a game (every mode). `UpdateRevealText()` now converts with `wxString::FromUTF8`.
+
+## Story pages are full screens; public-domain word list
+
+- Story text and its puzzles now show on a full screen (`src/StoryScreen.*`, swapped in like the
+  map) instead of a pop-up. A passed level's results and its outro story share one screen.
+- The puzzle word list is now ENABLE (172,823 words, public domain) instead of SCOWL, so no license
+  notice has to ship with it.

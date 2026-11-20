@@ -52,8 +52,8 @@ set(SOURCES
     src/StoryProgress.h
     src/StoryMapScreen.cpp
     src/StoryMapScreen.h
-    src/StoryPuzzleDialog.cpp
-    src/StoryPuzzleDialog.h
+    src/StoryScreen.cpp
+    src/StoryScreen.h
     src/WordPuzzle.cpp
     src/WordPuzzle.h
     src/SettingsScreen.cpp

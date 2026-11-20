@@ -21,6 +21,6 @@ bool ReadEmbeddedIconPng(std::string& out);
 // compiled into the program is used.
 bool ReadStoryMapText(std::string& out);
 
-// The English word list for story puzzles (data/words.txt, from SCOWL; see
-// data/WORDLIST-LICENSE.txt). A copy on disk wins, like the others.
+// The English word list for story puzzles (data/words.txt: the public-domain
+// ENABLE list). A copy on disk wins, like the others.
 bool ReadWordListText(std::string& out);
