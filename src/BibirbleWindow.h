@@ -50,6 +50,8 @@ private:
     void OnOpenStory();
     void ShowStoryMap();
     void OnStoryPlay(const std::string& levelKey, bool hardMode);
+    void ContinueStoryRun();
+    bool ShowStoryText(const StoryLevel& level, const StoryText& text);
     void StartStoryVerse();
     void HandleStoryVerseEnd(bool won);
     void UpdateStoryHud();
@@ -77,6 +79,7 @@ private:
 
     StoryMap m_storyMap;
     StoryProgress m_story;
+    WordList m_words;  // valid guesses for story fill-in-the-blank puzzles
     std::mt19937 m_rng{std::random_device{}()};  // Story draws are not seeded
     wxPanel* m_storyHud = nullptr;
     wxStaticText* m_storyHudText = nullptr;

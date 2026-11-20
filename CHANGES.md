@@ -147,3 +147,17 @@ area. Design: `docs/STORY_MODE.md`; map: `story_map.json`.
   half-played verse.
 - Fix found while testing: a `wxString::Format` string containing a raw non-ASCII character
   crashed in the C locale, so non-ASCII text is now joined in with `wxString::FromUTF8`.
+
+## Story puzzles (fill in the blank)
+
+Story text can now hold Wordle-style fill-in-the-blank puzzles: `{{answer|hint}}` in a level's
+`intro`, `between` (after verses 1 and 2) or `outro`. Unlimited guesses of real English words (or any
+answer in the map), green/yellow/gray letters, a hint after 6 misses, and they must be solved to
+continue. See `docs/STORY_MODE.md` §3.5.
+
+- New: `src/WordPuzzle.*` (parsing, colouring, word list), `src/StoryPuzzleDialog.*` (the story
+  card), `data/words.txt` + `data/WORDLIST-LICENSE.txt` (SCOWL English words, embedded).
+- `StoryRun::storyDone` remembers an unfinished story, so it comes back on Continue.
+- `tools/check_story_map.py` checks blanks.
+- Fix: verses with curly quotes or other non-ASCII text showed "(null)" in the verse panel at the end
+  of a game (every mode). `UpdateRevealText()` now converts with `wxString::FromUTF8`.

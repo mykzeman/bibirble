@@ -3,6 +3,7 @@
 #include "SeededRandom.h"
 #include "ChristmasVerses.h"
 #include "EmbeddedData.h"
+#include "StoryPuzzleDialog.h"
 #include <wx/iconbndl.h>
 #include <wx/image.h>
 #include <wx/mstream.h>
@@ -63,6 +64,9 @@ BibirbleWindow::BibirbleWindow(wxWindow* parent, const std::string& dataPath)
             if (m_story.Run().active && !m_storyMap.FindLevel(m_story.Run().levelKey)) m_story.ClearRun();
             m_story.UpdateUnlocks(m_storyMap);
         }
+        std::string words;
+        if (ReadWordListText(words)) m_words.Load(words);
+        for (const auto& answer : m_storyMap.AllAnswers()) m_words.Add(answer);
     }
 
     const wxIconBundle icons = LoadAppIcons();
@@ -462,14 +466,17 @@ void BibirbleWindow::ResetGameUi() {
 
 
 void BibirbleWindow::UpdateRevealText() {
+    // Verse text is UTF-8 (curly quotes, dashes...): convert it explicitly,
+    // since passing a std::string to wxString::Format or wxString's
+    // constructor uses the C locale and turns such verses into "(null)".
     wxString text;
     if (m_state.gameOver && m_state.currentStage == -1) {
-        text = wxString::Format("%s\n\n- %s %d:%d",
-                               m_data.getRevealedText(m_state.targetVerse, 7),
+        text = wxString::FromUTF8(m_data.getRevealedText(m_state.targetVerse, 7)) +
+               wxString::Format("\n\n- %s %d:%d",
                                wxString::FromUTF8(BibleData::BookDisplayName(m_state.targetVerse.book)),
                                m_state.targetVerse.chapter, m_state.targetVerse.verse);
     } else {
-        text = m_data.getRevealedText(m_state.targetVerse, m_state.currentStage);
+        text = wxString::FromUTF8(m_data.getRevealedText(m_state.targetVerse, m_state.currentStage));
     }
     m_revealPanel->SetLabel(text);
     m_revealPanel->Wrap(400);
@@ -752,12 +759,37 @@ void BibirbleWindow::OnStoryPlay(const std::string& levelKey, bool hardMode) {
         const LevelProgress* lp = m_story.Get(levelKey);
         const bool retryAfterFail = lp && lp->failedVerse >= 0;
         m_story.StartRun(*level, m_data, AllowMature(), hard, m_rng);
+        // The intro was already read (and its puzzles solved) on the attempt
+        // that just failed.
+        if (retryAfterFail) m_story.Run().storyDone = true;
         SaveStory();
-        // The level's part of the story. Skipped when retrying straight after a fail.
-        if (!level->intro.empty() && !retryAfterFail) {
-            wxMessageBox(wxString::FromUTF8(level->intro), wxString::FromUTF8(level->title),
-                         wxOK | wxICON_INFORMATION, this);
+    }
+    ContinueStoryRun();
+}
+
+bool BibirbleWindow::ShowStoryText(const StoryLevel& level, const StoryText& text) {
+    if (text.Empty()) return true;
+    StoryPuzzleDialog dlg(this, wxString::FromUTF8(level.title), text, m_words);
+    return dlg.ShowModal() == wxID_OK;
+}
+
+// Shows the story due before the next verse (the intro, or the "between"
+// text after verse 1 or 2) -- its blanks must be solved to go on -- then
+// starts that verse. "Back to map" in the story leaves the attempt saved
+// with the story still to do.
+void BibirbleWindow::ContinueStoryRun() {
+    StoryRun& run = m_story.Run();
+    const StoryLevel* level = m_storyMap.FindLevel(run.levelKey);
+    if (!run.active || !level) return;
+    if (!run.storyDone) {
+        const StoryText* text = level->StoryBefore(run.solvedCount);
+        if (text && !ShowStoryText(*level, *text)) {
+            SaveStory();
+            ShowStoryMap();
+            return;
         }
+        run.storyDone = true;
+        SaveStory();
     }
     StartStoryVerse();
 }
@@ -843,7 +875,7 @@ void BibirbleWindow::HandleStoryVerseEnd(bool won) {
                                       guesses == 1 ? "guess" : "guesses",
                                       m_story.Run().solvedCount + 1, StoryProgress::kVersesPerLevel),
                      "Verse solved", wxOK | wxICON_INFORMATION, this);
-        StartStoryVerse();
+        ContinueStoryRun();
         return;
     }
 
@@ -870,9 +902,10 @@ void BibirbleWindow::HandleStoryVerseEnd(bool won) {
         if (l && l->isBonus) ++newBonus;
     }
     if (newBonus > 0) msg += wxString::FromUTF8("\n\n\xF0\x9F\x94\xAE A hidden prophecy level has appeared!");  // 🔮
-    if (level && !level->outro.empty()) msg += "\n\n" + wxString::FromUTF8(level->outro);
 
     wxMessageBox(msg, level ? wxString::FromUTF8(level->title) : wxString("Story Mode"),
                  wxOK | wxICON_INFORMATION, this);
+    // The rest of the story, with any puzzles. Leaving it just goes to the map.
+    if (level) ShowStoryText(*level, level->outro);
     ShowStoryMap();
 }

@@ -45,6 +45,10 @@ struct StoryRun {
     int totalGuesses = 0;       // across solved verses
     bool hardMode = false;
     bool anyFirstTry = false;
+    // The story before verses[solvedCount] (intro or "between" text, with
+    // its puzzles) has been read/solved. Kept so leaving mid-puzzle shows it
+    // again on Continue.
+    bool storyDone = false;
     std::vector<GuessRecord> currentGuesses;  // guesses so far on verses[solvedCount]
 };
 

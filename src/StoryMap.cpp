@@ -172,14 +172,32 @@ bool StoryMap::ParseLevel(const json& j, const std::string& areaId, bool isBonus
     out.areaId = areaId;
     out.key = areaId + "." + out.id;
     out.title = j.value("title", out.id);
-    out.intro = j.value("intro", "");
-    out.outro = j.value("outro", "");
     out.isBonus = isBonus;
     bool ok = true;
     auto fail = [&](const std::string& msg) {
         m_errors.push_back(out.key + ": " + msg);
         ok = false;
     };
+    auto parseStory = [&](const json& value, const char* where, StoryText& into) {
+        std::string err;
+        if (!value.is_string()) {
+            if (!value.is_null()) fail(std::string(where) + " must be text");
+            return;
+        }
+        if (!StoryText::Parse(value.get<std::string>(), into, err)) fail(std::string(where) + ": " + err);
+    };
+    parseStory(j.value("intro", json()), "intro", out.intro);
+    parseStory(j.value("outro", json()), "outro", out.outro);
+    if (j.contains("between")) {
+        if (!j["between"].is_array() || j["between"].size() > 2) {
+            fail("between must be a list of up to 2 texts (after verse 1, after verse 2)");
+        } else {
+            for (const auto& b : j["between"]) {
+                out.between.emplace_back();
+                parseStory(b, "between", out.between.back());
+            }
+        }
+    }
     if (out.id.empty()) fail("level has no id");
 
     std::vector<std::string> refs;
@@ -347,4 +365,25 @@ std::vector<std::vector<std::string>> StoryMap::Paths() const {
         for (const auto& l : area.levels) paths.back().push_back(l.key);
     }
     return paths;
+}
+
+const StoryText* StoryLevel::StoryBefore(int verseIndex) const {
+    if (verseIndex == 0) return &intro;
+    if (verseIndex >= 1 && verseIndex <= (int)between.size()) return &between[verseIndex - 1];
+    return nullptr;
+}
+
+std::vector<std::string> StoryMap::AllAnswers() const {
+    std::vector<std::string> out;
+    auto add = [&](const StoryText& t) { for (const auto& b : t.blanks) out.push_back(b.answer); };
+    auto addLevel = [&](const StoryLevel& l) {
+        add(l.intro);
+        add(l.outro);
+        for (const auto& b : l.between) add(b);
+    };
+    for (const auto& area : m_areas) {
+        for (const auto& l : area.levels) addLevel(l);
+        for (const auto& l : area.bonusLevels) addLevel(l);
+    }
+    return out;
 }

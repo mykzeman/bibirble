@@ -107,6 +107,7 @@ void StoryProgress::FromJson(const json& j, const BibleData& bible) {
         run.totalGuesses = r.value("guessesSoFar", 0);
         run.hardMode = r.value("hardMode", false);
         run.anyFirstTry = r.value("anyFirstTry", false);
+        run.storyDone = r.value("storyDone", true);
         if (r.contains("currentGuesses") && r["currentGuesses"].is_array()) {
             for (const auto& g : r["currentGuesses"]) {
                 GuessRecord rec;
@@ -143,6 +144,7 @@ json StoryProgress::ToJson(const BibleData& bible) const {
         out["inProgress"] = json{{"level", m_run.levelKey}, {"verses", verses},
                                  {"solved", m_run.solvedCount}, {"guessesSoFar", m_run.totalGuesses},
                                  {"hardMode", m_run.hardMode}, {"anyFirstTry", m_run.anyFirstTry},
+                                 {"storyDone", m_run.storyDone},
                                  {"currentGuesses", guesses}};
     }
     return out;
@@ -292,6 +294,7 @@ bool StoryProgress::RecordVerseSolved(int guesses) {
     if (guesses == 1) m_run.anyFirstTry = true;
     m_run.solvedCount++;
     m_run.currentGuesses.clear();
+    m_run.storyDone = false;  // the "between" story (if any) comes next
     return m_run.solvedCount >= kVersesPerLevel;
 }
 

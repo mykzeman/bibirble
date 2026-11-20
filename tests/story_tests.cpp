@@ -4,6 +4,7 @@
 #include "BibleData.h"
 #include "StoryMap.h"
 #include "StoryProgress.h"
+#include "WordPuzzle.h"
 
 #include <algorithm>
 #include <cstdio>
@@ -162,6 +163,72 @@ void TestUnlocksAndStars(const BibleData& bible) {
           loaded.Run().currentGuesses[0].digitColors[3] == GuessColor::Yellow);
 }
 
+void TestWordPuzzles(const BibleData& bible, const std::string& dir) {
+    using G = GuessColor;
+    // Wordle colouring, including repeated letters.
+    CHECK((ScoreWord("ark", "ark") == std::vector<G>{G::Green, G::Green, G::Green}));
+    CHECK((ScoreWord("kar", "ark") == std::vector<G>{G::Yellow, G::Yellow, G::Yellow}));
+    CHECK((ScoreWord("llama", "lambs") == std::vector<G>{G::Green, G::Gray, G::Yellow, G::Yellow, G::Gray}));
+    CHECK((ScoreWord("eerie", "there") == std::vector<G>{G::Yellow, G::Gray, G::Yellow, G::Gray, G::Green}));
+
+    StoryText t;
+    std::string err;
+    CHECK(StoryText::Parse("God told Noah to build an {{Ark|A huge boat}} of {{wood}}.", t, err));
+    CHECK(t.blanks.size() == 2 && t.blanks[0].answer == "ark" && t.blanks[0].hint == "A huge boat");
+    CHECK(t.blanks[1].hint.empty() && t.parts.size() == 3);
+    CHECK(t.Render(0) == "God told Noah to build an [ _ _ _ ] of _ _ _ _.");
+    CHECK(t.Render(1) == "God told Noah to build an ARK of [ _ _ _ _ ].");
+    CHECK(t.Render(2) == "God told Noah to build an ARK of WOOD.");
+    CHECK(StoryText::Parse("No puzzles here.", t, err) && t.blanks.empty() && !t.Empty());
+    CHECK(StoryText::Parse("", t, err) && t.Empty());
+    CHECK(!StoryText::Parse("Oops {{ark", t, err));
+    CHECK(!StoryText::Parse("Two words {{burning bush}}", t, err));
+    CHECK(!StoryText::Parse("Empty {{|hint}}", t, err));
+    CHECK(DefaultHint("manna") == "It starts with M and has 5 letters.");
+
+    // The real word list: dictionary words yes, capitalised names no.
+    WordList words;
+    words.Load(ReadFile(dir + "/data/words.txt"));
+    CHECK(words.Size() > 50000);
+    CHECK(words.Contains("ark") && words.Contains("manna") && words.Contains("light"));
+    CHECK(!words.Contains("noah"));
+    words.Load("Noah\nmoses\n");  // capitalised lines are names, so skipped
+    CHECK(!words.Contains("noah") && words.Contains("moses"));
+
+    // Blanks in the real map parse, and map answers can be added as guesses.
+    StoryMap map;
+    CHECK(map.LoadFromText(ReadFile(dir + "/story_map.json"), bible));
+    const StoryLevel* eden = map.FindLevel("creation.eden");
+    CHECK(eden && eden->intro.blanks.size() == 1 && eden->between.size() == 2 && !eden->outro.blanks.empty());
+    CHECK(eden && eden->StoryBefore(0) == &eden->intro && eden->StoryBefore(2) == &eden->between[1]);
+    CHECK(eden && eden->StoryBefore(3) == nullptr);
+    const auto answers = map.AllAnswers();
+    CHECK(std::find(answers.begin(), answers.end(), "abram") != answers.end());
+
+    // Bad blanks and "between" lists are reported when the map loads.
+    StoryMap bad;
+    CHECK(!bad.LoadFromText(R"({"areas":[{"id":"a","levels":[
+        {"id":"x","pool":"ruth","intro":"An {{ark"},
+        {"id":"y","pool":"ruth","between":["a","b","c"]}]}]})", bible));
+    CHECK(bad.Errors().size() == 2);
+}
+
+void TestStoryDone(const BibleData& bible) {
+    StoryMap map;
+    CHECK(map.LoadFromText(kTestMap, bible));
+    std::mt19937 rng(7);
+    StoryProgress p;
+    p.UpdateUnlocks(map);
+    p.StartRun(*map.FindLevel("a.one"), bible, false, false, rng);
+    CHECK(!p.Run().storyDone);   // the intro comes first
+    p.Run().storyDone = true;
+    p.RecordVerseSolved(2);
+    CHECK(!p.Run().storyDone);   // then the "between" story before verse 2
+    StoryProgress loaded;
+    loaded.FromJson(p.ToJson(bible), bible);
+    CHECK(loaded.Run().active && !loaded.Run().storyDone);
+}
+
 void TestMapErrors(const BibleData& bible) {
     StoryMap map;
     CHECK(!map.LoadFromText(R"({"areas":[{"id":"a","levels":[
@@ -190,6 +257,8 @@ int main() {
     TestRealMap(bible, dir);
     TestUnlocksAndStars(bible);
     TestMapErrors(bible);
+    TestWordPuzzles(bible, dir);
+    TestStoryDone(bible);
     std::printf("%d checks, %d failed\n", g_checks, g_failures);
     return g_failures == 0 ? 0 : 1;
 }

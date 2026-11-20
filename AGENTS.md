@@ -22,7 +22,7 @@
 - **BibleData** (`src/BibleData.h/cpp`): Verse storage + utility functions. Book areas hardcoded in `getBookArea()` map (must match `tools/sort.py` AREAS definition)
 - **SeededRandom** (`src/SeededRandom.h/cpp`): Bit-for-bit port of the web version's `data.js` hash/seed algorithm (`HashStringToInt`, xorshift32 `SeededRandom`, `PickIndexFromSeed`, `GetDailySeed`), so Daily puzzles match the web version exactly
 - **PersistenceManager** (`src/PersistenceManager.h/cpp`): Small JSON file under `wxStandardPaths`' per-user data dir, standing in for the web version's `localStorage` (daily lockout date, last seed)
-- **Story Mode** (`src/StoryMap.h/cpp`, `src/StoryProgress.h/cpp`, `src/StoryMapScreen.h/cpp`): the map is data, not code: `story_map.json` (embedded like `bible_sections.json`; a copy on disk wins) defines areas, levels, story text, verse pools, star rules and unlocks. `StoryProgress` (no wx) holds stars/unlocks/retries and saves under PersistenceManager's `story` key. Design: `docs/STORY_MODE.md`. Logic tests: `tests/story_tests.cpp` (`story_tests` target / `ctest`). Check map edits with `python tools/check_story_map.py`
+- **Story Mode** (`src/StoryMap.h/cpp`, `src/StoryProgress.h/cpp`, `src/StoryMapScreen.h/cpp`): the map is data, not code: `story_map.json` (embedded like `bible_sections.json`; a copy on disk wins) defines areas, levels, story text, verse pools, star rules and unlocks. `StoryProgress` (no wx) holds stars/unlocks/retries and saves under PersistenceManager's `story` key. Design: `docs/STORY_MODE.md`. Logic tests: `tests/story_tests.cpp` (`story_tests` target / `ctest`). Check map edits with `python tools/check_story_map.py`. Story text can hold Wordle-style fill-in-the-blank puzzles (`{{answer|hint}}`), handled by `src/WordPuzzle.h/cpp` (no wx) and `src/StoryPuzzleDialog.h/cpp`; guesses are checked against `data/words.txt` (SCOWL, license in `data/WORDLIST-LICENSE.txt`), embedded like the other data files
 - **main.cpp**: wxApp bootstrapper that shows `LoadingDialog` then creates `BibirbleWindow` on startup
 
 ### Data Structure Consistency
@@ -85,6 +85,9 @@ wxWidgets uses parent-child ownership (constructor parameter `wxWindow* parent`)
 
 ### Async calls from background threads
 `LoadingDialog` (`src/loading_dialog.h`) runs its JSON parse on a background `std::thread` and needs to touch the gauge/end the modal from the main thread. Use the real `wxEvtHandler::CallAfter()` **member function** (e.g. `this->CallAfter([this]{...})`), not a free `wxCallAfter(fn)` -- this wx 3.2 packaging has no `<wx/callafter.h>`, and a handler-less shim that queues onto `wxTheApp` will never be dispatched while the dialog is shown via `ShowModal()` from inside `wxApp::OnInit()` (before the main loop starts drains `wxTheApp`'s pending events). `CallAfter()` on the dialog itself queues onto the dialog's own pending-event list, which the nested modal loop does drain correctly.
+
+### Text encoding
+Verse and story text is UTF-8 (curly quotes, dashes, emoji). Always convert it with `wxString::FromUTF8()`. Passing a `std::string` to `wxString::Format("%s", ...)`, or to wxString's constructor, uses the C locale: non-ASCII text turns into "(null)", and a raw non-ASCII format string can crash.
 
 ### Color Feedback
 `GameRow::setDigitColors()` and `setBookColor()` apply validation feedback, taking a `GuessColor` (Gray/Yellow/Green -- see `src/GuessColor.h`), not string literals. Integration with game logic in `BibirbleWindow::ProcessTurn()`, which also records a `GuessRecord` onto `GameState::history`.

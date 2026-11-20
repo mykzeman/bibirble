@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "BibleData.h"
+#include "WordPuzzle.h"
 
 // Story Mode's map, loaded from story_map.json (see docs/STORY_MODE.md).
 // Nothing about the areas is hard-coded: the JSON decides which areas and
@@ -35,8 +36,14 @@ struct StoryLevel {
     std::string id;
     std::string areaId;
     std::string title;
-    std::string intro;
-    std::string outro;
+    // Story text, which may hold fill-in-the-blank puzzles ({{answer|hint}}):
+    // before verse 1, after verse 1 and after verse 2 ("between"), and after
+    // the level is passed.
+    StoryText intro;
+    std::vector<StoryText> between;
+    StoryText outro;
+    // The story shown before verse `verseIndex` (0 = intro, 1-2 = between).
+    const StoryText* StoryBefore(int verseIndex) const;
     std::vector<int> pool;  // BibleData indices, in dataset order, no duplicates
     StarFormula minStars;   // main-path levels
     StarFormula requiresStars;  // bonus levels
@@ -76,6 +83,9 @@ public:
     const StoryLevel* FindLevel(const std::string& key) const;
     const StoryArea* FindArea(const std::string& id) const;
     const std::vector<std::string>& Errors() const { return m_errors; }
+    // Every blank's answer in the map, so they can be guessed even when they
+    // aren't dictionary words (names like NOAH).
+    std::vector<std::string> AllAnswers() const;
     bool IsLoaded() const { return m_loaded; }
 
     // Paths through the map: each starts at the first area or at an
