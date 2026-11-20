@@ -13,6 +13,9 @@ without it still use every verse.
 
 Writes src/UsefulVerses.h and, when the web repo is next to this one,
 ../Bibirble-web/scripts/useful.js, so both games share the same pool.
+The pool is picked from the World English Bible (bible_sections.json) in its
+numbering; the other Bible versions find the same verses by their "ref"
+(see sort.py), so this only needs running once.
 
 Run from the repo root:
     python tools/pick_useful.py               # write both files

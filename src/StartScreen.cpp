@@ -134,6 +134,10 @@ void StartScreen::SetupUi() {
 
     addHeading("New in this update");
     addItems({
+        "Bible versions: pick the World English Bible, King James Version, "
+        "Douay-Rheims or Catholic Public Domain Version in Settings. Story "
+        "Mode works in every version, and the Catholic Bibles add Tobit, "
+        "Judith, Wisdom, Sirach, Baruch and 1-2 Maccabees.",
         "Story Mode: journey through the Bible from Creation to the early "
         "church. Each level tells part of the story and asks you 3 verses. "
         "Earn up to 7 stars per level to unlock what comes next, and look "

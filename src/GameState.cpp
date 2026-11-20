@@ -81,9 +81,9 @@ std::string GameState::CheckHardModeViolation(const std::string& bookGuess,
     return "";
 }
 
-std::string GameState::BuildShareText() const {
+std::string GameState::BuildShareText(const std::string& versionName) const {
     std::ostringstream out;
-    out << "Could you beat this score in Bibirble?";
+    out << "Could you beat this score in Bibirble (" << versionName << ")?";
     if (christmas) out << " \xF0\x9F\x8E\x84";  // 🎄
     out << "\n\n";
     out << "- " << BibleData::BookDisplayName(targetVerse.book) << " " << targetVerse.chapter << ":" << targetVerse.verse << "\n\n";

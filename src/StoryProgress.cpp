@@ -44,7 +44,10 @@ bool GuessFromJson(const json& j, GuessRecord& g) {
 }  // namespace
 
 std::string VerseKey(const Verse& v) {
-    return v.book + " " + std::to_string(v.chapter) + ":" + std::to_string(v.verse);
+    // World English Bible numbering, so saved progress still finds its
+    // verses after switching Bible versions.
+    if (!v.hasStdRef) return v.book + " " + std::to_string(v.chapter) + ":" + std::to_string(v.verse) + "*";
+    return v.book + " " + std::to_string(v.stdChapter) + ":" + std::to_string(v.stdVerse);
 }
 
 int LevelStars::Total() const {

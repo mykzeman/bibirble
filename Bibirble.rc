@@ -4,6 +4,10 @@
 // file (see src/EmbeddedData.cpp). A bible_sections.json next to the exe still
 // takes priority over this embedded copy.
 BIBLE_SECTIONS_JSON RCDATA "bible_sections.json"
+// The other Bible versions (src/BibleVersions.h), embedded the same way.
+BIBLE_KJV_JSON RCDATA "bible_sections_kjv.json"
+BIBLE_DR_JSON RCDATA "bible_sections_dr.json"
+BIBLE_CPDV_JSON RCDATA "bible_sections_cpdv.json"
 
 // Story Mode's map, embedded the same way (a story_map.json next to the exe
 // takes priority).

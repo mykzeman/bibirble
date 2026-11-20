@@ -11,6 +11,7 @@
 #include <fstream>
 #include <set>
 #include <sstream>
+#include <random>
 #include <string>
 
 namespace {
@@ -257,6 +258,52 @@ void TestMapErrors(const BibleData& bible) {
     CHECK(has("duplicate level id"));
     CHECK(has("can't read minStars"));
 }
+// Every Bible version loads, Story Mode works in each, and verses are
+// matched across versions by their World English Bible reference.
+void TestBibleVersions(const std::string& dir) {
+    BibleData web;
+    CHECK(web.loadVersion(FindBibleVersion("web")));
+    const std::string map = ReadFile(dir + "/story_map.json");
+    StoryProgress progress;
+    {
+        StoryMap webMap;
+        CHECK(webMap.LoadFromText(map, web));
+        std::mt19937 rng(3);
+        progress.UpdateUnlocks(webMap);
+        progress.StartRun(*webMap.FindLevel("creation.eden"), web, false, false, rng);
+    }
+    const json saved = progress.ToJson(web);
+
+    for (const auto& version : BibleVersions()) {
+        BibleData bible;
+        CHECK(bible.loadVersion(version));
+        CHECK(std::string(bible.version().id) == version.id);
+        StoryMap storyMap;
+        const bool ok = storyMap.LoadFromText(map, bible);
+        for (const auto& e : storyMap.Errors()) std::printf("  %s map error: %s\n", version.id, e.c_str());
+        CHECK(ok);
+        CHECK(bible.getUsefulVerseIndices().size() > 1000);
+        CHECK(bible.getChristmasVerseIndices().size() > 60);
+        // A Story attempt saved in one version carries on in another.
+        StoryProgress loaded;
+        loaded.FromJson(saved, bible);
+        CHECK(loaded.Run().active && loaded.Run().levelKey == "creation.eden");
+    }
+
+    // The Douay-Rheims numbers most Psalms one lower: its Psalm 22 is the
+    // World English Bible's Psalm 23, and Story pools follow that.
+    BibleData dr;
+    CHECK(dr.loadVersion(FindBibleVersion("dr")));
+    const int shepherd = dr.findStdRef("psalms", 23, 1);
+    CHECK(shepherd >= 0 && dr.getVerseAtIndex(shepherd).chapter == 22);
+    CHECK(dr.getVerseAtIndex(shepherd).text.find("ruleth me") != std::string::npos);
+    CHECK(dr.getBookArea("tobit") == "Small stories" && dr.getBookArea("1maccabees") == "Historical");
+    CHECK(BibleData::BookDisplayName("2maccabees") == "2 Maccabees");
+    std::vector<std::string> books = dr.getAllBooks();
+    CHECK(books.size() == 73);
+    CHECK(books.front() == "genesis" && books.back() == "revelation");
+    CHECK(std::find(books.begin(), books.end(), "tobit") - books.begin() == 16);  // after Nehemiah
+}
 }  // namespace
 
 int main() {
@@ -272,6 +319,7 @@ int main() {
     TestMapErrors(bible);
     TestWordPuzzles(bible, dir);
     TestStoryDone(bible);
+    TestBibleVersions(dir);
     std::printf("%d checks, %d failed\n", g_checks, g_failures);
     return g_failures == 0 ? 0 : 1;
 }

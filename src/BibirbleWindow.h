@@ -17,7 +17,7 @@
 
 class BibirbleWindow : public wxFrame {
 public:
-    explicit BibirbleWindow(wxWindow* parent, const std::string& dataPath = "");
+    explicit BibirbleWindow(wxWindow* parent);
 
 private:
     void SetupUi();
@@ -63,6 +63,12 @@ private:
     void HandleStoryVerseEnd(bool won);
     void UpdateStoryHud();
     void SaveStory();
+    // Loads a Bible version (falling back to the World English Bible) and
+    // rebuilds Story Mode's pools and progress for it.
+    void LoadBibleVersion(const std::string& id);
+    // Switches to the version picked in Settings, if it changed. Called
+    // between games so a game never mixes two versions.
+    void ApplyBibleVersionSetting();
     bool AllowMature() const;
 
     void OnVirtualKeyClicked(wxCommandEvent& event);

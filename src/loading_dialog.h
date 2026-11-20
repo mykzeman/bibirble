@@ -25,11 +25,10 @@
 class LoadingDialog : public wxDialog
 {
 public:
-    // path is optional -- defaults to a local file named `bible_sections.json`
-    explicit LoadingDialog(wxWindow* parent, const wxString& path = wxEmptyString)
+    // Checks the default Bible version (the World English Bible) can be read.
+    explicit LoadingDialog(wxWindow* parent)
         : wxDialog(parent, wxID_ANY, "Loading", wxDefaultPosition, wxSize(320, 110)),
-          m_gauge(new wxGauge(this, wxID_ANY, 100)),
-          m_path(path)
+          m_gauge(new wxGauge(this, wxID_ANY, 100))
     {
         wxBoxSizer* s = new wxBoxSizer(wxVERTICAL);
         s->Add(new wxStaticText(this, wxID_ANY, "Loading..."), 0, wxALL | wxALIGN_CENTER, 10);
@@ -52,9 +51,8 @@ private:
         const auto startedAt = std::chrono::steady_clock::now();
         constexpr auto kMinLoadVisible = std::chrono::milliseconds(1500);
 
-        const std::string preferredPath = std::string(m_path.mb_str(wxConvUTF8));
         std::string fileContent;
-        m_foundFile = ReadBibleDataText(preferredPath, fileContent);
+        m_foundFile = ReadBibleDataText(BibleVersions().front(), fileContent);
 
         // Parse using nlohmann::json
         std::vector<std::string> texts;
@@ -103,6 +101,5 @@ private:
 
     wxGauge* m_gauge;
     std::string m_loadedText;
-    wxString m_path;
     bool m_foundFile = false;
 };

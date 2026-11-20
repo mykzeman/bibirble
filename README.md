@@ -24,7 +24,10 @@ src/
 └── bibirble.cpp             # Placeholder for future features
 
 tools/
-├── sort.py                  # Builds bible_sections.json from the per-book JSON
+├── bibles/<version>/        # One JSON file per book for each Bible version (web, kjv, dr, cpdv)
+├── split_bible.py           # Splits a whole-Bible JSON into tools/bibles/<version>/ book files
+├── sort.py                  # Builds bible_sections*.json (one per version) from the book files
+├── check_story_map.py       # Checks story_map.json against every version
 ├── content_filters.py       # R18 (mature) verse patterns shared by both scripts
 └── pick_useful.py           # Builds the "Useful verses only" pool (both games)
 
@@ -100,7 +103,7 @@ Bibirble is a small Bible-verse guessing game written in modern C++ using wxWidg
 
 **Quick links**
 - Source: https://github.com/mykzeman/bibirble
-- Data pipeline: `tools/sort.py` → `bible_sections.json`
+- Data pipeline: `tools/bibles/<version>/*.json` → `tools/sort.py` → `bible_sections*.json`
 
 ## Quickstart (Linux / macOS)
 
@@ -135,12 +138,14 @@ cmake --build . --config Release
 ## Project layout
 
 - `src/` - application source (UI, game logic, data loader)
-- `tools/sort.py` - helper to convert raw book JSON into `bible_sections.json`
-- `bible_sections.json` - compiled verse data used at runtime
+- `tools/sort.py` - builds each Bible version's verse file from its per-book JSON in `tools/bibles/`
+- `bible_sections.json` (World English Bible), `bible_sections_kjv.json`, `bible_sections_dr.json`,
+  `bible_sections_cpdv.json` - compiled verse data used at runtime
 
 ## Data format
 
-The game expects `bible_sections.json` next to the executable. Each verse entry should look like:
+Each Bible version's verses are compiled into the program; a `bible_sections*.json` next to the
+executable wins, for testing new data. Each verse entry looks like:
 
 ```json
 {
@@ -153,15 +158,28 @@ The game expects `bible_sections.json` next to the executable. Each verse entry 
 }
 ```
 
-If you have the original per-book JSON files in `tools/`, run:
+plus `"mature": true` for R18 verses, and `"ref": [chapter, verse]` when a version numbers a verse
+differently from the World English Bible (the Douay-Rheims and CPDV number most Psalms one lower);
+`"ref": null` means there's no match. Story Mode, Useful verses and Christmas verses find verses by
+that standard reference, so they pick the same passage in every version. Players still see and guess
+each version's own numbers.
+
+To rebuild them from the book files in `tools/bibles/` (also copies them into `../Bibirble-web/scripts/`):
 
 ```bash
 python3 tools/sort.py
-# this generates or updates bible_sections.json
 ```
+
+To add a version, split its JSON into book files with `tools/split_bible.py`, then add it to
+`VERSIONS` in `tools/sort.py`, `src/BibleVersions.h`, `Bibirble.rc`, `CMakeLists.txt` (`BIBIRBLE_BLOBS`)
+and Bibirble-web's `scripts/versions.js`.
 
 ## Features
 
+- **Bible versions**: pick the World English Bible (WEB), King James Version (KJV), Douay-Rheims 1899
+  American Edition (DRA) or Catholic Public Domain Version (CPDV) in Settings. The Catholic versions add
+  Tobit, Judith, Wisdom, Sirach, Baruch and 1-2 Maccabees, sorted into the book areas. Story Mode works in
+  every version, and its progress carries over when you switch.
 - **Daily mode**: a seeded puzzle that's the same for everyone on a given calendar day (it resets at your local midnight), and matches the web
   version's verse exactly (bit-for-bit port of its hash/seed algorithm).
 - **Random mode**: pick any seed (or generate one) for a shareable, replayable puzzle.
@@ -189,7 +207,11 @@ python3 tools/sort.py
 
 - `tools/sort.py` keeps prose and poetry verses with at least 7 words. References past 99 (Psalms 100-150,
   Psalm 119:100-176) are skipped, because the guess row only has two chapter digits and two verse digits.
-- Book area mappings are defined in both `tools/sort.py` and `src/BibleData.cpp::getBookArea()`; keep them in sync when changing categories.
+- Book area mappings are defined in `tools/sort.py`, `src/BibleData.cpp::getBookArea()` and Bibirble-web's
+  `scripts/books.js`; keep them in sync when changing categories.
+- The Douay-Rheims source has no Malachi 4 (6 verses) or Esther 11-16, so those can't come up in that
+  version; Story Mode skips them there. CPDV prologues (Sirach, Lamentations) are left out because they
+  have no chapter number.
 
 ## Contributing
 
@@ -199,6 +221,11 @@ Contributions welcome. Suggested improvements:
 
 ## License & Credits
 
-This project includes or references the World English Bible dataset. See `LICENSE` for project licensing.
+The Bible texts (World English Bible, King James Version, Douay-Rheims 1899 American Edition and
+Catholic Public Domain Version) are in the public domain. See `LICENSE` for project licensing.
 
-Data source reference: https://github.com/TehShrike/world-english-bible
+Data sources:
+- World English Bible: https://github.com/TehShrike/world-english-bible
+- King James Version: https://github.com/aruljohn/Bible-kjv (MIT License, `tools/bibles/kjv/LICENSE`)
+- Douay-Rheims: https://github.com/yoarikso/douayrheimsbible (MIT License, `tools/bibles/dr/LICENSE`)
+- Catholic Public Domain Version: by Ronald L. Conte Jr., public domain

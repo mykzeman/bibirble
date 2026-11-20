@@ -50,7 +50,8 @@ public:
     // version, which pads blank lines for unplayed rows on an early win.
     // Immune to the web's gray/grey emoji-key mismatch since there is only
     // ever one GuessColor.
-    std::string BuildShareText() const;
+    // versionName: the Bible version's short name ("KJV"), shown in the text.
+    std::string BuildShareText(const std::string& versionName) const;
 
     // Book hints: the books from allBooks that still fit the book clues in
     // history. Green keeps only that book, yellow keeps only its area, gray

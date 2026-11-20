@@ -14,13 +14,19 @@
 #include <windows.h>
 #endif
 
-// Linux: CMake generates EmbeddedDataBlob.cpp, whose .incbin copies
-// bible_sections.json and icons/bibirble.png into the binary between these
+// Linux: CMake generates EmbeddedDataBlob.cpp, whose .incbin copies the
+// Bible versions' verse files and icons/bibirble.png into the binary between these
 // symbols, and defines BIBIRBLE_HAS_INCBIN, so the Linux build is a single
 // file too.
 #if !defined(_WIN32) && defined(BIBIRBLE_HAS_INCBIN)
 extern "C" const char bibirble_data_start[];
 extern "C" const char bibirble_data_end[];
+extern "C" const char bibirble_kjv_start[];
+extern "C" const char bibirble_kjv_end[];
+extern "C" const char bibirble_dr_start[];
+extern "C" const char bibirble_dr_end[];
+extern "C" const char bibirble_cpdv_start[];
+extern "C" const char bibirble_cpdv_end[];
 extern "C" const char bibirble_icon_start[];
 extern "C" const char bibirble_icon_end[];
 extern "C" const char bibirble_story_start[];
@@ -49,10 +55,10 @@ bool ReadEmbeddedResource(std::string& out, const wchar_t* name = L"BIBLE_SECTIO
 
 }  // namespace
 
-bool ReadBibleDataText(const std::string& preferredPath, std::string& out) {
+bool ReadBibleDataText(const BibleVersion& version, std::string& out) {
     out.clear();
 
-    const std::string resolvedPath = BibleData::ResolveDataFilePath(preferredPath);
+    const std::string resolvedPath = BibleData::ResolveDataFilePath(version.file);
     if (!resolvedPath.empty()) {
         std::ifstream ifs(resolvedPath, std::ios::binary);
         if (ifs) {
@@ -64,9 +70,13 @@ bool ReadBibleDataText(const std::string& preferredPath, std::string& out) {
     }
 
 #ifdef _WIN32
-    return ReadEmbeddedResource(out);
+    return ReadEmbeddedResource(out, version.resource);
 #elif defined(BIBIRBLE_HAS_INCBIN)
-    out.assign(bibirble_data_start, bibirble_data_end);
+    const std::string id = version.id;
+    if (id == "kjv") out.assign(bibirble_kjv_start, bibirble_kjv_end);
+    else if (id == "dr") out.assign(bibirble_dr_start, bibirble_dr_end);
+    else if (id == "cpdv") out.assign(bibirble_cpdv_start, bibirble_cpdv_end);
+    else out.assign(bibirble_data_start, bibirble_data_end);
     return !out.empty();
 #else
     return false;

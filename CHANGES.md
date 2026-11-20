@@ -184,3 +184,27 @@ continue. See `docs/STORY_MODE.md` §3.5.
 - The "World English Bible Version" tagline moved from the top of the window to a new **Credits**
   section in Settings (Bible text, word list, icon/original game, Wordle, wxWidgets, nlohmann/json).
   Settings now scrolls.
+
+## Bible versions
+
+Settings has a Bible version picker: World English Bible (default), King James Version, Douay-Rheims
+1899 American Edition and Catholic Public Domain Version.
+
+- Data: each version is split into one file per book under `tools/bibles/<version>/` (the WEB files moved
+  there from `tools/`). `tools/split_bible.py` does the splitting; `tools/sort.py` now builds
+  `bible_sections*.json` for every version (one verse per line, about 7 MB each instead of 9 MB; the WEB
+  verses are unchanged, so the Daily is too) and copies them to Bibirble-web.
+- Douay-Rheims comes from yoarikso/douayrheimsbible. The first DR file tried skipped 46 chapters and
+  numbered the rest straight on (its "Ruth 2" was Ruth 4), so it was replaced. This one lacks only
+  Malachi 4 and Esther 11-16.
+- The Douay-Rheims and CPDV number most Psalms like the Vulgate (Psalm 22 = Psalm 23). sort.py gives
+  each such verse a `"ref"` (its World English Bible place), lining psalms up by their wording. Useful
+  verses, Christmas verses, Story pools and Story save keys use it, so they work in every version and
+  Story progress carries over between versions.
+- The deuterocanonical books (Tobit, Judith, Wisdom, Sirach, Baruch, 1-2 Maccabees) are in the book
+  order, names and areas.
+- Story Mode: a version missing a passage (DR's Malachi 4) skips it; `check_story_map.py` checks every
+  version.
+- All four versions are embedded (`Bibirble.rc`, `BIBIRBLE_BLOBS` in CMakeLists.txt).
+- Share text names the version; Credits name every translation and data source.
+- Fix: `calculateSliceSteps` rounded down where data.js rounds up (no visible change with 7 rows).

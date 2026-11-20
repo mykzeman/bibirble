@@ -3,11 +3,12 @@
 #include <wx/wx.h>
 #include <wx/scrolwin.h>
 #include <functional>
+#include <string>
 
-// Christmas verses (December only), Hard Mode, Useful-verses-only, Book hints and R18 mode toggles + seed entry/randomize/readout, matching the web
+// Bible version, Christmas verses (December only), Hard Mode, Useful-verses-only, Book hints and R18 mode toggles + seed entry/randomize/readout, matching the web
 // version's Settings screen. Seed and hard-mode apply to the next game
 // started, same as the web version. A Credits section at the bottom names the
-// Bible translation (World English Bible) and everything else the game uses.
+// Bible translations and everything else the game uses.
 // Scrolls when it doesn't fit (e.g. a landscape window).
 class SettingsScreen : public wxScrolledWindow {
 public:
@@ -24,6 +25,9 @@ public:
     // December only: Random games pick Christmas verses too. (December's
     // Daily is always a Christmas verse.)
     bool GetChristmasVerses() const;
+    // The picked Bible version's id (BibleVersions.h).
+    std::string GetBibleVersion() const;
+    void SetBibleVersion(const std::string& id);
     wxString GetSeedText() const;
     void SetSeedText(const wxString& seed);
     void SetCurrentSeedDisplay(const wxString& seed);
@@ -34,6 +38,7 @@ public:
 private:
     void SetupUi();
 
+    wxChoice* m_versionChoice = nullptr;
     wxCheckBox* m_hardModeCheck = nullptr;
     wxCheckBox* m_usefulOnlyCheck = nullptr;
     wxCheckBox* m_bookHintsCheck = nullptr;

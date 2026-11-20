@@ -7,10 +7,8 @@ public:
     bool OnInit() override {
         SetAppName("Bibirble");
 
-        const std::string dataPath = BibleData::ResolveDataFilePath("bible_sections.json");
-
-        // Show a small loading dialog that verifies the presence of bible_sections.json
-        LoadingDialog dlg(nullptr, wxString::FromUTF8(dataPath.c_str()));
+        // Show a small loading dialog that checks the verse data can be read
+        LoadingDialog dlg(nullptr);
         dlg.ShowModal();
         if (!dlg.FoundFile()) {
             wxMessageBox(
@@ -18,7 +16,7 @@ public:
                 "Warning", wxOK | wxICON_WARNING);
         }
 
-        BibirbleWindow* frame = new BibirbleWindow(nullptr, dataPath);
+        BibirbleWindow* frame = new BibirbleWindow(nullptr);
         frame->Show();
         return true;
     }

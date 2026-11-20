@@ -1,6 +1,12 @@
 """Check story_map.json against bible_sections.json and preview the star unlock path.
 
-Usage (from the repo root):  python tools/check_story_map.py [story_map.json] [bible_sections.json]
+Usage (from the repo root):  python tools/check_story_map.py [story_map.json] [bible_sections.json ...]
+
+With no Bible files given it checks every version (bible_sections*.json), World English
+Bible first: every pool reference must exist there; another version may lack one
+(it is skipped there) as long as each pool keeps 3+ verses. Pools use
+World English Bible numbering; other versions match verses by their "ref" field
+(see tools/sort.py), so "psalms 23" is Psalm 22 in the Douay-Rheims.
 
 Pool references:  "book", "book 3", "book 3-5", "book 3:4", "book 3:4-9"
 Bonus levels (an area's "bonusLevels") use "requiresStars" the same way, and stay hidden until unlocked.
@@ -10,6 +16,7 @@ fill-in-the-blank puzzles: {{answer}} or {{answer|hint shown after 6 wrong guess
 minStars:         a number (e.g. 64) or a formula "ax+b" / "ax-b" / "ax", where
                   x = levels unlocked in the whole game so far, compared to the total stars in the game.
 """
+import glob
 import json
 import re
 import sys
@@ -39,13 +46,17 @@ def check_story(text, where):
     return errors
 
 
+class NoMatch(ValueError):
+    """A pool reference the Bible version doesn't have (the game skips it)."""
+
+
 def expand(ref, verses_by_book):
     m = REF.match(ref.lower())
     if not m:
         raise ValueError(f"can't read pool reference {ref!r}")
     book, c1, c2, v1, v2 = m.groups()
     if book not in verses_by_book:
-        raise ValueError(f"unknown book {book!r} in {ref!r}")
+        raise NoMatch(f"unknown book {book!r} in {ref!r}")
     out = []
     for (ch, vs) in verses_by_book[book]:
         if c1 is None:
@@ -57,7 +68,7 @@ def expand(ref, verses_by_book):
         if ok:
             out.append((book, ch, vs))
     if not out:
-        raise ValueError(f"{ref!r} matches no verses")
+        raise NoMatch(f"{ref!r} matches no verses")
     return out
 
 
@@ -74,11 +85,21 @@ def min_stars(value, x):
 
 def main():
     map_path = sys.argv[1] if len(sys.argv) > 1 else "story_map.json"
-    bible_path = sys.argv[2] if len(sys.argv) > 2 else "bible_sections.json"
+    bible_paths = sys.argv[2:] or sorted(glob.glob("bible_sections*.json"))  # bible_sections.json sorts first
+    failed = False
+    for i, bible_path in enumerate(bible_paths):
+        print(f"=== {bible_path}")
+        failed |= not check(map_path, bible_path, preview=(i == 0))
+    sys.exit(1 if failed else 0)
+
+
+def check(map_path, bible_path, preview):
     story = json.load(open(map_path, encoding="utf-8"))
     verses_by_book = defaultdict(list)
     for v in json.load(open(bible_path, encoding="utf-8")):
-        verses_by_book[v["book"]].append((v["chapter"], v["verse"]))
+        ref = v.get("ref", [v["chapter"], v["verse"]])
+        if ref is not None:
+            verses_by_book[v["book"]].append(tuple(ref))
 
     errors = []
     area_ids = set()
@@ -96,7 +117,15 @@ def main():
             pool = set()
             try:
                 for r in refs:
-                    pool.update(expand(r, verses_by_book))
+                    try:
+                        pool.update(expand(r, verses_by_book))
+                    except NoMatch as e:
+                        # Other versions may lack a passage (the Douay-Rheims
+                        # has no Malachi 4): the game skips it there. The
+                        # World English Bible (checked first) must have it all.
+                        if preview:
+                            raise
+                        print(f"  note: {key}: {e}, skipped in this version")
                 min_stars(lvl.get("minStars", 0), 0)
                 min_stars(lvl.get("requiresStars", 0), 0)
             except ValueError as e:
@@ -114,6 +143,9 @@ def main():
             lvl["_size"] = len(pool)
         if area.get("bonusArea") and area.get("unlock") != "perfect":
             errors.append(f"{area['id']}: bonus area needs \"unlock\": \"perfect\"")
+
+    if not preview:
+        return report(errors)
 
     # Unlock preview: the player plays the main path in order and passes every level.
     # x = levels unlocked in the game when the check happens (open-from-start areas' first level counts).
@@ -145,13 +177,18 @@ def main():
     print(f"\nPerfect-unlock area needs every verse of every non-bonus level solved: "
           f"{main_verses} verses, at least {-(-main_verses // 3)} level plays.")
 
+    return report(errors)
+
+
+def report(errors):
     print()
     if errors:
         print("ERRORS:")
         for e in errors:
             print("  -", e)
-        sys.exit(1)
+        return False
     print("No errors found.")
+    return True
 
 
 if __name__ == "__main__":

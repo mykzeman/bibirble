@@ -99,7 +99,9 @@ int StoryLevel::MaxStars() const {
 
 namespace {
 // book -> (chapter, verse, BibleData index) for every verse, built once per
-// load so expanding ~200 pool references stays fast.
+// load so expanding ~200 pool references stays fast. Pools are written in
+// World English Bible numbering, so verses go in by their standard reference
+// (the Douay-Rheims' Psalm 22 is filed under psalms 23).
 using BookIndex = std::map<std::string, std::vector<std::array<int, 3>>>;
 
 BookIndex BuildBookIndex(const BibleData& bible) {
@@ -107,7 +109,7 @@ BookIndex BuildBookIndex(const BibleData& bible) {
     const int count = bible.getVerseCount();
     for (int i = 0; i < count; ++i) {
         const Verse v = bible.getVerseAtIndex(i);
-        index[v.book].push_back({v.chapter, v.verse, i});
+        if (v.hasStdRef) index[v.book].push_back({v.stdChapter, v.stdVerse, i});
     }
     return index;
 }
@@ -151,6 +153,12 @@ bool ExpandPoolRefIndexed(const std::string& ref, const BookIndex& index,
         return false;
     }
     return true;
+}
+
+// True if ref is written like a pool reference (it may still match nothing).
+bool ReadsAsRef(const std::string& ref) {
+    static const std::regex kRef(R"(^\s*(\w+)(?:\s+(\d+)(?:-(\d+))?(?::(\d+)(?:-(\d+))?)?)?\s*$)");
+    return std::regex_match(Lower(ref), kRef);
 }
 
 // Set by LoadFromText for the duration of a load.
@@ -209,9 +217,14 @@ bool StoryMap::ParseLevel(const json& j, const std::string& areaId, bool isBonus
         }
     }
     if (refs.empty()) fail("level has no pool");
+    // The map is written against the World English Bible, which must have
+    // every passage (tools/check_story_map.py). Another version may lack one
+    // (the Douay-Rheims source has no Malachi 4): it's skipped there, as long
+    // as the level still has 3+ verses.
+    const bool strict = std::string(bible.version().id) == "web";
     for (const auto& r : refs) {
         std::string err;
-        if (!ExpandPoolRef(r, bible, out.pool, err)) fail(err);
+        if (!ExpandPoolRef(r, bible, out.pool, err) && (strict || !ReadsAsRef(r))) fail(err);
     }
     std::sort(out.pool.begin(), out.pool.end());
     out.pool.erase(std::unique(out.pool.begin(), out.pool.end()), out.pool.end());
