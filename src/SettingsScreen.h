@@ -1,12 +1,15 @@
 #pragma once
 
 #include <wx/wx.h>
+#include <wx/scrolwin.h>
 #include <functional>
 
 // Christmas verses (December only), Hard Mode, Useful-verses-only, Book hints and R18 mode toggles + seed entry/randomize/readout, matching the web
 // version's Settings screen. Seed and hard-mode apply to the next game
-// started, same as the web version.
-class SettingsScreen : public wxPanel {
+// started, same as the web version. A Credits section at the bottom names the
+// Bible translation (World English Bible) and everything else the game uses.
+// Scrolls when it doesn't fit (e.g. a landscape window).
+class SettingsScreen : public wxScrolledWindow {
 public:
     using Callback = std::function<void()>;
 

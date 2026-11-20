@@ -5,6 +5,14 @@
 // takes priority over this embedded copy.
 BIBLE_SECTIONS_JSON RCDATA "bible_sections.json"
 
+// Story Mode's map, embedded the same way (a story_map.json next to the exe
+// takes priority).
+STORY_MAP_JSON RCDATA "story_map.json"
+
+// English word list for Story Mode's fill-in-the-blank puzzles (the
+// public-domain ENABLE list).
+WORD_LIST_TXT RCDATA "data/words.txt"
+
 // App icon (same artwork as Bibirble-web's icons/). Explorer shows the icon
 // group whose name sorts first, so "appicon" also beats wx.rc's wxICON_AAA;
 // BibirbleWindow loads it by this name for the title bar and taskbar.

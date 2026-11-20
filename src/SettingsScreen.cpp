@@ -15,7 +15,8 @@ void StyleButton(wxButton* btn) {
 }
 }  // namespace
 
-SettingsScreen::SettingsScreen(wxWindow* parent) : wxPanel(parent) {
+SettingsScreen::SettingsScreen(wxWindow* parent) : wxScrolledWindow(parent) {
+    SetScrollRate(0, 10);
     SetupUi();
 }
 
@@ -130,6 +131,28 @@ void SettingsScreen::SetupUi() {
 
     card->SetSizer(cardLayout);
     layout->Add(card, 0, wxEXPAND | wxALL, 10);
+
+    // Credits
+    wxPanel* credits = new wxPanel(this);
+    credits->SetBackgroundColour(*wxWHITE);
+    wxBoxSizer* creditsLayout = new wxBoxSizer(wxVERTICAL);
+    wxStaticText* creditsTitle = new wxStaticText(credits, wxID_ANY, "Credits");
+    creditsTitle->SetFont(wxFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
+    creditsLayout->Add(creditsTitle, 0, wxALL, 8);
+    for (const char* line : {
+             "\xF0\x9F\x93\x96 Bible text: the World English Bible (WEB), which is in the public domain. "
+             "Verse data from the world-english-bible project by TehShrike.",
+             "\xF0\x9F\x94\xA4 Story puzzle words: the ENABLE word list (public domain).",
+             "\xF0\x9F\x8E\xA8 App icon and original game: Bibirble for the web.",
+             "\xF0\x9F\x9F\xA9 Inspired by Wordle.",
+             "\xF0\x9F\x9B\xA0 Built with wxWidgets and JSON for Modern C++ (nlohmann/json) by Niels Lohmann.",
+         }) {
+        wxStaticText* item = new wxStaticText(credits, wxID_ANY, wxString::FromUTF8(line));
+        item->Wrap(400);
+        creditsLayout->Add(item, 0, wxLEFT | wxRIGHT | wxBOTTOM, 8);
+    }
+    credits->SetSizer(creditsLayout);
+    layout->Add(credits, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
 
     SetSizer(layout);
 }

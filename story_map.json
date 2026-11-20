@@ -18,14 +18,19 @@
                     "title": "In the Beginning",
                     "pool": "genesis 1-2",
                     "minStars": 0,
-                    "intro": "Before anything was, God was. He spoke, and light broke through the dark."
+                    "intro": "Before anything was, God was. He spoke, and {{light|The very first thing God made, on day one}} broke through the dark.",
+                    "between": [
+                        "Day by day, God filled the world: sky and sea, sun and {{moon|It lights up the night}}, birds, fish and animals.",
+                        "Last of all, God formed a man from the dust of the ground and breathed into him the breath of {{life|The opposite of death}}."
+                    ],
+                    "outro": "And God saw everything He had made, and it was very {{good|God's opinion of His creation (Genesis 1:31)}}."
                 },
                 {
                     "id": "fall",
                     "title": "The Fall",
                     "pool": "genesis 3-5",
                     "minStars": 0,
-                    "intro": "A serpent, a question, and a bite that changed everything."
+                    "intro": "A {{serpent|A sneaky, talking animal in the garden}}, a question, and a bite that changed everything."
                 }
             ],
             "bonusLevels": [
@@ -64,7 +69,7 @@
                     "title": "Noah to Abram",
                     "pool": "genesis 6-12",
                     "minStars": 2,
-                    "intro": "The world grew wicked, but Noah found favor. After the flood, God called a man named Abram."
+                    "intro": "The world grew wicked, but Noah found favor. God told him to build an {{ark|A huge wooden boat}}. After the flood, God called a man named {{Abram|Later renamed Abraham}}."
                 },
                 {
                     "id": "abraham",

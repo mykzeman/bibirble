@@ -5,6 +5,8 @@ Usage (from the repo root):  python tools/check_story_map.py [story_map.json] [b
 Pool references:  "book", "book 3", "book 3-5", "book 3:4", "book 3:4-9"
 Bonus levels (an area's "bonusLevels") use "requiresStars" the same way, and stay hidden until unlocked.
 A bonus area ("bonusArea": true, "unlock": "perfect") opens when every non-bonus level has all 7 stars.
+Story text ("intro", "outro", and "between": [after verse 1, after verse 2]) can hold
+fill-in-the-blank puzzles: {{answer}} or {{answer|hint shown after 6 wrong guesses}}.
 minStars:         a number (e.g. 64) or a formula "ax+b" / "ax-b" / "ax", where
                   x = levels unlocked in the whole game so far, compared to the total stars in the game.
 """
@@ -16,6 +18,25 @@ from collections import defaultdict
 REF = re.compile(r"^\s*(\w+)(?:\s+(\d+)(?:-(\d+))?(?::(\d+)(?:-(\d+))?)?)?\s*$")
 FORMULA = re.compile(r"^\s*(\d*)x\s*(?:([+-])\s*(\d+))?\s*$")
 MAX_STARS = 7
+BLANK = re.compile(r"\{\{(.*?)\}\}")
+
+
+def check_story(text, where):
+    """Errors in one story text's {{answer|hint}} blanks (see src/WordPuzzle.cpp)."""
+    if text is None:
+        return []
+    if not isinstance(text, str):
+        return [f"{where} must be text"]
+    errors = []
+    for inside in BLANK.findall(text):
+        answer = inside.split("|", 1)[0].strip()
+        if not answer:
+            errors.append(f"{where}: a blank has no answer")
+        elif not answer.isalpha() or not answer.isascii():
+            errors.append(f"{where}: blank answer {answer!r} must be one word of letters only")
+    if "{{" in BLANK.sub("", text):
+        errors.append(f"{where}: a \"{{{{\" blank is never closed with \"}}}}\"")
+    return errors
 
 
 def expand(ref, verses_by_book):
@@ -80,6 +101,14 @@ def main():
                 min_stars(lvl.get("requiresStars", 0), 0)
             except ValueError as e:
                 errors.append(f"{key}: {e}")
+            for where in ("intro", "outro"):
+                errors += [f"{key}: {e}" for e in check_story(lvl.get(where), where)]
+            between = lvl.get("between", [])
+            if not isinstance(between, list) or len(between) > 2:
+                errors.append(f"{key}: between must be a list of up to 2 texts (after verse 1, after verse 2)")
+            else:
+                for b in between:
+                    errors += [f"{key}: {e}" for e in check_story(b, "between")]
             if len(pool) < 3:
                 errors.append(f"{key}: pool has only {len(pool)} verses (needs 3+)")
             lvl["_size"] = len(pool)

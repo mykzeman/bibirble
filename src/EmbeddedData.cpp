@@ -23,15 +23,19 @@ extern "C" const char bibirble_data_start[];
 extern "C" const char bibirble_data_end[];
 extern "C" const char bibirble_icon_start[];
 extern "C" const char bibirble_icon_end[];
+extern "C" const char bibirble_story_start[];
+extern "C" const char bibirble_story_end[];
+extern "C" const char bibirble_words_start[];
+extern "C" const char bibirble_words_end[];
 #endif
 
 namespace {
 
 #ifdef _WIN32
 // Must match the resource name/type in Bibirble.rc.
-bool ReadEmbeddedResource(std::string& out) {
+bool ReadEmbeddedResource(std::string& out, const wchar_t* name = L"BIBLE_SECTIONS_JSON") {
     HMODULE module = GetModuleHandleW(nullptr);
-    HRSRC res = FindResourceW(module, L"BIBLE_SECTIONS_JSON", MAKEINTRESOURCEW(10) /* RT_RCDATA */);
+    HRSRC res = FindResourceW(module, name, MAKEINTRESOURCEW(10) /* RT_RCDATA */);
     if (!res) return false;
     HGLOBAL handle = LoadResource(module, res);
     if (!handle) return false;
@@ -75,6 +79,53 @@ bool ReadEmbeddedIconPng(std::string& out) {
     return !out.empty();
 #else
     out.clear();
+    return false;
+#endif
+}
+
+namespace {
+// The first of these files that exists and isn't empty.
+bool ReadFirstFile(std::initializer_list<const char*> paths, std::string& out) {
+    for (const char* path : paths) {
+        std::ifstream ifs(path, std::ios::binary);
+        if (!ifs) continue;
+        std::ostringstream ss;
+        ss << ifs.rdbuf();
+        out = ss.str();
+        if (!out.empty()) return true;
+    }
+    out.clear();
+    return false;
+}
+}  // namespace
+
+bool ReadStoryMapText(std::string& out) {
+    if (ReadFirstFile({"story_map.json", "../story_map.json", "../../story_map.json",
+                       "build/story_map.json", "Release/story_map.json", "Debug/story_map.json"}, out)) {
+        return true;
+    }
+
+#ifdef _WIN32
+    return ReadEmbeddedResource(out, L"STORY_MAP_JSON");
+#elif defined(BIBIRBLE_HAS_INCBIN)
+    out.assign(bibirble_story_start, bibirble_story_end);
+    return !out.empty();
+#else
+    return false;
+#endif
+}
+
+bool ReadWordListText(std::string& out) {
+    if (ReadFirstFile({"data/words.txt", "../data/words.txt", "../../data/words.txt", "words.txt"}, out)) {
+        return true;
+    }
+
+#ifdef _WIN32
+    return ReadEmbeddedResource(out, L"WORD_LIST_TXT");
+#elif defined(BIBIRBLE_HAS_INCBIN)
+    out.assign(bibirble_words_start, bibirble_words_end);
+    return !out.empty();
+#else
     return false;
 #endif
 }

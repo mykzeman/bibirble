@@ -2,6 +2,7 @@
 
 #include <wx/colour.h>
 
+#include "GuessColor.h"
 #include "SeededRandom.h"
 
 // App colours. All through December they switch to a Christmas look like the
@@ -28,6 +29,16 @@ inline wxColour Accent() {
 // Text on Accent().
 inline wxColour AccentText() {
     return Christmas() ? wxColour(247, 242, 228) : wxColour(235, 230, 157);
+}
+
+// Clue colours, the same ones the guess rows use (GameRow::setDigitColors).
+inline wxColour ClueColour(GuessColor c) {
+    switch (c) {
+        case GuessColor::Green: return *wxGREEN;
+        case GuessColor::Yellow: return *wxYELLOW;
+        case GuessColor::Gray:
+        default: return *wxLIGHT_GREY;
+    }
 }
 
 }  // namespace Theme

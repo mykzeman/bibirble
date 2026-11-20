@@ -132,3 +132,55 @@ Testing guidance:
 5. Deliberately violate a Hard Mode constraint and confirm the guess is rejected without being consumed.
 6. Finish a game, Share, and confirm the clipboard has the correct emoji grid (only played rows) + citation.
 7. Guess "Nehemiah" against a different Historical-area target verse and confirm yellow, not gray.
+
+## Story Mode
+
+A new mode on the start screen: a journey through the Bible in levels of 3 random verses each, with
+up to 7 stars per level, star-gated unlocks, hidden prophecy bonus levels and a hidden End Times
+area. Design: `docs/STORY_MODE.md`; map: `story_map.json`.
+
+- New: `StoryMap` (loads/validates the map), `StoryProgress` (stars, unlocks, retries, save data),
+  `StoryMapScreen` (the map UI), `tests/story_tests.cpp` (logic tests, `story_tests` target).
+- `BibirbleWindow`: Story bar, 3-verse level loop, fail -> retry prompt, results box.
+- `story_map.json` is embedded (Linux `.incbin`, Windows `STORY_MAP_JSON`); a copy on disk wins.
+- `PersistenceManager` saves Story progress under `story`; `GameRow::SetGuess` restores a
+  half-played verse.
+- Fix found while testing: a `wxString::Format` string containing a raw non-ASCII character
+  crashed in the C locale, so non-ASCII text is now joined in with `wxString::FromUTF8`.
+
+## Story puzzles (fill in the blank)
+
+Story text can now hold Wordle-style fill-in-the-blank puzzles: `{{answer|hint}}` in a level's
+`intro`, `between` (after verses 1 and 2) or `outro`. Unlimited guesses of real English words (or any
+answer in the map), green/yellow/gray letters, a hint after 6 misses, and they must be solved to
+continue. See `docs/STORY_MODE.md` §3.5.
+
+- New: `src/WordPuzzle.*` (parsing, colouring, word list), `src/StoryPuzzleDialog.*` (the story
+  card), `data/words.txt` (the public-domain ENABLE English word list, embedded).
+- `StoryRun::storyDone` remembers an unfinished story, so it comes back on Continue.
+- `tools/check_story_map.py` checks blanks.
+- Fix: verses with curly quotes or other non-ASCII text showed "(null)" in the verse panel at the end
+  of a game (every mode). `UpdateRevealText()` now converts with `wxString::FromUTF8`.
+
+## Story pages are full screens; public-domain word list
+
+- Story text and its puzzles now show on a full screen (`src/StoryScreen.*`, swapped in like the
+  map) instead of a pop-up. A passed level's results and its outro story share one screen.
+- The puzzle word list is now ENABLE (172,823 words, public domain) instead of SCOWL, so no license
+  notice has to ship with it.
+- Story puzzles have an on-screen QWERTY keyboard (Enter, Del) whose keys turn green/yellow/gray like
+  Wordle's.
+
+## Landscape, key colours, credits
+
+- **Landscape mode:** when the window is wider than tall, the number keys sit in a column to the right
+  of the verse and guess rows (`BibirbleWindow::ApplyGameOrientation`, checked when a game starts and on
+  every resize). On screens too short for the 850px portrait window (most laptops) the app opens
+  in landscape (about 1000x680). The window can now be resized down to 420x420.
+- **Number keys change colour** like the letter keyboard: each digit shows its best clue so far
+  (`UpdateDigitKeyColours`, using `Theme::ClueColour`, the guess rows' colours).
+- **No key outlines:** both keyboards use flat `wxBORDER_NONE` keys on the page background.
+- **Hard Mode story puzzles** follow Wordle's hard mode (`WordHardModeViolation`).
+- The "World English Bible Version" tagline moved from the top of the window to a new **Credits**
+  section in Settings (Bible text, word list, icon/original game, Wordle, wxWidgets, nlohmann/json).
+  Settings now scrolls.

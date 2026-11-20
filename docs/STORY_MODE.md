@@ -1,6 +1,6 @@
 # Story Mode — Design Doc
 
-**Status:** Design (not yet implemented)
+**Status:** Implemented (see §11). Story cards are plain message boxes for now, ready for cinematic content.
 
 ## 1. Summary
 
@@ -96,15 +96,54 @@ It's a hidden bonus area (`"bonusArea": true, "unlock": "perfect"`). It unlocks 
 non-bonus level has all 7 stars**, Perfect included. Like other bonus content, it's completely
 hidden until then. Its levels unlock in order with no star check.
 
+### 3.5 Story puzzles (fill in the blank)
+Story text can hold **fill-in-the-blank word puzzles**, so the story is more interactive and teaches
+it to people who don't know the Bible yet. The author places them anywhere in a level's story text:
+
+| Field | When it's shown |
+|---|---|
+| `intro` | Before verse 1 |
+| `between` | A list of up to 2 texts: after verse 1, and after verse 2 |
+| `outro` | After the level is passed (after the results) |
+
+A blank is written `{{answer}}` or `{{answer|hint}}`, and a text can have any number of them:
+
+```json
+"intro": "God told Noah to build an {{ark|A huge wooden boat}}. After the flood, God called {{Abram|Later renamed Abraham}}."
+```
+
+How a puzzle plays:
+- The text shows the blank as `[ _ _ _ ]` (one `_` per letter); blanks are solved in order.
+- It's **Wordle-style**: guess a word of the right length and each letter turns green (right spot),
+  yellow (in the word elsewhere) or gray (not in the word). Repeated letters count like Wordle.
+- Guesses can be typed on the computer keyboard or on an **on-screen QWERTY keyboard** (with Enter and
+  Del). Like Wordle's, its keys turn green/yellow/gray as letters are tried, and reset for the next
+  blank.
+- On a level played in **Hard Mode**, the puzzles use Wordle's hard mode too: green letters must stay
+  in their spot and every yellow letter must be used in later guesses (`WordHardModeViolation`).
+- **Unlimited guesses**, and the puzzle is **required to continue**: Continue only appears once
+  every blank is solved. "Back to map" leaves the attempt saved, and the same story comes back on
+  Continue.
+- Guesses must be **real English words** (`data/words.txt`: the ENABLE word list, 172,823 words,
+  public domain, so no license notice is needed). The dictionary doesn't need Bible names: every answer used anywhere
+  in the map is also accepted as a guess, so names like NOAH or ABRAM work.
+- After **6 wrong guesses** on a blank, its **hint** appears. Without a hint, it says "It starts with
+  A and has 5 letters."
+- Answers are one word of letters only (no spaces). `tools/check_story_map.py` and the map loader
+  both report a bad blank (unclosed `{{`, empty or multi-word answer).
+- Puzzles never affect stars.
+
 ## 4. Level Flow
 
 1. Player picks an unlocked level on the map, or presses that level's **Retry** button to replay
    it (§7.1). Hard Mode can be toggled here only if it's unlocked for this level (§5.3).
-2. The **intro** story text is shown.
+2. The **intro** story text is shown, and its puzzles must be solved (§3.5). Skipped when retrying
+   straight after a fail.
 3. The game randomly draws **3 distinct verses** from the pool. Draws are **not seeded**, so
    every attempt is a fresh random pick.
 4. The player guesses each verse with the normal game (same `GameRow` input, reveal stages and
-   color feedback as Random/Daily).
+   color feedback as Random/Daily). After verse 1 and verse 2, that spot's `between` story (if any)
+   is shown, with its puzzles.
 5. **All 3 solved** → level passed → stars are awarded (§5), the **outro** is shown, and progress
    auto-saves.
 6. **Any verse failed** (out of guesses) → the level fails, and the player **retries this level**
@@ -320,24 +359,40 @@ story and test it **without rebuilding**.
   - Perfect progress per level (e.g. "Pool 9 / 14"),
   - unlocked bonus levels marked with 🔮 (locked ones are not shown at all),
   - the player's star total at the top.
-- **Story card:** intro/outro text with a Continue button.
+- **Story screen:** a full screen (not a pop-up) with the story text, its fill-in-the-blank puzzles
+  (§3.5), Back to map, and Continue. After a pass, the level's results and its outro share this screen.
 - **In-level HUD:** "Verse 2 / 3".
-- **Level result:** stars earned in each category, with any new bests highlighted (and "Hard
+- **Level result:** on the story screen, above the outro: stars earned in each category (and "Hard
   Mode unlocked!" the first time a level reaches 4 stars 💪).
 
-## 11. Code changes (planned)
+## 11. Code
 
-| Piece | Change |
+| Piece | What it does |
 |---|---|
-| `src/StoryMap.h/cpp` (new) | Loads + validates `story_map.json`; expands pool references into verse indices. |
-| `src/StoryProgress.h/cpp` (new) | Attempts, best stars, in-progress level, star total, unlock checks. |
-| `src/StoryMapScreen.h/cpp` (new) | Map UI panel, including Retry buttons and the per-level Hard Mode toggle. |
-| `GameState` | Add `GameMode::Story` plus level context (level id, verse 1–3 of 3). |
-| `BibirbleWindow` | Runs the 3-verse level loop, retry logic, and story cards. |
-| `PersistenceManager` | Read/write the `story` key. |
-| `StartScreen` | Story button. |
-| `CMakeLists.txt` / `Bibirble.rc` | Embed `story_map.json`. |
-| `tools/check_story_map.py` | Validates `story_map.json` and previews the star unlock curve (done). |
+| `src/StoryMap.h/cpp` | Loads + validates `story_map.json` (disk copy first, then the embedded one) and expands pool references into verse indices. |
+| `src/StoryProgress.h/cpp` | Best stars, Perfect progress, unlocks (never re-lock), retries, the attempt in progress, and its JSON save format. No wx. |
+| `src/StoryMapScreen.h/cpp` | The map: areas, levels, stars, Play / Retry / Continue, the per-level Hard Mode toggle, and "Needs N ★" on the next locked level. |
+| `GameState` | `GameMode::Story`. |
+| `BibirbleWindow` | The Story button, the Story bar above the verse (level, verse 1–3 of 3, Story Map button), the 3-verse level loop, the fail → retry prompt, and the results box. |
+| `GameRow::SetGuess` | Puts saved guesses back when a verse is resumed. |
+| `PersistenceManager` | Reads/writes the `story` key. |
+| `StartScreen` | Story Mode button. |
+| `CMakeLists.txt` / `Bibirble.rc` / `EmbeddedData` | Embed `story_map.json` (Linux `.incbin`, Windows `STORY_MAP_JSON` resource). |
+| `src/WordPuzzle.h/cpp` | Story text + blank parsing, Wordle colouring, the word list. No wx. |
+| `src/StoryScreen.h/cpp` | The full-screen story page with its puzzles (letter tiles, hint, Continue / Back to map), also used for a level's results + outro. |
+| `data/words.txt` | The English word list for puzzle guesses, embedded like `story_map.json` (Windows `WORD_LIST_TXT`). |
+| `tests/story_tests.cpp` | Logic tests (`story_tests` target, run with `ctest`): formulas, the real map, unlocks, stars, retries, save/load. |
+| `tools/check_story_map.py` | Validates `story_map.json` and previews the star unlock curve. |
+
+Details settled while building it:
+- Every guess is saved as it's made, so closing the app or going back to the map mid-verse resumes
+  exactly where the player was.
+- Starting a different level while one is half-played counts as a retry for the abandoned level, so
+  the No retry star can't be kept by walking away from a bad attempt.
+- The book list offers **all** books (limiting it to the level's pool would give the answer away).
+- Mature (R18) verses are left out of pools unless R18 mode is on, and Perfect only counts the
+  verses the player can actually be shown.
+- The intro is skipped when retrying straight after a fail.
 
 ## 12. Decisions
 - Random draws are **not seeded**. Each attempt is a fresh random pick.
