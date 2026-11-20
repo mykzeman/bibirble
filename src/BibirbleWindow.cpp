@@ -9,6 +9,7 @@
 #include <wx/msgdlg.h>
 #include <wx/scrolwin.h>
 #include <wx/clipbrd.h>
+#include <wx/display.h>
 #include <wx/textdlg.h>
 #include <algorithm>
 
@@ -47,6 +48,20 @@ wxEND_EVENT_TABLE()
 
 BibirbleWindow::BibirbleWindow(wxWindow* parent, const std::string& dataPath)
     : wxFrame(parent, wxID_ANY, "Bibirble", wxDefaultPosition, wxSize(500, 850)) {
+    // Start in landscape on screens too short for the tall portrait window
+    // (most laptops); the game layout follows the window's shape either way.
+    {
+        const int d = wxDisplay::GetFromWindow(this);
+        const wxRect area = wxDisplay(d == wxNOT_FOUND ? 0u : static_cast<unsigned>(d)).GetClientArea();
+        if (area.height > 0 && area.height < 900) {
+            SetSize(wxSize(std::min(1000, area.width - 40), std::min(680, area.height - 40)));
+        }
+        SetMinSize(wxSize(420, 420));
+        Bind(wxEVT_SIZE, [this](wxSizeEvent& e) {
+            e.Skip();
+            if (m_gameLayout) ApplyGameOrientation();
+        });
+    }
 
     const std::string resolvedPath = dataPath.empty()
         ? BibleData::ResolveDataFilePath("bible_sections.json")
@@ -90,7 +105,6 @@ void BibirbleWindow::SetupUi() {
     m_centralPanel->SetBackgroundColour(bgColor);
 
     m_mainLayout = new wxBoxSizer(wxVERTICAL);
-    m_mainLayout->SetMinSize(wxSize(500, 850));
 
     // Header
     // December: Christmas trees around a red title.
@@ -102,8 +116,6 @@ void BibirbleWindow::SetupUi() {
     if (Theme::Christmas()) title->SetForegroundColour(Theme::Accent());
     m_mainLayout->Add(title, 0, wxALL | wxALIGN_CENTER, 10);
 
-    wxStaticText* subtitle = new wxStaticText(m_centralPanel, wxID_ANY, "World English Bible Version");
-    m_mainLayout->Add(subtitle, 0, wxALL | wxALIGN_CENTER, 5);
 
     // Start screen
     m_startScreen = new StartScreen(m_centralPanel);
@@ -140,6 +152,9 @@ void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
     m_gamePanel = new wxPanel(m_centralPanel);
     m_gamePanel->SetBackgroundColour(Theme::Background());
 
+    // gameLayout holds the verse/rows column and the number keys: stacked in
+    // portrait, side by side in landscape (ApplyGameOrientation).
+    m_gameLayout = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* gameLayout = new wxBoxSizer(wxVERTICAL);
 
     // Story Mode bar: level, verse 1-3 of 3, and a way back to the map.
@@ -211,11 +226,12 @@ void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
     m_rowsSizer->Add(m_submitBtn, 0, wxEXPAND | wxALL, 10);
 
     gameLayout->Add(scrollArea, 1, wxEXPAND);
+    m_gameLayout->Add(gameLayout, 1, wxEXPAND);
 
     // Keyboard
-    SetupKeyboard(gameLayout);
+    SetupKeyboard(m_gameLayout);
 
-    m_gamePanel->SetSizer(gameLayout);
+    m_gamePanel->SetSizer(m_gameLayout);
     parentLayout->Add(m_gamePanel, 1, wxEXPAND | wxALL, 5);
 }
 
@@ -251,7 +267,7 @@ void BibirbleWindow::SetupPostGameControls(wxBoxSizer* parentLayout) {
 
 void BibirbleWindow::SetupKeyboard(wxBoxSizer* parentLayout) {
     wxPanel* kbPanel = new wxPanel(m_gamePanel);
-    kbPanel->SetBackgroundColour(Theme::Accent());
+    kbPanel->SetBackgroundColour(Theme::Background());  // keys are solid tiles with gaps, no outlines
     kbPanel->SetMinSize(wxSize(-1, 200));
 
     wxBoxSizer* hLayout = new wxBoxSizer(wxHORIZONTAL);
@@ -260,7 +276,9 @@ void BibirbleWindow::SetupKeyboard(wxBoxSizer* parentLayout) {
     auto createCol = [&](const wxArrayString& keys) {
         wxBoxSizer* col = new wxBoxSizer(wxVERTICAL);
         for (const auto& k : keys) {
-            wxButton* btn = new wxButton(kbPanel, wxID_ANY, k);
+            // No outline: flat keys on the coloured panel.
+            wxButton* btn = new wxButton(kbPanel, wxID_ANY, k, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
+            if (k.Length() == 1 && wxIsdigit(k[0])) m_digitKeys[std::string(k.utf8_str())] = btn;
             btn->SetBackgroundColour(Theme::Accent());
             btn->SetForegroundColour(Theme::AccentText());
             wxFont btnFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
@@ -294,6 +312,49 @@ void BibirbleWindow::SetupKeyboard(wxBoxSizer* parentLayout) {
 
     kbPanel->SetSizer(hLayout);
     parentLayout->Add(kbPanel, 0, wxEXPAND);
+    m_keyboardPanel = kbPanel;
+}
+
+void BibirbleWindow::ApplyGameOrientation() {
+    if (!m_gameLayout || !m_keyboardPanel) return;
+    const wxSize client = GetClientSize();
+    const bool landscape = client.x > client.y;
+    if (landscape == m_landscape && m_gameLayout->GetOrientation() == (landscape ? wxHORIZONTAL : wxVERTICAL)) {
+        return;
+    }
+    m_landscape = landscape;
+    m_gameLayout->SetOrientation(landscape ? wxHORIZONTAL : wxVERTICAL);
+    // Portrait: a 200px-tall strip under the rows. Landscape: a column on the
+    // right, as tall as the window.
+    m_keyboardPanel->SetMinSize(landscape ? wxSize(300, -1) : wxSize(-1, 200));
+    if (wxSizer* kb = m_keyboardPanel->GetSizer()) kb->SetMinSize(landscape ? wxSize(300, -1) : wxSize(-1, 200));
+    m_gamePanel->Layout();
+    m_centralPanel->Layout();
+}
+
+void BibirbleWindow::UpdateDigitKeyColours() {
+    auto rank = [](GuessColor c) { return c == GuessColor::Green ? 2 : c == GuessColor::Yellow ? 1 : 0; };
+    std::map<std::string, GuessColor> best;
+    for (const auto& record : m_state.history) {
+        for (size_t i = 0; i < record.digitGuesses.size() && i < record.digitColors.size(); ++i) {
+            auto it = best.find(record.digitGuesses[i]);
+            // A key keeps its best clue: green beats yellow beats gray.
+            if (it == best.end() || rank(record.digitColors[i]) > rank(it->second)) {
+                best[record.digitGuesses[i]] = record.digitColors[i];
+            }
+        }
+    }
+    for (auto& [digit, btn] : m_digitKeys) {
+        auto it = best.find(digit);
+        if (it == best.end()) {
+            btn->SetBackgroundColour(Theme::Accent());
+            btn->SetForegroundColour(Theme::AccentText());
+        } else {
+            btn->SetBackgroundColour(Theme::ClueColour(it->second));
+            btn->SetForegroundColour(*wxBLACK);
+        }
+        btn->Refresh();
+    }
 }
 
 
@@ -303,10 +364,11 @@ void BibirbleWindow::ShowOnly(wxWindow* screen) {
                         static_cast<wxWindow*>(m_gamePanel)}) {
         m_mainLayout->Show(w, w == screen);
     }
-    if (m_gamePanel->GetSizer()) {
-        m_gamePanel->GetSizer()->Show(m_storyHud, m_state.mode == GameMode::Story);
-        m_gamePanel->Layout();
+    if (m_storyHud->GetContainingSizer()) {
+        m_storyHud->GetContainingSizer()->Show(m_storyHud, m_state.mode == GameMode::Story);
     }
+    if (screen == m_gamePanel) ApplyGameOrientation();
+    m_gamePanel->Layout();
     m_centralPanel->Layout();
 }
 
@@ -465,6 +527,7 @@ void BibirbleWindow::ResetGameUi() {
     if (m_postGameControls && m_postGameControls->GetContainingSizer()) {
         m_postGameControls->GetContainingSizer()->Show(m_postGameControls, false);
     }
+    UpdateDigitKeyColours();  // history is empty for a new game or verse
     if (m_gamePanel) m_gamePanel->Layout();
 }
 
@@ -572,6 +635,7 @@ void BibirbleWindow::OnSubmit(wxCommandEvent& event) {
     }
 
     int result = ProcessTurn();
+    UpdateDigitKeyColours();
     if (result == -1 && m_state.mode == GameMode::Story) {
         const GuessRecord& last = m_state.history.back();
         const bool won = last.bookColor == GuessColor::Green &&
@@ -786,7 +850,7 @@ void BibirbleWindow::ContinueStoryRun() {
         StartStoryVerse();
         return;
     }
-    m_storyScreen->ShowStory(wxString::FromUTF8(level->title), wxString(), *text, m_words,
+    m_storyScreen->ShowStory(wxString::FromUTF8(level->title), wxString(), *text, m_words, run.hardMode,
         [this]() {
             m_story.Run().storyDone = true;
             SaveStory();
@@ -832,6 +896,7 @@ void BibirbleWindow::StartStoryVerse() {
         }
     }
 
+    UpdateDigitKeyColours();
     UpdateRevealText();
     UpdateStoryHud();
     ShowGamePanel();
@@ -884,6 +949,7 @@ void BibirbleWindow::HandleStoryVerseEnd(bool won) {
         return;
     }
 
+    const bool passedInHardMode = m_story.Run().hardMode;  // RecordPass clears the run
     const PassResult r = m_story.RecordPass(m_storyMap, m_data, AllowMature());
     SaveStory();
 
@@ -914,7 +980,7 @@ void BibirbleWindow::HandleStoryVerseEnd(bool won) {
     }
     // Results and the rest of the story (with any puzzles) on one full
     // screen. Leaving it just goes to the map.
-    m_storyScreen->ShowStory(wxString::FromUTF8(level->title), msg, level->outro, m_words,
+    m_storyScreen->ShowStory(wxString::FromUTF8(level->title), msg, level->outro, m_words, passedInHardMode,
                              [this]() { ShowStoryMap(); }, [this]() { ShowStoryMap(); });
     ShowOnly(m_storyScreen);
 }

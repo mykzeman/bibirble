@@ -119,6 +119,8 @@ How a puzzle plays:
 - Guesses can be typed on the computer keyboard or on an **on-screen QWERTY keyboard** (with Enter and
   Del). Like Wordle's, its keys turn green/yellow/gray as letters are tried, and reset for the next
   blank.
+- On a level played in **Hard Mode**, the puzzles use Wordle's hard mode too: green letters must stay
+  in their spot and every yellow letter must be used in later guesses (`WordHardModeViolation`).
 - **Unlimited guesses**, and the puzzle is **required to continue**: Continue only appears once
   every blank is solved. "Back to map" leaves the attempt saved, and the same story comes back on
   Continue.

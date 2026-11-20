@@ -40,6 +40,18 @@ struct StoryText {
 // repeats); gray = not (or no more) in the word. Both lowercase.
 std::vector<GuessColor> ScoreWord(const std::string& guess, const std::string& answer);
 
+// A guess already made on a blank, with its colours.
+struct WordGuess {
+    std::string word;
+    std::vector<GuessColor> colors;
+};
+
+// Wordle's hard mode, for Story Mode levels played in Hard Mode: every green
+// letter must stay in its spot, and every yellow (or green) letter must be
+// used again, as many times as it was shown. Returns a message for the first
+// rule the guess breaks, or "" if it's allowed.
+std::string WordHardModeViolation(const std::vector<WordGuess>& history, const std::string& guess);
+
 // Lowercases and trims; returns "" if anything but letters is left.
 std::string NormalizeWord(const std::string& word);
 

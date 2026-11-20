@@ -126,3 +126,30 @@ std::string DefaultHint(const std::string& answer) {
     return "It starts with " + std::string(1, static_cast<char>(std::toupper(static_cast<unsigned char>(answer[0])))) +
            " and has " + std::to_string(answer.size()) + " letters.";
 }
+
+std::string WordHardModeViolation(const std::vector<WordGuess>& history, const std::string& guess) {
+    auto upper = [](char c) { return std::string(1, static_cast<char>(std::toupper(static_cast<unsigned char>(c)))); };
+    for (const WordGuess& g : history) {
+        for (size_t i = 0; i < g.word.size() && i < g.colors.size(); ++i) {
+            if (g.colors[i] == GuessColor::Green && (i >= guess.size() || guess[i] != g.word[i])) {
+                return "Hard mode: keep the green " + upper(g.word[i]) + " in spot " + std::to_string(i + 1) + ".";
+            }
+        }
+        int needed[26] = {0};
+        for (size_t i = 0; i < g.word.size() && i < g.colors.size(); ++i) {
+            const char c = g.word[i];
+            if (c >= 'a' && c <= 'z' && g.colors[i] != GuessColor::Gray) needed[c - 'a']++;
+        }
+        int have[26] = {0};
+        for (char c : guess) {
+            if (c >= 'a' && c <= 'z') have[c - 'a']++;
+        }
+        for (int c = 0; c < 26; ++c) {
+            if (have[c] < needed[c]) {
+                return "Hard mode: your guess must use the " + upper(static_cast<char>('a' + c)) +
+                       (needed[c] > 1 ? " " + std::to_string(needed[c]) + " times." : " you found.");
+            }
+        }
+    }
+    return "";
+}

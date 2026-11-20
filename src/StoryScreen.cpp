@@ -36,7 +36,7 @@ StoryScreen::StoryScreen(wxWindow* parent) : wxScrolledWindow(parent) {
 }
 
 void StoryScreen::ShowStory(const wxString& title, const wxString& header, const StoryText& story,
-                            const WordList& words, Callback onContinue, Callback onLeave) {
+                            const WordList& words, bool hardMode, Callback onContinue, Callback onLeave) {
     m_story = &story;
     m_words = &words;
     m_onContinue = std::move(onContinue);
@@ -44,6 +44,8 @@ void StoryScreen::ShowStory(const wxString& title, const wxString& header, const
     m_solved = 0;
     m_wrongOnThisBlank = 0;
     m_guessedThisBlank.clear();
+    m_historyThisBlank.clear();
+    m_hardMode = hardMode;
     m_howTo = nullptr;
     m_guessPanel = nullptr;
     m_guessSizer = nullptr;
@@ -91,9 +93,10 @@ void StoryScreen::ShowStory(const wxString& title, const wxString& header, const
     }
 
     if (!story.blanks.empty()) {
-        m_howTo = new wxStaticText(this, wxID_ANY,
-            "Fill in the blank! Guess the missing word: green = right letter, right spot; "
-            "yellow = in the word somewhere else; gray = not in the word.");
+        wxString how = "Fill in the blank! Guess the missing word: green = right letter, right spot; "
+                       "yellow = in the word somewhere else; gray = not in the word.";
+        if (hardMode) how += " Hard Mode: keep green letters in place and use every yellow letter.";
+        m_howTo = new wxStaticText(this, wxID_ANY, how);
         m_howTo->Wrap(kTextWidth);
         layout->Add(m_howTo, 0, wxALL, 10);
 
@@ -220,10 +223,18 @@ void StoryScreen::OnGuess() {
         reject("You already tried that one.");
         return;
     }
+    if (m_hardMode) {
+        const std::string violation = WordHardModeViolation(m_historyThisBlank, guess);
+        if (!violation.empty()) {
+            reject(wxString::FromUTF8(violation));
+            return;
+        }
+    }
     m_message->SetLabel("");
     m_guessedThisBlank.insert(guess);
     m_input->Clear();
     const std::vector<GuessColor> colors = ScoreWord(guess, blank.answer);
+    m_historyThisBlank.push_back({guess, colors});
     AddGuessRow(guess, colors);
     UpdateKeyColours(guess, colors);
 
@@ -231,6 +242,7 @@ void StoryScreen::OnGuess() {
         ++m_solved;
         m_wrongOnThisBlank = 0;
         m_guessedThisBlank.clear();
+        m_historyThisBlank.clear();
         m_guessSizer->Clear(true);
         ResetKeyColours();  // the next blank is a new word
         RefreshStory();
@@ -248,7 +260,7 @@ void StoryScreen::OnGuess() {
 
 void StoryScreen::BuildKeyboard(wxSizer* layout) {
     m_keyboard = new wxPanel(this);
-    m_keyboard->SetBackgroundColour(Theme::Accent());
+    m_keyboard->SetBackgroundColour(Theme::Background());  // keys are solid tiles with gaps, no outlines
     wxBoxSizer* rows = new wxBoxSizer(wxVERTICAL);
     const wxString enter = "Enter";
     const wxString del = "Del";
@@ -263,7 +275,7 @@ void StoryScreen::BuildKeyboard(wxSizer* layout) {
         for (const wxString& k : keys) {
             const bool wide = k == enter || k == del;
             wxButton* btn = new wxButton(m_keyboard, wxID_ANY, k, wxDefaultPosition,
-                                         wxSize(wide ? 62 : 40, 46), wxBU_EXACTFIT);
+                                         wxSize(wide ? 62 : 40, 46), wxBU_EXACTFIT | wxBORDER_NONE);
             btn->SetBackgroundColour(Theme::Accent());
             btn->SetForegroundColour(Theme::AccentText());
             btn->SetFont(Font(wide ? 11 : 14, true));

@@ -12,6 +12,7 @@
 #include "StoryProgress.h"
 #include "StoryScreen.h"
 
+#include <map>
 #include <random>
 
 class BibirbleWindow : public wxFrame {
@@ -28,6 +29,12 @@ private:
     void ShowSettingsScreen();
     void ShowGamePanel();
     void ShowOnly(wxWindow* screen);
+    // Landscape (window wider than tall): the number keys go to the right of
+    // the verse and guess rows instead of below them. Checked when a game
+    // starts and whenever the window is resized.
+    void ApplyGameOrientation();
+    // Colours the number keys by the best clue each digit has had this game.
+    void UpdateDigitKeyColours();
 
     void StartNewGame(GameMode mode, bool hardMode, const wxString& seedText);
     void ResetGameUi();
@@ -84,6 +91,11 @@ private:
     std::mt19937 m_rng{std::random_device{}()};  // Story draws are not seeded
     wxPanel* m_storyHud = nullptr;
     wxStaticText* m_storyHudText = nullptr;
+
+    wxBoxSizer* m_gameLayout = nullptr;   // verse/rows column + keyboard; vertical or horizontal
+    wxPanel* m_keyboardPanel = nullptr;
+    std::map<std::string, wxButton*> m_digitKeys;  // "0".."9"
+    bool m_landscape = false;
 
     wxStaticText* m_revealPanel;
     wxPanel* m_postGameControls;

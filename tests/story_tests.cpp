@@ -186,6 +186,19 @@ void TestWordPuzzles(const BibleData& bible, const std::string& dir) {
     CHECK(!StoryText::Parse("Empty {{|hint}}", t, err));
     CHECK(DefaultHint("manna") == "It starts with M and has 5 letters.");
 
+    // Hard mode: greens stay put, yellows (and greens) must be reused.
+    std::vector<WordGuess> hist = {{"night", ScoreWord("night", "light")}};   // N gray, IGHT green
+    CHECK(WordHardModeViolation(hist, "sight").empty());
+    CHECK(WordHardModeViolation(hist, "light").empty());
+    CHECK(WordHardModeViolation(hist, "lithe") == "Hard mode: keep the green G in spot 3.");
+    CHECK(WordHardModeViolation(hist, "eight").empty());  // keeps all the greens
+    CHECK(WordHardModeViolation(hist, "tight").empty());
+    CHECK(!WordHardModeViolation(hist, "bough").empty());
+    std::vector<WordGuess> hist2 = {{"steal", ScoreWord("steal", "light")}};  // T and L yellow
+    CHECK(WordHardModeViolation(hist2, "light").empty());
+    CHECK(WordHardModeViolation(hist2, "night") == "Hard mode: your guess must use the L you found.");
+    CHECK(WordHardModeViolation({}, "anything").empty());
+
     // The real word list: dictionary words yes, capitalised names no.
     WordList words;
     words.Load(ReadFile(dir + "/data/words.txt"));

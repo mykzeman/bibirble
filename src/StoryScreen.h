@@ -26,9 +26,10 @@ public:
 
     // Rebuilds the page. `story` and `words` must outlive the page (they live
     // in BibirbleWindow's StoryMap / WordList). Either callback may be empty:
-    // no "Back to map" button is shown without onLeave.
+    // no "Back to map" button is shown without onLeave. With hardMode, the
+    // puzzles follow Wordle's hard mode (WordHardModeViolation).
     void ShowStory(const wxString& title, const wxString& header, const StoryText& story, const WordList& words,
-                   Callback onContinue, Callback onLeave);
+                   bool hardMode, Callback onContinue, Callback onLeave);
 
 private:
     void OnGuess();
@@ -46,6 +47,8 @@ private:
     size_t m_solved = 0;
     int m_wrongOnThisBlank = 0;
     std::set<std::string> m_guessedThisBlank;
+    std::vector<WordGuess> m_historyThisBlank;  // for hard mode
+    bool m_hardMode = false;
 
     wxStaticText* m_storyText = nullptr;
     wxStaticText* m_howTo = nullptr;

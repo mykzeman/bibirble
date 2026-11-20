@@ -15,7 +15,8 @@
 ### Component Responsibilities
 
 - **BibirbleWindow** (`src/BibirbleWindow.h/cpp`): Main wxWidgets frame. Swaps between StartScreen/SettingsScreen/game panel, handles keyboard events and turn processing
-- **StartScreen** / **SettingsScreen** (`src/StartScreen.h/cpp`, `src/SettingsScreen.h/cpp`): Mode-select landing screen and Hard Mode/seed configuration, as `wxPanel`s swapped within `BibirbleWindow` rather than separate top-level frames
+- **StartScreen** / **SettingsScreen** (`src/StartScreen.h/cpp`, `src/SettingsScreen.h/cpp`): Mode-select landing screen and Hard Mode/seed configuration (plus the Credits section, which names the World English Bible), as panels swapped within `BibirbleWindow` rather than separate top-level frames
+- **Orientation**: the game panel switches between portrait (number keys below the rows) and landscape (keys on the right) from the window's shape, in `BibirbleWindow::ApplyGameOrientation()`
 - **GameRow** (`src/GameRow.h/cpp`): Input component for one guess (book dropdown + 4 digit TextCtrls for chapter/verse). Provides color feedback validation (`GuessColor`) and a `Reset()` for replayable games
 - **GameState** (`src/GameState.h/cpp`): Single source of truth for mode, seed, Hard Mode, current stage, game-over, target verse, and guess history (`GuessRecord` list). Also owns Hard Mode constraint checking and the emoji share-text builder
 - **GuessColor** (`src/GuessColor.h`): The one canonical Gray/Yellow/Green enum, shared by GameRow (rendering) and GameState (domain model)

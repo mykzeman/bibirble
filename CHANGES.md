@@ -170,3 +170,17 @@ continue. See `docs/STORY_MODE.md` §3.5.
   notice has to ship with it.
 - Story puzzles have an on-screen QWERTY keyboard (Enter, Del) whose keys turn green/yellow/gray like
   Wordle's.
+
+## Landscape, key colours, credits
+
+- **Landscape mode:** when the window is wider than tall, the number keys sit in a column to the right
+  of the verse and guess rows (`BibirbleWindow::ApplyGameOrientation`, checked when a game starts and on
+  every resize). On screens too short for the 850px portrait window (most laptops) the app opens
+  in landscape (about 1000x680). The window can now be resized down to 420x420.
+- **Number keys change colour** like the letter keyboard: each digit shows its best clue so far
+  (`UpdateDigitKeyColours`, using `Theme::ClueColour`, the guess rows' colours).
+- **No key outlines:** both keyboards use flat `wxBORDER_NONE` keys on the page background.
+- **Hard Mode story puzzles** follow Wordle's hard mode (`WordHardModeViolation`).
+- The "World English Bible Version" tagline moved from the top of the window to a new **Credits**
+  section in Settings (Bible text, word list, icon/original game, Wordle, wxWidgets, nlohmann/json).
+  Settings now scrolls.
