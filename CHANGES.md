@@ -168,3 +168,5 @@ continue. See `docs/STORY_MODE.md` §3.5.
   map) instead of a pop-up. A passed level's results and its outro story share one screen.
 - The puzzle word list is now ENABLE (172,823 words, public domain) instead of SCOWL, so no license
   notice has to ship with it.
+- Story puzzles have an on-screen QWERTY keyboard (Enter, Del) whose keys turn green/yellow/gray like
+  Wordle's.

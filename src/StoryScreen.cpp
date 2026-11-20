@@ -51,6 +51,9 @@ void StoryScreen::ShowStory(const wxString& title, const wxString& header, const
     m_input = nullptr;
     m_message = nullptr;
     m_hint = nullptr;
+    m_keyboard = nullptr;
+    m_keys.clear();
+    m_keyState.clear();
 
     Freeze();
     DestroyChildren();
@@ -121,6 +124,7 @@ void StoryScreen::ShowStory(const wxString& title, const wxString& header, const
     }
 
     layout->AddStretchSpacer();
+    if (!story.blanks.empty()) BuildKeyboard(layout);
     wxBoxSizer* buttons = new wxBoxSizer(wxHORIZONTAL);
     if (m_onLeave) {
         wxButton* leave = new wxButton(this, wxID_ANY, "Back to map");
@@ -163,6 +167,7 @@ void StoryScreen::RefreshStory() {
         m_howTo->Show(!done);
         m_guessPanel->Show(!done);
         m_inputRow->Show(!done);
+        m_keyboard->Show(!done);
         m_message->SetLabel("");
         m_hint->SetLabel("");
         if (!done) {
@@ -218,13 +223,16 @@ void StoryScreen::OnGuess() {
     m_message->SetLabel("");
     m_guessedThisBlank.insert(guess);
     m_input->Clear();
-    AddGuessRow(guess, ScoreWord(guess, blank.answer));
+    const std::vector<GuessColor> colors = ScoreWord(guess, blank.answer);
+    AddGuessRow(guess, colors);
+    UpdateKeyColours(guess, colors);
 
     if (guess == blank.answer) {
         ++m_solved;
         m_wrongOnThisBlank = 0;
         m_guessedThisBlank.clear();
         m_guessSizer->Clear(true);
+        ResetKeyColours();  // the next blank is a new word
         RefreshStory();
         if (m_input && m_solved < m_story->blanks.size()) m_input->SetFocus();
         return;
@@ -235,5 +243,88 @@ void StoryScreen::OnGuess() {
         m_hint->Wrap(kTextWidth);
         Layout();
         FitInside();
+    }
+}
+
+void StoryScreen::BuildKeyboard(wxSizer* layout) {
+    m_keyboard = new wxPanel(this);
+    m_keyboard->SetBackgroundColour(Theme::Accent());
+    wxBoxSizer* rows = new wxBoxSizer(wxVERTICAL);
+    const wxString enter = "Enter";
+    const wxString del = "Del";
+    const std::vector<std::vector<wxString>> layoutKeys = {
+        {"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"},
+        {"A", "S", "D", "F", "G", "H", "J", "K", "L"},
+        {enter, "Z", "X", "C", "V", "B", "N", "M", del},
+    };
+    for (const auto& keys : layoutKeys) {
+        wxBoxSizer* row = new wxBoxSizer(wxHORIZONTAL);
+        row->AddStretchSpacer();
+        for (const wxString& k : keys) {
+            const bool wide = k == enter || k == del;
+            wxButton* btn = new wxButton(m_keyboard, wxID_ANY, k, wxDefaultPosition,
+                                         wxSize(wide ? 62 : 40, 46), wxBU_EXACTFIT);
+            btn->SetBackgroundColour(Theme::Accent());
+            btn->SetForegroundColour(Theme::AccentText());
+            btn->SetFont(Font(wide ? 11 : 14, true));
+            btn->Bind(wxEVT_BUTTON, [this, k](wxCommandEvent&) { OnKey(k); });
+            if (!wide) m_keys[static_cast<char>(std::tolower(static_cast<unsigned char>(k[0])))] = btn;
+            row->Add(btn, 0, wxALL, 2);
+        }
+        row->AddStretchSpacer();
+        rows->Add(row, 0, wxEXPAND);
+    }
+    m_keyboard->SetSizer(rows);
+    layout->Add(m_keyboard, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 5);
+}
+
+void StoryScreen::OnKey(const wxString& key) {
+    if (!m_input || !m_story || m_solved >= m_story->blanks.size()) return;
+    if (key == "Enter") {
+        OnGuess();
+    } else if (key == "Del") {
+        long from = 0, to = 0;
+        m_input->GetSelection(&from, &to);
+        if (from != to) {
+            m_input->Clear();  // a rejected guess is selected: delete it all
+        } else {
+            const wxString text = m_input->GetValue();
+            if (!text.IsEmpty()) m_input->ChangeValue(text.Left(text.Length() - 1));
+        }
+    } else {
+        long from = 0, to = 0;
+        m_input->GetSelection(&from, &to);
+        if (from != to) m_input->Clear();  // typing replaces a selected (rejected) guess
+        const size_t len = m_story->blanks[m_solved].answer.size();
+        if (m_input->GetValue().Length() < len) m_input->ChangeValue(m_input->GetValue() + key.Lower());
+    }
+    // Keep the text box focused so the computer keyboard works too.
+    m_input->SetFocus();
+    m_input->SetInsertionPointEnd();
+}
+
+void StoryScreen::UpdateKeyColours(const std::string& guess, const std::vector<GuessColor>& colors) {
+    auto rank = [](GuessColor c) { return c == GuessColor::Green ? 2 : c == GuessColor::Yellow ? 1 : 0; };
+    for (size_t i = 0; i < guess.size() && i < colors.size(); ++i) {
+        const char c = guess[i];
+        auto it = m_keyState.find(c);
+        // A key keeps its best clue: green beats yellow beats gray.
+        if (it == m_keyState.end() || rank(colors[i]) > rank(it->second)) m_keyState[c] = colors[i];
+    }
+    for (const auto& [c, state] : m_keyState) {
+        auto key = m_keys.find(c);
+        if (key == m_keys.end()) continue;
+        key->second->SetBackgroundColour(TileColour(state));
+        key->second->SetForegroundColour(*wxBLACK);
+        key->second->Refresh();
+    }
+}
+
+void StoryScreen::ResetKeyColours() {
+    m_keyState.clear();
+    for (auto& [c, btn] : m_keys) {
+        btn->SetBackgroundColour(Theme::Accent());
+        btn->SetForegroundColour(Theme::AccentText());
+        btn->Refresh();
     }
 }

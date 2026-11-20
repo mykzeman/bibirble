@@ -116,6 +116,9 @@ How a puzzle plays:
 - The text shows the blank as `[ _ _ _ ]` (one `_` per letter); blanks are solved in order.
 - It's **Wordle-style**: guess a word of the right length and each letter turns green (right spot),
   yellow (in the word elsewhere) or gray (not in the word). Repeated letters count like Wordle.
+- Guesses can be typed on the computer keyboard or on an **on-screen QWERTY keyboard** (with Enter and
+  Del). Like Wordle's, its keys turn green/yellow/gray as letters are tried, and reset for the next
+  blank.
 - **Unlimited guesses**, and the puzzle is **required to continue**: Continue only appears once
   every blank is solved. "Back to map" leaves the attempt saved, and the same story comes back on
   Continue.

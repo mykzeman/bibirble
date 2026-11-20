@@ -3,6 +3,7 @@
 #include <wx/wx.h>
 #include <wx/scrolwin.h>
 #include <functional>
+#include <map>
 #include <set>
 #include <string>
 
@@ -14,7 +15,9 @@
 // Wordle-style (unlimited guesses, real English words or a map answer, hint
 // after 6 misses), and Continue only appears once all are solved.
 // "Back to map" leaves without finishing. An optional header (e.g. a
-// level's results) can sit above the story.
+// level's results) can sit above the story. An on-screen QWERTY keyboard
+// (with Enter and Del) types guesses, and its keys turn green/yellow/gray
+// like Wordle's as letters are tried.
 class StoryScreen : public wxScrolledWindow {
 public:
     using Callback = std::function<void()>;
@@ -31,6 +34,10 @@ private:
     void OnGuess();
     void AddGuessRow(const std::string& guess, const std::vector<GuessColor>& colors);
     void RefreshStory();
+    void BuildKeyboard(wxSizer* layout);
+    void OnKey(const wxString& key);
+    void UpdateKeyColours(const std::string& guess, const std::vector<GuessColor>& colors);
+    void ResetKeyColours();
 
     const StoryText* m_story = nullptr;
     const WordList* m_words = nullptr;
@@ -49,4 +56,7 @@ private:
     wxStaticText* m_message = nullptr;
     wxStaticText* m_hint = nullptr;
     wxButton* m_continue = nullptr;
+    wxPanel* m_keyboard = nullptr;
+    std::map<char, wxButton*> m_keys;       // 'a'..'z'
+    std::map<char, GuessColor> m_keyState;  // best clue so far for each letter on this blank
 };
