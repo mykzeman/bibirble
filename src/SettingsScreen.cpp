@@ -1,5 +1,6 @@
 #include "SettingsScreen.h"
 #include "Theme.h"
+#include "WrappingText.h"
 
 #include <wx/datectrl.h>
 #include <wx/datetime.h>
@@ -53,16 +54,19 @@ void SettingsScreen::SetupUi() {
         m_versionChoice->Append(wxString::FromUTF8(std::string(v.name) + " (" + v.shortName + ")"));
     }
     m_versionChoice->SetSelection(0);
-    versionRow->Add(m_versionChoice, 0, wxALIGN_CENTER_VERTICAL | wxALL, 8);
+    // Some version names are long: let the list shrink with the window
+    // (the full name still shows when it's opened) instead of setting the
+    // screen's minimum width.
+    m_versionChoice->SetMinSize(FromDIP(wxSize(120, -1)));
+    versionRow->Add(m_versionChoice, 2, wxALIGN_CENTER_VERTICAL | wxALL, 8);
     cardLayout->Add(versionRow, 0, wxEXPAND);
 
     // December only: Christmas verses for Random games too.
     if (Theme::Christmas()) {
         wxBoxSizer* christmasRow = new wxBoxSizer(wxHORIZONTAL);
-        wxStaticText* christmasLabel = new wxStaticText(card, wxID_ANY, wxString::FromUTF8(
+        WrappingText* christmasLabel = new WrappingText(card, wxString::FromUTF8(
             "\xF0\x9F\x8E\x84 Christmas verses (Random games pick Christmas verses too; "
             "December's Daily is always one)"));
-        christmasLabel->Wrap(300);
         christmasRow->Add(christmasLabel, 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
         m_christmasCheck = new wxCheckBox(card, wxID_ANY, "");
         m_christmasCheck->SetValue(true);
@@ -83,19 +87,17 @@ void SettingsScreen::SetupUi() {
     cardLayout->Add(usefulRow, 0, wxEXPAND);
 
     wxBoxSizer* hintsRow = new wxBoxSizer(wxHORIZONTAL);
-    wxStaticText* hintsLabel = new wxStaticText(card, wxID_ANY,
+    WrappingText* hintsLabel = new WrappingText(card,
         "Book hints (narrows the book list using your clues; works in hard mode too)");
-    hintsLabel->Wrap(300);
     hintsRow->Add(hintsLabel, 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
     m_bookHintsCheck = new wxCheckBox(card, wxID_ANY, "");
     hintsRow->Add(m_bookHintsCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 8);
     cardLayout->Add(hintsRow, 0, wxEXPAND);
 
     wxBoxSizer* r18Row = new wxBoxSizer(wxHORIZONTAL);
-    wxStaticText* r18Label = new wxStaticText(card, wxID_ANY,
+    WrappingText* r18Label = new WrappingText(card,
         "R18 mode (lets Daily and Random games pick verses with mature content; "
         "18+ only; Useful verses only always stays family friendly)");
-    r18Label->Wrap(300);
     r18Row->Add(r18Label, 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
     m_r18Check = new wxCheckBox(card, wxID_ANY, "");
     r18Row->Add(m_r18Check, 0, wxALIGN_CENTER_VERTICAL | wxALL, 8);
@@ -129,11 +131,10 @@ void SettingsScreen::SetupUi() {
     });
     cardLayout->Add(randomizeBtn, 0, wxALIGN_CENTER | wxALL, 8);
 
-    wxStaticText* note = new wxStaticText(card, wxID_ANY,
+    WrappingText* note = new WrappingText(card,
         "Bible version, seed settings, Christmas verses, hard mode, useful verses only, book hints, and R18 mode apply to the next game you start. "
         "You can return here anytime.");
-    note->Wrap(400);
-    cardLayout->Add(note, 0, wxALL, 8);
+    cardLayout->Add(note, 0, wxEXPAND | wxALL, 8);
 
     card->SetSizer(cardLayout);
     layout->Add(card, 0, wxEXPAND | wxALL, 10);
@@ -155,9 +156,8 @@ void SettingsScreen::SetupUi() {
              "\xF0\x9F\x9F\xA9 Inspired by Wordle.",
              "\xF0\x9F\x9B\xA0 Built with wxWidgets and JSON for Modern C++ (nlohmann/json) by Niels Lohmann.",
          }) {
-        wxStaticText* item = new wxStaticText(credits, wxID_ANY, wxString::FromUTF8(line));
-        item->Wrap(400);
-        creditsLayout->Add(item, 0, wxLEFT | wxRIGHT | wxBOTTOM, 8);
+        WrappingText* item = new WrappingText(credits, wxString::FromUTF8(line));
+        creditsLayout->Add(item, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
     }
     credits->SetSizer(creditsLayout);
     layout->Add(credits, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);

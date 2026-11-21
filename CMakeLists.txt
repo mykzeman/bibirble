@@ -70,6 +70,7 @@ set(SOURCES
     src/SettingsScreen.cpp
     src/SettingsScreen.h
     src/loading_dialog.h
+    src/WrappingText.h
 )
 
 # Compile the Bible versions (bible_sections*.json), story_map.json and the app icon into the program (Bibirble.rc

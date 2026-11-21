@@ -1,12 +1,11 @@
 #include "StoryScreen.h"
 #include "Theme.h"
+#include "WrappingText.h"
 
 #include <cctype>
 
 namespace {
-const int kTextWidth = 440;       // instructions, hint, header
 const int kStoryPadding = 14;     // around the story text inside its card
-const int kStoryWidth = kTextWidth - 2 * kStoryPadding;
 
 wxFont Font(int size, bool bold = false) {
     return wxFont(size, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, bold ? wxFONTWEIGHT_BOLD : wxFONTWEIGHT_NORMAL);
@@ -69,10 +68,9 @@ void StoryScreen::ShowStory(const wxString& title, const wxString& header, const
         wxPanel* card = new wxPanel(this);
         card->SetBackgroundColour(*wxWHITE);
         wxBoxSizer* cs = new wxBoxSizer(wxVERTICAL);
-        wxStaticText* h = new wxStaticText(card, wxID_ANY, header);
+        WrappingText* h = new WrappingText(card, header);
         h->SetFont(Font(12));
-        h->Wrap(kStoryWidth);
-        cs->Add(h, 0, wxALL, kStoryPadding);
+        cs->Add(h, 0, wxEXPAND | wxALL, kStoryPadding);
         card->SetSizer(cs);
         layout->Add(card, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
     }
@@ -82,10 +80,9 @@ void StoryScreen::ShowStory(const wxString& title, const wxString& header, const
         wxPanel* card = new wxPanel(this);
         card->SetBackgroundColour(*wxWHITE);
         wxBoxSizer* cardLayout = new wxBoxSizer(wxVERTICAL);
-        m_storyText = new wxStaticText(card, wxID_ANY, "");
+        m_storyText = new WrappingText(card, "");
         m_storyText->SetFont(Font(14));
-        cardLayout->Add(m_storyText, 0, wxALL, kStoryPadding);
-        cardLayout->SetMinSize(wxSize(kTextWidth, -1));
+        cardLayout->Add(m_storyText, 0, wxEXPAND | wxALL, kStoryPadding);
         card->SetSizer(cardLayout);
         layout->Add(card, 0, wxEXPAND | wxLEFT | wxRIGHT, 10);
     } else {
@@ -96,9 +93,8 @@ void StoryScreen::ShowStory(const wxString& title, const wxString& header, const
         wxString how = "Fill in the blank! Guess the missing word: green = right letter, right spot; "
                        "yellow = in the word somewhere else; gray = not in the word.";
         if (hardMode) how += " Hard Mode: keep green letters in place and use every yellow letter.";
-        m_howTo = new wxStaticText(this, wxID_ANY, how);
-        m_howTo->Wrap(kTextWidth);
-        layout->Add(m_howTo, 0, wxALL, 10);
+        m_howTo = new WrappingText(this, how);
+        layout->Add(m_howTo, 0, wxEXPAND | wxALL, 10);
 
         m_inputRow = new wxPanel(this);
         wxBoxSizer* inputLayout = new wxBoxSizer(wxHORIZONTAL);
@@ -115,9 +111,9 @@ void StoryScreen::ShowStory(const wxString& title, const wxString& header, const
         m_message = new wxStaticText(this, wxID_ANY, "");
         m_message->SetForegroundColour(wxColour(170, 30, 30));
         layout->Add(m_message, 0, wxLEFT | wxRIGHT | wxTOP, 10);
-        m_hint = new wxStaticText(this, wxID_ANY, "");
+        m_hint = new WrappingText(this, "");
         m_hint->SetFont(Font(11, true));
-        layout->Add(m_hint, 0, wxLEFT | wxRIGHT | wxTOP, 10);
+        layout->Add(m_hint, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
 
         // Guesses so far, newest at the bottom (the whole page scrolls).
         m_guessPanel = new wxPanel(this);
@@ -156,8 +152,7 @@ void StoryScreen::ShowStory(const wxString& title, const wxString& header, const
 
 void StoryScreen::RefreshStory() {
     if (m_storyText) {
-        m_storyText->SetLabel(wxString::FromUTF8(m_story->Render(m_solved, "\xC2\xA0")));  // no-break space
-        m_storyText->Wrap(kStoryWidth);
+        m_storyText->SetLabel(wxString::FromUTF8(m_story->Render(m_solved, "\xC2\xA0")));  // no-break space; WrappingText wraps it
         // The wrapped label may be taller now: make its card grow.
         m_storyText->InvalidateBestSize();
         m_storyText->GetParent()->InvalidateBestSize();
@@ -252,7 +247,6 @@ void StoryScreen::OnGuess() {
     if (++m_wrongOnThisBlank >= kGuessesBeforeHint) {
         const std::string hint = blank.hint.empty() ? DefaultHint(blank.answer) : blank.hint;
         m_hint->SetLabel(wxString::FromUTF8("\xF0\x9F\x92\xA1 Hint: ") + wxString::FromUTF8(hint));  // 💡
-        m_hint->Wrap(kTextWidth);
         Layout();
         FitInside();
     }
@@ -276,12 +270,16 @@ void StoryScreen::BuildKeyboard(wxSizer* layout) {
             const bool wide = k == enter || k == del;
             wxButton* btn = new wxButton(m_keyboard, wxID_ANY, k, wxDefaultPosition,
                                          wxSize(wide ? 62 : 40, 46), wxBU_EXACTFIT | wxBORDER_NONE);
+            // Full size when there's room, narrower keys in a narrow window
+            // (instead of the 10-key top row setting the window's width).
+            btn->SetMinSize(wxSize(wide ? 40 : 24, 46));
+            btn->SetMaxSize(wxSize(wide ? 62 : 40, 46));
             btn->SetBackgroundColour(Theme::Accent());
             btn->SetForegroundColour(Theme::AccentText());
             btn->SetFont(Font(wide ? 11 : 14, true));
             btn->Bind(wxEVT_BUTTON, [this, k](wxCommandEvent&) { OnKey(k); });
             if (!wide) m_keys[static_cast<char>(std::tolower(static_cast<unsigned char>(k[0])))] = btn;
-            row->Add(btn, 0, wxALL, 2);
+            row->Add(btn, wide ? 3 : 2, wxALL, 2);
         }
         row->AddStretchSpacer();
         rows->Add(row, 0, wxEXPAND);

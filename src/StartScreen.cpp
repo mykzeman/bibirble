@@ -1,7 +1,9 @@
 #include "StartScreen.h"
 #include "Theme.h"
+#include "WrappingText.h"
 
 #include <ctime>
+#include <wx/wrapsizer.h>
 
 #include "SeededRandom.h"
 
@@ -57,12 +59,11 @@ void StartScreen::SetupUi() {
         wxPanel* banner = new wxPanel(this);
         banner->SetBackgroundColour(*wxWHITE);
         wxBoxSizer* bannerLayout = new wxBoxSizer(wxVERTICAL);
-        wxStaticText* bannerText = new wxStaticText(banner, wxID_ANY, wxString::FromUTF8(day == 25
+        WrappingText* bannerText = new WrappingText(banner, wxString::FromUTF8(day == 25
             ? "\xF0\x9F\x8E\x81 Merry Christmas! Jesus is born! Today's Daily is extra special."
             : "\xF0\x9F\x8E\x84 Merry Christmas! Every Daily this month is a Christmas verse."),
-            wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL);
-        bannerText->Wrap(400);
-        bannerLayout->Add(bannerText, 0, wxALL | wxALIGN_CENTER, 10);
+            wxALIGN_CENTER_HORIZONTAL);
+        bannerLayout->Add(bannerText, 0, wxALL | wxEXPAND, 10);
         banner->SetSizer(bannerLayout);
         layout->Add(banner, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
     }
@@ -72,7 +73,9 @@ void StartScreen::SetupUi() {
     headline->SetFont(headlineFont);
     layout->Add(headline, 0, wxALL | wxALIGN_CENTER, 10);
 
-    wxBoxSizer* actions = new wxBoxSizer(wxHORIZONTAL);
+    // A wrap sizer puts the buttons side by side when there's room, and
+    // moves them onto a second line in a narrow window instead of clipping.
+    wxWrapSizer* actions = new wxWrapSizer(wxHORIZONTAL, wxEXTEND_LAST_ON_EACH_LINE);
     auto makeButton = [&](const wxString& label) {
         wxButton* btn = new wxButton(this, wxID_ANY, label);
         btn->SetBackgroundColour(Theme::Accent());
@@ -126,9 +129,8 @@ void StartScreen::SetupUi() {
     };
     auto addItems = [&](std::initializer_list<const char*> items) {
         for (const char* text : items) {
-            wxStaticText* item = new wxStaticText(newsCard, wxID_ANY, wxString::FromUTF8("\xE2\x80\xA2 ") + text);
-            item->Wrap(400);
-            newsLayout->Add(item, 0, wxLEFT | wxRIGHT | wxBOTTOM, 8);
+            WrappingText* item = new WrappingText(newsCard, wxString::FromUTF8("\xE2\x80\xA2 ") + text);
+            newsLayout->Add(item, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
         }
     };
 
@@ -192,24 +194,21 @@ void StartScreen::SetupUi() {
     overviewTitle->SetFont(overviewFont);
     infoLayout->Add(overviewTitle, 0, wxALL, 8);
 
-    wxStaticText* overviewText = new wxStaticText(infoCard, wxID_ANY,
+    WrappingText* overviewText = new WrappingText(infoCard,
         "Guess the verse by selecting the correct book and entering the "
         "chapter:verse digits. Green means exact match, yellow means correct "
         "digit in the wrong place, gray means not in the answer.");
-    overviewText->Wrap(400);
-    infoLayout->Add(overviewText, 0, wxALL, 8);
+    infoLayout->Add(overviewText, 0, wxEXPAND | wxALL, 8);
 
-    wxStaticText* howToPlay = new wxStaticText(infoCard, wxID_ANY,
+    WrappingText* howToPlay = new WrappingText(infoCard,
         "How to play: Choose a book, then enter the four chapter/verse "
         "digits based on the clue.");
-    howToPlay->Wrap(400);
-    infoLayout->Add(howToPlay, 0, wxALL, 8);
+    infoLayout->Add(howToPlay, 0, wxEXPAND | wxALL, 8);
 
-    wxStaticText* seedHint = new wxStaticText(infoCard, wxID_ANY,
+    WrappingText* seedHint = new WrappingText(infoCard,
         "Seed hint: Use the Settings screen to set or randomize a seed for "
         "replayable games.");
-    seedHint->Wrap(400);
-    infoLayout->Add(seedHint, 0, wxALL, 8);
+    infoLayout->Add(seedHint, 0, wxEXPAND | wxALL, 8);
 
     m_countdownText = new wxStaticText(infoCard, wxID_ANY, "");
     infoLayout->Add(m_countdownText, 0, wxALL, 8);

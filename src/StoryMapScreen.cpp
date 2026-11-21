@@ -1,5 +1,6 @@
 #include "StoryMapScreen.h"
 #include "Theme.h"
+#include "WrappingText.h"
 
 namespace {
 const char* kStar = "\xE2\x98\x85";        // ★
@@ -55,9 +56,8 @@ void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress,
     if (!map.IsLoaded()) {
         wxString msg = "Story Mode couldn't load its map:\n";
         for (const auto& e : map.Errors()) msg += "\n- " + wxString::FromUTF8(e);
-        wxStaticText* err = new wxStaticText(this, wxID_ANY, msg);
-        err->Wrap(420);
-        layout->Add(err, 0, wxALL, 10);
+        WrappingText* err = new WrappingText(this, msg);
+        layout->Add(err, 0, wxEXPAND | wxALL, 10);
         SetSizer(layout);
         Thaw();
         return;
@@ -71,9 +71,8 @@ void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress,
             wxPanel* card = new wxPanel(this);
             card->SetBackgroundColour(*wxWHITE);
             wxBoxSizer* cs = new wxBoxSizer(wxHORIZONTAL);
-            wxStaticText* t = new wxStaticText(card, wxID_ANY, wxString::Format("In progress: %s (verse %d of %d)",
+            WrappingText* t = new WrappingText(card, wxString::Format("In progress: %s (verse %d of %d)",
                 wxString::FromUTF8(lvl->title), run.solvedCount + 1, StoryProgress::kVersesPerLevel));
-            t->Wrap(300);
             cs->Add(t, 1, wxALL | wxALIGN_CENTER_VERTICAL, 8);
             wxButton* cont = AccentButton(card, "Continue");
             const std::string key = run.levelKey;
@@ -155,11 +154,10 @@ void StoryMapScreen::AddLevelRow(wxSizer* sizer, const StoryLevel& level, const 
         t->SetFont(BoldFont(11));
         info->Add(t, 0, wxBOTTOM, 2);
         info->Add(new wxStaticText(row, wxID_ANY, StarString(stars, level.MaxStars())), 0, wxBOTTOM, 2);
-        wxStaticText* note = new wxStaticText(row, wxID_ANY, wxString::FromUTF8(
+        WrappingText* note = new WrappingText(row, wxString::FromUTF8(
             "Not in the " + std::string(bible.version().name) + ". Pick another Bible in Settings to play it."));
         note->SetForegroundColour(wxColour(120, 120, 120));
-        note->Wrap(320);
-        info->Add(note, 0);
+        info->Add(note, 0, wxEXPAND);
         rs->Add(info, 1, wxALL, 8);
         row->SetSizer(rs);
         sizer->Add(row, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);

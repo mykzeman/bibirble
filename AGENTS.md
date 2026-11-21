@@ -98,6 +98,9 @@ wxWidgets uses parent-child ownership (constructor parameter `wxWindow* parent`)
 ### Text encoding
 Verse and story text is UTF-8 (curly quotes, dashes, emoji). Always convert it with `wxString::FromUTF8()`. Passing a `std::string` to `wxString::Format("%s", ...)`, or to wxString's constructor, uses the C locale: non-ASCII text turns into "(null)", and a raw non-ASCII format string can crash.
 
+### Flexible layout
+The window can be resized freely (down to 420x420), so nothing may rely on a fixed width. Use `WrappingText` (`src/WrappingText.h`) instead of `wxStaticText` + `Wrap(N)` for any multi-line text, and add it with `wxEXPAND` (or a proportion in a horizontal sizer) so it re-wraps to the width it's given. Rows of buttons use `wxWrapSizer` so they move onto a second line rather than overflow.
+
 ### Color Feedback
 `GameRow::setDigitColors()` and `setBookColor()` apply validation feedback, taking a `GuessColor` (Gray/Yellow/Green -- see `src/GuessColor.h`), not string literals. Integration with game logic in `BibirbleWindow::ProcessTurn()`, which also records a `GuessRecord` onto `GameState::history`.
 
