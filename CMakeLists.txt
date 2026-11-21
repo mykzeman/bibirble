@@ -133,7 +133,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 
 # Create executable
-add_executable(Bibirble ${SOURCES})
+# WIN32: a windowed app on Windows (no console window); ignored elsewhere.
+add_executable(Bibirble WIN32 ${SOURCES})
 
 # Link libraries
 target_link_libraries(Bibirble ${wxWidgets_LIBRARIES} nlohmann_json::nlohmann_json ZLIB::ZLIB)

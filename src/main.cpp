@@ -26,8 +26,6 @@ public:
     }
 };
 
-wxIMPLEMENT_APP_NO_MAIN(BibirbleApp);
-
-int main(int argc, char* argv[]) {
-    return wxEntry(argc, argv);
-}
+// Generates the right entry point per platform (WinMain on Windows, so no
+// console window opens alongside the game).
+wxIMPLEMENT_APP(BibirbleApp);
