@@ -132,3 +132,97 @@ Testing guidance:
 5. Deliberately violate a Hard Mode constraint and confirm the guess is rejected without being consumed.
 6. Finish a game, Share, and confirm the clipboard has the correct emoji grid (only played rows) + citation.
 7. Guess "Nehemiah" against a different Historical-area target verse and confirm yellow, not gray.
+
+## Story Mode
+
+A new mode on the start screen: a journey through the Bible in levels of 3 random verses each, with
+up to 7 stars per level, star-gated unlocks, hidden prophecy bonus levels and a hidden End Times
+area. Design: `docs/STORY_MODE.md`; map: `story_map.json`.
+
+- New: `StoryMap` (loads/validates the map), `StoryProgress` (stars, unlocks, retries, save data),
+  `StoryMapScreen` (the map UI), `tests/story_tests.cpp` (logic tests, `story_tests` target).
+- `BibirbleWindow`: Story bar, 3-verse level loop, fail -> retry prompt, results box.
+- `story_map.json` is embedded (Linux `.incbin`, Windows `STORY_MAP_JSON`); a copy on disk wins.
+- `PersistenceManager` saves Story progress under `story`; `GameRow::SetGuess` restores a
+  half-played verse.
+- Fix found while testing: a `wxString::Format` string containing a raw non-ASCII character
+  crashed in the C locale, so non-ASCII text is now joined in with `wxString::FromUTF8`.
+
+## Story puzzles (fill in the blank)
+
+Story text can now hold Wordle-style fill-in-the-blank puzzles: `{{answer|hint}}` in a level's
+`intro`, `between` (after verses 1 and 2) or `outro`. Unlimited guesses of real English words (or any
+answer in the map), green/yellow/gray letters, a hint after 6 misses, and they must be solved to
+continue. See `docs/STORY_MODE.md` §3.5.
+
+- New: `src/WordPuzzle.*` (parsing, colouring, word list), `src/StoryPuzzleDialog.*` (the story
+  card), `data/words.txt` (the public-domain ENABLE English word list, embedded).
+- `StoryRun::storyDone` remembers an unfinished story, so it comes back on Continue.
+- `tools/check_story_map.py` checks blanks.
+- Fix: verses with curly quotes or other non-ASCII text showed "(null)" in the verse panel at the end
+  of a game (every mode). `UpdateRevealText()` now converts with `wxString::FromUTF8`.
+
+## Story pages are full screens; public-domain word list
+
+- Story text and its puzzles now show on a full screen (`src/StoryScreen.*`, swapped in like the
+  map) instead of a pop-up. A passed level's results and its outro story share one screen.
+- The puzzle word list is now ENABLE (172,823 words, public domain) instead of SCOWL, so no license
+  notice has to ship with it.
+- Story puzzles have an on-screen QWERTY keyboard (Enter, Del) whose keys turn green/yellow/gray like
+  Wordle's.
+
+## Landscape, key colours, credits
+
+- **Landscape mode:** when the window is wider than tall, the number keys sit in a column to the right
+  of the verse and guess rows (`BibirbleWindow::ApplyGameOrientation`, checked when a game starts and on
+  every resize). On screens too short for the 850px portrait window (most laptops) the app opens
+  in landscape (about 1000x680). The window can now be resized down to 420x420.
+- **Number keys change colour** like the letter keyboard: each digit shows its best clue so far
+  (`UpdateDigitKeyColours`, using `Theme::ClueColour`, the guess rows' colours).
+- **No key outlines:** both keyboards use flat `wxBORDER_NONE` keys on the page background.
+- **Hard Mode story puzzles** follow Wordle's hard mode (`WordHardModeViolation`).
+- The "World English Bible Version" tagline moved from the top of the window to a new **Credits**
+  section in Settings (Bible text, word list, icon/original game, Wordle, wxWidgets, nlohmann/json).
+  Settings now scrolls.
+
+## Bible versions
+
+Settings has a Bible version picker: World English Bible (default), King James Version, Douay-Rheims
+1899 American Edition and Catholic Public Domain Version.
+
+- Data: each version is split into one file per book under `tools/bibles/<version>/` (the WEB files moved
+  there from `tools/`). `tools/split_bible.py` does the splitting; `tools/sort.py` now builds
+  `bible_sections*.json` for every version (one verse per line, about 7 MB each instead of 9 MB; the WEB
+  verses are unchanged, so the Daily is too) and copies them to Bibirble-web.
+- Douay-Rheims comes from yoarikso/douayrheimsbible. The first DR file tried skipped 46 chapters and
+  numbered the rest straight on (its "Ruth 2" was Ruth 4), so it was replaced. This one lacks only
+  Malachi 4 and Esther 11-16.
+- The Douay-Rheims and CPDV number most Psalms like the Vulgate (Psalm 22 = Psalm 23). sort.py gives
+  each such verse a `"ref"` (its World English Bible place), lining psalms up by their wording. Useful
+  verses, Christmas verses, Story pools and Story save keys use it, so they work in every version and
+  Story progress carries over between versions.
+- The deuterocanonical books (Tobit, Judith, Wisdom, Sirach, Baruch, 1-2 Maccabees) are in the book
+  order, names and areas.
+- Story Mode: a version missing a passage (DR's Malachi 4) skips it; `check_story_map.py` checks every
+  version.
+- All four versions are embedded (`Bibirble.rc`, `BIBIRBLE_BLOBS` in CMakeLists.txt).
+- Share text names the version; Credits name every translation and data source.
+- Fix: `calculateSliceSteps` rounded down where data.js rounds up (no visible change with 7 rows).
+
+## 32 Bible versions, Prophet Alternatives and Maccabees areas, web-style hard mode and sharing
+
+- main's `translations/` (31 ebible.org translations) was replaced: 21 of them had saved every book's
+  chapter N to the same file, so only the last book survived. `tools/fetch_ebible.py` re-downloads them
+  complete and splits them into `tools/bibles/<id>/<book>.json`; KJV and Douay-Rheims now come from there too
+  (the ebible DRA is complete). `tools/bible_versions.json` lists all 32 versions (31 ebible minus the WEB
+  duplicate, plus the CPDV); Psalm 151 is skipped.
+- `sort.py` writes gzipped `bibles/<id>.json.gz` (42 MB for all 32, instead of ~230 MB of JSON), detects
+  Vulgate/Septuagint psalm numbering by itself, and generates the version lists for both games. The WEB
+  verses are unchanged (same Daily).
+- C++ reads the gzipped files with zlib; CMake embeds every `bibles/*.json.gz` (Windows: `bibles/bibles.rc`).
+- New books and areas: Wisdom, Sirach, Prayer of Manasseh and Psalms of Solomon join Poetry; Tobit, Judith and
+  Greek Esther join Small Stories; 1 Esdras joins History; new **Prophet Alternatives** (Baruch, Letter of
+  Jeremiah, Greek Daniel, Song of the Three, Susanna, Bel, 2 Esdras) and **Maccabees** (1-4) areas.
+- Story Mode in partial Bibles: a level without 3 verses in that version shows "Not in this Bible".
+- Like the web version: hard mode's yellow book means the same author (`BibleData::getBookAuthor`), book
+  hints work in hard mode, and the share text is spoiler-free ("Bibirble Daily 2026-11-23 KJV 4/7*" + grid).

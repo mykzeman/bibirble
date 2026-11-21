@@ -6,6 +6,7 @@
 #include <wx/datetime.h>
 
 #include "AgeCheck.h"
+#include "BibleVersions.h"
 
 namespace {
 void StyleButton(wxButton* btn) {
@@ -17,7 +18,6 @@ void StyleButton(wxButton* btn) {
 }  // namespace
 
 SettingsScreen::SettingsScreen(wxWindow* parent) : wxScrolledWindow(parent) {
-    // Scrolls vertically when the window is too short to show every setting.
     SetScrollRate(0, 10);
     SetupUi();
 }
@@ -46,6 +46,21 @@ void SettingsScreen::SetupUi() {
     card->SetBackgroundColour(*wxWHITE);
     wxBoxSizer* cardLayout = new wxBoxSizer(wxVERTICAL);
 
+    // Bible version: which translation's verses the games use.
+    wxBoxSizer* versionRow = new wxBoxSizer(wxHORIZONTAL);
+    versionRow->Add(new wxStaticText(card, wxID_ANY, "Bible version"), 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
+    m_versionChoice = new wxChoice(card, wxID_ANY);
+    for (const auto& v : BibleVersions()) {
+        m_versionChoice->Append(wxString::FromUTF8(std::string(v.name) + " (" + v.shortName + ")"));
+    }
+    m_versionChoice->SetSelection(0);
+    // Some version names are long: let the list shrink with the window
+    // (the full name still shows when it's opened) instead of setting the
+    // screen's minimum width.
+    m_versionChoice->SetMinSize(FromDIP(wxSize(120, -1)));
+    versionRow->Add(m_versionChoice, 2, wxALIGN_CENTER_VERTICAL | wxALL, 8);
+    cardLayout->Add(versionRow, 0, wxEXPAND);
+
     // December only: Christmas verses for Random games too.
     if (Theme::Christmas()) {
         wxBoxSizer* christmasRow = new wxBoxSizer(wxHORIZONTAL);
@@ -73,7 +88,7 @@ void SettingsScreen::SetupUi() {
 
     wxBoxSizer* hintsRow = new wxBoxSizer(wxHORIZONTAL);
     WrappingText* hintsLabel = new WrappingText(card,
-        "Book hints (narrows the book list using your clues; not in hard mode)");
+        "Book hints (narrows the book list using your clues; works in hard mode too)");
     hintsRow->Add(hintsLabel, 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
     m_bookHintsCheck = new wxCheckBox(card, wxID_ANY, "");
     hintsRow->Add(m_bookHintsCheck, 0, wxALIGN_CENTER_VERTICAL | wxALL, 8);
@@ -95,12 +110,6 @@ void SettingsScreen::SetupUi() {
         event.Skip();
     });
 
-    m_hardModeCheck->Bind(wxEVT_CHECKBOX, [this, hintsLabel](wxCommandEvent& event) {
-        bool hard = m_hardModeCheck->GetValue();
-        m_bookHintsCheck->Enable(!hard);
-        hintsLabel->Enable(!hard);
-        event.Skip();
-    });
 
     wxBoxSizer* seedRow = new wxBoxSizer(wxHORIZONTAL);
     seedRow->Add(new wxStaticText(card, wxID_ANY, "Random seed"), 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
@@ -123,14 +132,51 @@ void SettingsScreen::SetupUi() {
     cardLayout->Add(randomizeBtn, 0, wxALIGN_CENTER | wxALL, 8);
 
     WrappingText* note = new WrappingText(card,
-        "Seed settings, Christmas verses, hard mode, useful verses only, book hints, and R18 mode apply to the next game you start. "
+        "Bible version, seed settings, Christmas verses, hard mode, useful verses only, book hints, and R18 mode apply to the next game you start. "
         "You can return here anytime.");
     cardLayout->Add(note, 0, wxEXPAND | wxALL, 8);
 
     card->SetSizer(cardLayout);
     layout->Add(card, 0, wxEXPAND | wxALL, 10);
 
+    // Credits
+    wxPanel* credits = new wxPanel(this);
+    credits->SetBackgroundColour(*wxWHITE);
+    wxBoxSizer* creditsLayout = new wxBoxSizer(wxVERTICAL);
+    wxStaticText* creditsTitle = new wxStaticText(credits, wxID_ANY, "Credits");
+    creditsTitle->SetFont(wxFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
+    creditsLayout->Add(creditsTitle, 0, wxALL, 8);
+    for (const char* line : {
+             "\xF0\x9F\x93\x96 Bible text: every version is in the public domain.",
+             "\xF0\x9F\x93\x82 Verse data: the World English Bible from world-english-bible by "
+             "TehShrike; the Catholic Public Domain Version by Ronald L. Conte Jr.; every other "
+             "version from eBible.org (via the Free Use Bible API, bible.helloao.org).",
+             "\xF0\x9F\x94\xA4 Story puzzle words: the ENABLE word list (public domain).",
+             "\xF0\x9F\x8E\xA8 App icon and original game: Bibirble for the web.",
+             "\xF0\x9F\x9F\xA9 Inspired by Wordle.",
+             "\xF0\x9F\x9B\xA0 Built with wxWidgets and JSON for Modern C++ (nlohmann/json) by Niels Lohmann.",
+         }) {
+        WrappingText* item = new WrappingText(credits, wxString::FromUTF8(line));
+        creditsLayout->Add(item, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 8);
+    }
+    credits->SetSizer(creditsLayout);
+    layout->Add(credits, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
+
     SetSizer(layout);
+}
+
+std::string SettingsScreen::GetBibleVersion() const {
+    const int i = m_versionChoice ? m_versionChoice->GetSelection() : 0;
+    const auto& versions = BibleVersions();
+    return versions[(i >= 0 && i < (int)versions.size()) ? i : 0].id;
+}
+
+void SettingsScreen::SetBibleVersion(const std::string& id) {
+    if (!m_versionChoice) return;
+    const auto& versions = BibleVersions();
+    for (size_t i = 0; i < versions.size(); ++i) {
+        if (id == versions[i].id) m_versionChoice->SetSelection(static_cast<int>(i));
+    }
 }
 
 bool SettingsScreen::GetHardMode() const {
@@ -142,7 +188,7 @@ bool SettingsScreen::GetUsefulOnly() const {
 }
 
 bool SettingsScreen::GetBookHints() const {
-    return m_bookHintsCheck && m_bookHintsCheck->GetValue() && !GetHardMode();
+    return m_bookHintsCheck && m_bookHintsCheck->GetValue();
 }
 
 bool SettingsScreen::GetR18Mode() const {

@@ -1,11 +1,17 @@
 # Build script for Bibirble wxWidgets project (Windows)
 # Usage: .\build.ps1 -BuildType Release
+#        .\build.ps1 -Triplet x64-windows   # DLL build (exe needs the DLLs + VC++ runtime)
+#
+# The default triplet, x64-windows-static, links wxWidgets, zlib and the C++
+# runtime into Bibirble.exe, so the exe runs on its own. First time:
+#   C:\vcpkg\vcpkg install wxwidgets zlib nlohmann-json --triplet x64-windows-static
 
 param(
     [string]$BuildType = "Release",
     [string]$VcpkgPath = "C:\vcpkg",
     [string]$Generator = "Visual Studio 18 2026",
-    [string]$Arch = "x64"
+    [string]$Arch = "x64",
+    [string]$Triplet = "x64-windows-static"
 )
 
 Write-Host "Building Bibirble in $BuildType mode..." -ForegroundColor Cyan
@@ -35,8 +41,9 @@ if (-not (Test-Path $toolchain)) {
     exit 1
 }
 
-Write-Host "Configuring CMake (generator: $Generator, arch: $Arch) ..." -ForegroundColor Yellow
+Write-Host "Configuring CMake (generator: $Generator, arch: $Arch, triplet: $Triplet) ..." -ForegroundColor Yellow
 cmake -DCMAKE_TOOLCHAIN_FILE="$toolchain" `
+      -DVCPKG_TARGET_TRIPLET="$Triplet" `
       -G "$Generator" -A $Arch `
       -DCMAKE_BUILD_TYPE=$BuildType ..
 

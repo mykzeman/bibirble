@@ -1,0 +1,403 @@
+# Story Mode — Design Doc
+
+**Status:** Implemented (see §11). Story cards are plain message boxes for now, ready for cinematic content.
+
+## 1. Summary
+
+Story Mode turns Bibirble into a journey through the Bible. The player moves along a story map in
+Bible order. Each **level** shows the player its own piece of story text and then asks them to guess
+**3 verses** picked at random from that level's verse pool. Passing a level earns up to **7 stars**.
+Stars unlock later areas and **prophetic bonus levels**. Progress **auto-saves**.
+
+The map's content (areas, levels, story text, verse pools, star limits, unlock rules) lives in a
+JSON file, `story_map.json`. **No area is hard-coded.** Changing the story means editing the JSON,
+not the C++.
+
+## 2. Goals / Non-goals
+
+**Goals**
+- A story the player reads as they go: every level carries its own part of the story.
+- Replayable levels: the game picks a fresh random set of verses from the level's pool.
+- A 7-star scoring system that rewards accuracy, Hard Mode, first-try guesses, clean runs and
+  mastering a level's whole verse pool.
+- Fully data-driven areas, so the author can add, remove, rename, reorder and regroup them freely.
+- Automatic saving.
+
+**Non-goals (for now)**
+- An in-game map editor (the JSON file is the editor).
+- Multiple save slots / profiles.
+- Changing Daily or Random mode.
+
+## 3. Structure
+
+```
+Story Map
+ └─ Area (any number, in the order listed in the JSON)
+     ├─ Level (main path, in order)
+     │    ├─ story text (shown to the player)
+     │    ├─ verse pool (3 are drawn per attempt)
+     │    └─ star rules
+     └─ Bonus level (optional, e.g. prophetic scriptures)
+```
+
+### 3.1 Areas are not set in stone
+An **area** is just a named group of levels defined in `story_map.json`. The game makes no
+assumptions about which areas exist, how many there are, or what they're called.
+
+- The order of areas in the JSON **is** the order on the map.
+- Area `id`s are what save data and unlock rules point to, so renaming an area's display
+  `title` is always safe. Changing an `id` resets progress for that area (see §8.2).
+- Story Mode areas are **separate** from the book-color areas in `BibleData::getBookArea()` /
+  `tools/sort.py` `AREAS`. Those stay as they are for color feedback. Story areas can cut across
+  books any way the author likes (e.g. "Joseph" spanning Genesis 37–50, or "Psalms of David"
+  hand-picked across Psalms).
+
+The real map is in `story_map.json`. The examples in this doc are just examples, and the real areas can change anytime.
+
+### 3.2 Levels
+Each level has:
+- **Story text**: shown before the first verse (an `intro`), and optionally after the level is
+  passed (an `outro`).
+- **Verse pool**: the verses the level can ask about. Defined as any mix of:
+  - whole books: `"ruth"`
+  - chapters or chapter ranges: `"exodus 14"`, `"genesis 6-12"`
+  - single verses or verse ranges: `"exodus 14:21"`, `"ezekiel 24:15-27"`
+  The pool must resolve to **at least 3 distinct verses** (checked at load, see §9).
+- **Star rules** (§5).
+
+### 3.3 Bonus levels (prophetic scriptures)
+Prophetic scriptures are **bonus levels**. They play exactly like normal levels but sit off the main
+path. Each area lists its own in `bonusLevels`, and they're picked by **theme**, not by time: an
+area's bonus prophecies are about the same thing as the area. For example:
+- **Promises** → the new covenant (Jeremiah 31) and God's oath to Abraham (Isaiah 51, Micah 7)
+- **Wilderness** → the desert blooming (Isaiah 35) and "I will allure her into the wilderness" (Hosea 2)
+- **Kings** → the coming Son of David (Isaiah 9 and 11, Jeremiah 23) and prophets confronting kings (Jeremiah 36)
+- **Messiah** → the Suffering Servant (Isaiah 53), prophecies fulfilled in Jesus, and the sign of Jonah
+
+A bonus level unlocks when **both** of these are true:
+1. the player has reached the area it belongs to, **and**
+2. the player's total stars ≥ its `requiresStars` (a number or an `ax+b` formula, like `minStars`).
+
+Bonus levels are never required to move forward on the main path. Their stars count toward the total.
+
+**Locked bonus levels are hidden completely:** they don't appear on the map at all, with no tile,
+no title, no hint and no unlock requirements. A bonus level shows up (🔮) only once it unlocks,
+as a surprise. ✨
+
+### 3.4 The perfect-unlock bonus area: The End Times
+**All prophecy about the future / end times** goes here instead of in a themed bonus level:
+Ezekiel's prophecies, Revelation, and the other end-time passages (Isaiah's "last days" and new
+heavens and new earth, Daniel 7–8 and 10–12, the Day of the Lord in Joel/Obadiah/Zephaniah/Malachi,
+Zechariah 12–14, the Olivet Discourse in Matthew 24–25 / Mark 13 / Luke 21, and Paul's and Peter's
+letters on Christ's return). Those Gospel chapters are left out of the regular Messiah levels so they
+only appear here.
+
+It's a hidden bonus area (`"bonusArea": true, "unlock": "perfect"`). It unlocks only when **every
+non-bonus level has all 7 stars**, Perfect included. Like other bonus content, it's completely
+hidden until then. Its levels unlock in order with no star check.
+
+### 3.5 Story puzzles (fill in the blank)
+Story text can hold **fill-in-the-blank word puzzles**, so the story is more interactive and teaches
+it to people who don't know the Bible yet. The author places them anywhere in a level's story text:
+
+| Field | When it's shown |
+|---|---|
+| `intro` | Before verse 1 |
+| `between` | A list of up to 2 texts: after verse 1, and after verse 2 |
+| `outro` | After the level is passed (after the results) |
+
+A blank is written `{{answer}}` or `{{answer|hint}}`, and a text can have any number of them:
+
+```json
+"intro": "God told Noah to build an {{ark|A huge wooden boat}}. After the flood, God called {{Abram|Later renamed Abraham}}."
+```
+
+How a puzzle plays:
+- The text shows the blank as `[ _ _ _ ]` (one `_` per letter); blanks are solved in order.
+- It's **Wordle-style**: guess a word of the right length and each letter turns green (right spot),
+  yellow (in the word elsewhere) or gray (not in the word). Repeated letters count like Wordle.
+- Guesses can be typed on the computer keyboard or on an **on-screen QWERTY keyboard** (with Enter and
+  Del). Like Wordle's, its keys turn green/yellow/gray as letters are tried, and reset for the next
+  blank.
+- On a level played in **Hard Mode**, the puzzles use Wordle's hard mode too: green letters must stay
+  in their spot and every yellow letter must be used in later guesses (`WordHardModeViolation`).
+- **Unlimited guesses**, and the puzzle is **required to continue**: Continue only appears once
+  every blank is solved. "Back to map" leaves the attempt saved, and the same story comes back on
+  Continue.
+- Guesses must be **real English words** (`data/words.txt`: the ENABLE word list, 172,823 words,
+  public domain, so no license notice is needed). The dictionary doesn't need Bible names: every answer used anywhere
+  in the map is also accepted as a guess, so names like NOAH or ABRAM work.
+- After **6 wrong guesses** on a blank, its **hint** appears. Without a hint, it says "It starts with
+  A and has 5 letters."
+- Answers are one word of letters only (no spaces). `tools/check_story_map.py` and the map loader
+  both report a bad blank (unclosed `{{`, empty or multi-word answer).
+- Puzzles never affect stars.
+
+## 4. Level Flow
+
+1. Player picks an unlocked level on the map, or presses that level's **Retry** button to replay
+   it (§7.1). Hard Mode can be toggled here only if it's unlocked for this level (§5.3).
+2. The **intro** story text is shown, and its puzzles must be solved (§3.5). Skipped when retrying
+   straight after a fail.
+3. The game randomly draws **3 distinct verses** from the pool. Draws are **not seeded**, so
+   every attempt is a fresh random pick.
+4. The player guesses each verse with the normal game (same `GameRow` input, reveal stages and
+   color feedback as Random/Daily). After verse 1 and verse 2, that spot's `between` story (if any)
+   is shown, with its puzzles.
+5. **All 3 solved** → level passed → stars are awarded (§5), the **outro** is shown, and progress
+   auto-saves.
+6. **Any verse failed** (out of guesses) → the level fails, and the player **retries this level**
+   (§6). No stars are awarded on a failed attempt.
+
+Stars are only ever earned for **passing the whole level**, never per verse.
+
+## 5. Stars (max 7 per level)
+
+| Stars | Name | Earned when |
+|---|---|---|
+| ⭐⭐⭐ (0–3) | **Guess count** | Based on total guesses across all 3 verses. Fewer guesses = more stars. Limits set per level. |
+| ⭐ | **Hard Mode** | The whole level was played with Hard Mode on. |
+| ⭐ | **First try** | At least one verse was guessed exactly right on the first guess. |
+| ⭐ | **No retry** | The level was passed on the first attempt (no failed attempts before it). |
+| ⭐ | **Perfect** | Every verse in the level's pool has been solved, counted across all plays of the level. |
+
+### 5.1 Guess-count stars
+Each level sets the most total guesses (across the 3 verses) allowed for each star tier:
+
+```json
+"guessStars": { "3": 6, "2": 9, "1": 12 }
+```
+= 3 stars for ≤ 6 total guesses, 2 for ≤ 9, 1 for ≤ 12, and 0 above that (still a pass).
+
+If a level leaves `guessStars` out, it uses the map-wide `defaults.guessStars`.
+
+**Tiers scale in Hard Mode.** Hard Mode is tougher, so its tiers allow more guesses. A level can set
+its own `hardGuessStars`. If it doesn't, each normal limit is multiplied by
+`defaults.hardModeScale` (default `1.25`) and rounded up, e.g. `{6, 9, 12}` → `{8, 12, 15}`.
+
+### 5.2 Bonus stars
+- **Hard Mode** uses the existing Hard Mode constraint checks in `GameState`. Turning Hard Mode
+  on/off mid-level isn't allowed: it's set when the level starts.
+- **First try**: a verse whose first `GuessRecord` is all green (book + all digits).
+- **No retry**: the level was passed without failing a verse during that attempt (§6).
+- **Perfect**: each verse solved in a passed attempt is added to the level's saved
+  `solvedVerses` set. The star is earned once that set covers **every verse in the pool**. Since
+  draws are random, replaying with **Retry** (§7.1) is how players work toward it. Big pools =
+  a real challenge. 🏆
+
+Any bonus star can be turned off for a level with `"bonus": [...]` listing only the ones it allows.
+By default all four are on.
+
+### 5.3 Hard Mode unlock
+Hard Mode is **locked per level** until the player has earned **4 or more stars** on that level.
+After that, the Hard Mode toggle is available when starting or retrying that level. So the usual
+path is: pass the level → collect 4+ stars → hit **Retry** in Hard Mode for the Hard Mode star.
+
+### 5.4 Best score is kept
+A level's saved stars are the **best** result ever, per category. Replaying a passed level can only
+add stars, never remove them. For example, an earlier Hard Mode star stays even if a later run is
+played in normal mode.
+
+The **star total** used for unlocks = the sum of saved stars over all levels (bonus levels included).
+
+## 6. Fail & Retry
+
+When any verse in a level is failed:
+- The attempt ends and the player retries **the same level**.
+- The retry draws a **new random set of verses**, but **the verse the player failed on is always
+  included** so they get a shot at it again. The other 2 are re-rolled from the rest of the pool.
+- The **No retry** star can't be earned on the attempt that eventually passes after a fail.
+  It can still be earned later by replaying the level with **Retry** (§7.1) and passing cleanly.
+
+## 7. Unlocking
+
+Levels unlock **one at a time, in map order**. A level unlocks when:
+1. the level before it on the path is passed, **and**
+2. the player's **total stars in the whole game** ≥ that level's `minStars`.
+
+`minStars` is either a plain number (`64`) or a formula `ax+b` (`"2x"`, `"3x+1"`, `"6x-10"`), where
+**x = the number of levels unlocked in the whole game so far**. That way the bar rises as the player
+goes deeper. A formula below 0 counts as 0. Each level has its own `minStars`, so when a book is split
+into several smaller levels, every piece uses the book's formula (and x keeps going up).
+
+Example: with 37 levels unlocked, `"4x+3"` needs 4 × 37 + 3 = **151** total stars.
+
+- **Start:** the first level of the first area is always unlocked.
+- **Open-from-start areas:** an area with `"openFromStart": true` (e.g. the Gospels) is its own
+  path. Its first level is unlocked from the start, and its levels then unlock in order as usual.
+- **Next area:** the first level of an area follows on from the last level of the area before it.
+- **Bonus levels:** see §3.3 (`requiresArea` + `requiresStars`).
+- **Hard Mode:** per level, at 4+ stars (§5.3).
+
+`tools/check_story_map.py` prints the star total each level needs along the main path, plus the
+average stars per level that implies, so the curve can be tuned.
+
+### 7.1 Retry button
+Every **passed** level on the map has a **Retry** button 🔁 to play it again from scratch. A new
+random draw, new attempt, and a chance to raise its stars (best score is kept, §5.4). This is how
+players earn the Hard Mode, No retry and Perfect stars they missed the first time.
+
+## 8. Saving
+
+### 8.1 Auto-save
+Progress is saved automatically through `PersistenceManager` (the same per-user JSON file),
+under a new `story` key. It saves:
+- after each verse is solved (so the in-progress level can be resumed),
+- when a level is passed or failed,
+- when the app closes.
+
+There is no manual save button.
+
+### 8.2 Save format
+```json
+"story": {
+  "mapVersion": 1,
+  "levels": {
+    "exodus.red-sea": {
+      "passed": true,
+      "stars": { "guess": 2, "hard": true, "firstTry": true, "noRetry": false, "perfect": false },
+      "solvedVerses": ["Exodus 14:21", "Exodus 14:22", "Exodus 15:2"]
+    }
+  },
+  "inProgress": {
+    "level": "exodus.passover",
+    "verses": ["Exodus 12:13", "Exodus 12:23", "Exodus 12:27"],
+    "solved": 1,
+    "guessesSoFar": 3,
+    "failedThisAttempt": false,
+    "hardMode": false
+  }
+}
+```
+
+Saved progress is keyed by `areaId.levelId`, so:
+- reordering or renaming areas/levels keeps progress,
+- deleting a level drops its saved stars (they no longer count toward the total),
+- adding a level just adds a new locked/unplayed level.
+
+## 9. `story_map.json` format
+
+```json
+{
+  "version": 1,
+  "defaults": {
+    "guessStars": { "3": 6, "2": 9, "1": 12 },
+    "hardModeScale": 1.25
+  },
+  "areas": [
+    {
+      "id": "creation",
+      "title": "In the Beginning",
+      "intro": "Before anything was, God was...",
+      "levels": [
+        {
+          "id": "days",
+          "title": "Six Days",
+          "intro": "God spoke, and light broke through the dark...",
+          "outro": "And God saw that it was very good.",
+          "pool": ["genesis 1", "genesis 2:1-3"],
+          "minStars": 0
+        }
+      ]
+    },
+    {
+      "id": "exodus",
+      "title": "Out of Egypt",
+      "levels": [
+        {
+          "id": "red-sea",
+          "title": "The Red Sea",
+          "intro": "Pharaoh's army thundered behind them. Moses raised his staff...",
+          "pool": ["exodus 14:13-31", "exodus 15:1-3"],
+          "minStars": "2x",
+          "guessStars": { "3": 5, "2": 8, "1": 11 },
+          "hardGuessStars": { "3": 7, "2": 10, "1": 14 },
+          "bonus": ["hard", "firstTry", "noRetry", "perfect"]
+        }
+      ],
+      "bonusLevels": [
+        {
+          "id": "prophet-like-moses",
+          "title": "A Prophet Like Me",
+          "requiresArea": "exodus",
+          "requiresStars": 20,
+          "intro": "Moses spoke of One who would come...",
+          "pool": "deuteronomy 18:15-19"
+        }
+      ]
+    }
+  ]
+}
+```
+
+Pool references are lowercase book names as in `bible_sections.json` (`1samuel`, `2kings`), in
+any of these forms: `"ruth"` (whole book), `"genesis 6-12"`, `"2chronicles 36"`, `"ezekiel 24:15-27"`.
+A pool can be one string or a list. The real map lives in `story_map.json` at the repo root.
+
+### 9.1 Load-time validation
+When the map loads, the game checks it and reports clear errors (area/level id + problem) for:
+- duplicate area ids, or duplicate level ids within an area,
+- a pool reference that doesn't exist in `bible_sections.json` (uses `BibleData::verseExists()`),
+- a pool with fewer than 3 distinct verses,
+- a `minStars` that isn't a number or an `ax+b` formula,
+- `guessStars` / `hardGuessStars` tiers that aren't increasing (`3` ≤ `2` ≤ `1`),
+- a `requiresArea` that points at an unknown area.
+
+### 9.2 Where the file lives
+Same approach as `bible_sections.json`: compiled into the program (Windows `.rc`, Linux
+`.incbin`), with a `story_map.json` found on disk taking priority. That lets the author edit the
+story and test it **without rebuilding**.
+
+## 10. UI
+
+- **Start screen:** a new **Story** button next to Daily / Random.
+- **Map screen** (new `StoryMapScreen` panel, swapped in by `BibirbleWindow` like
+  `StartScreen`/`SettingsScreen`):
+  - areas listed in order, with locked areas greyed out and showing their unlock requirement 🔒,
+  - levels in each area showing their best stars (e.g. ⭐⭐⭐⭐⭐☆☆),
+  - a **Retry** 🔁 button on every passed level, plus a Hard Mode toggle once it has 4+ stars,
+  - Perfect progress per level (e.g. "Pool 9 / 14"),
+  - unlocked bonus levels marked with 🔮 (locked ones are not shown at all),
+  - the player's star total at the top.
+- **Story screen:** a full screen (not a pop-up) with the story text, its fill-in-the-blank puzzles
+  (§3.5), Back to map, and Continue. After a pass, the level's results and its outro share this screen.
+- **In-level HUD:** "Verse 2 / 3".
+- **Level result:** on the story screen, above the outro: stars earned in each category (and "Hard
+  Mode unlocked!" the first time a level reaches 4 stars 💪).
+
+## 11. Code
+
+| Piece | What it does |
+|---|---|
+| `src/StoryMap.h/cpp` | Loads + validates `story_map.json` (disk copy first, then the embedded one) and expands pool references into verse indices. |
+| `src/StoryProgress.h/cpp` | Best stars, Perfect progress, unlocks (never re-lock), retries, the attempt in progress, and its JSON save format. No wx. |
+| `src/StoryMapScreen.h/cpp` | The map: areas, levels, stars, Play / Retry / Continue, the per-level Hard Mode toggle, and "Needs N ★" on the next locked level. |
+| `GameState` | `GameMode::Story`. |
+| `BibirbleWindow` | The Story button, the Story bar above the verse (level, verse 1–3 of 3, Story Map button), the 3-verse level loop, the fail → retry prompt, and the results box. |
+| `GameRow::SetGuess` | Puts saved guesses back when a verse is resumed. |
+| `PersistenceManager` | Reads/writes the `story` key. |
+| `StartScreen` | Story Mode button. |
+| `CMakeLists.txt` / `Bibirble.rc` / `EmbeddedData` | Embed `story_map.json` (Linux `.incbin`, Windows `STORY_MAP_JSON` resource). |
+| `src/WordPuzzle.h/cpp` | Story text + blank parsing, Wordle colouring, the word list. No wx. |
+| `src/StoryScreen.h/cpp` | The full-screen story page with its puzzles (letter tiles, hint, Continue / Back to map), also used for a level's results + outro. |
+| `data/words.txt` | The English word list for puzzle guesses, embedded like `story_map.json` (Windows `WORD_LIST_TXT`). |
+| `tests/story_tests.cpp` | Logic tests (`story_tests` target, run with `ctest`): formulas, the real map, unlocks, stars, retries, save/load. |
+| `tools/check_story_map.py` | Validates `story_map.json` and previews the star unlock curve. |
+
+Details settled while building it:
+- Every guess is saved as it's made, so closing the app or going back to the map mid-verse resumes
+  exactly where the player was.
+- Starting a different level while one is half-played counts as a retry for the abandoned level, so
+  the No retry star can't be kept by walking away from a bad attempt.
+- The book list offers **all** books (limiting it to the level's pool would give the answer away).
+- Mature (R18) verses are left out of pools unless R18 mode is on, and Perfect only counts the
+  verses the player can actually be shown.
+- The intro is skipped when retrying straight after a fail.
+
+## 12. Decisions
+- Random draws are **not seeded**. Each attempt is a fresh random pick.
+- Locked bonus levels are **hidden completely**, and appear only once unlocked.
+- Guess-count tiers **scale in Hard Mode** (`hardGuessStars` or `hardModeScale`).
+- Hard Mode unlocks per level at **4+ stars**, and every passed level has a **Retry** button.
+- The End Times unlock stays the **ultimate challenge**: all 7 stars (Perfect included) on every
+  non-bonus level. That means every verse of every regular pool solved (~17,700 verses).

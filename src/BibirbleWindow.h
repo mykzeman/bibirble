@@ -7,10 +7,19 @@
 #include "PersistenceManager.h"
 #include "SettingsScreen.h"
 #include "StartScreen.h"
+#include "StoryMap.h"
+#include "StoryMapScreen.h"
+#include "StoryProgress.h"
+#include "StoryScreen.h"
+
+#include <map>
+#include <random>
 
 class BibirbleWindow : public wxFrame {
 public:
-    explicit BibirbleWindow(wxWindow* parent, const std::string& dataPath = "");
+    // preloaded: verses already loaded (by LoadingDialog) for the saved Bible
+    // version; if it's empty, the window loads the version itself.
+    BibirbleWindow(wxWindow* parent, BibleData preloaded = BibleData());
 
 private:
     void SetupUi();
@@ -21,6 +30,13 @@ private:
     void ShowStartScreen();
     void ShowSettingsScreen();
     void ShowGamePanel();
+    void ShowOnly(wxWindow* screen);
+    // Landscape (window wider than tall): the number keys go to the right of
+    // the verse and guess rows instead of below them. Checked when a game
+    // starts and whenever the window is resized.
+    void ApplyGameOrientation();
+    // Colours the number keys by the best clue each digit has had this game.
+    void UpdateDigitKeyColours();
 
     void StartNewGame(GameMode mode, bool hardMode, const wxString& seedText);
     void ResetGameUi();
@@ -40,6 +56,25 @@ private:
     void OnPlayRandom();
     void OnViewSetSeed();
 
+    // Story Mode (docs/STORY_MODE.md)
+    void OnOpenStory();
+    void ShowStoryMap();
+    void OnStoryPlay(const std::string& levelKey, bool hardMode);
+    void ContinueStoryRun();
+    void StartStoryVerse();
+    void HandleStoryVerseEnd(bool won);
+    void UpdateStoryHud();
+    void SaveStory();
+    // Loads a Bible version (falling back to the World English Bible) and
+    // rebuilds Story Mode's pools and progress for it.
+    void LoadBibleVersion(const std::string& id);
+    // Rebuilds what depends on the loaded verses (Story Mode pools/progress).
+    void OnBibleDataLoaded();
+    // Switches to the version picked in Settings, if it changed. Called
+    // between games so a game never mixes two versions.
+    void ApplyBibleVersionSetting();
+    bool AllowMature() const;
+
     void OnVirtualKeyClicked(wxCommandEvent& event);
     void OnSubmit(wxCommandEvent& event);
     void OnShare(wxCommandEvent& event);
@@ -56,7 +91,21 @@ private:
 
     StartScreen* m_startScreen;
     SettingsScreen* m_settingsScreen;
+    StoryMapScreen* m_storyMapScreen;
+    StoryScreen* m_storyScreen;  // story text + fill-in-the-blank puzzles, full screen
     wxPanel* m_gamePanel;
+
+    StoryMap m_storyMap;
+    StoryProgress m_story;
+    WordList m_words;  // valid guesses for story fill-in-the-blank puzzles
+    std::mt19937 m_rng{std::random_device{}()};  // Story draws are not seeded
+    wxPanel* m_storyHud = nullptr;
+    wxStaticText* m_storyHudText = nullptr;
+
+    wxBoxSizer* m_gameLayout = nullptr;   // verse/rows column + keyboard; vertical or horizontal
+    wxPanel* m_keyboardPanel = nullptr;
+    std::map<std::string, wxButton*> m_digitKeys;  // "0".."9"
+    bool m_landscape = false;
 
     wxStaticText* m_revealPanel;
     wxPanel* m_postGameControls;
