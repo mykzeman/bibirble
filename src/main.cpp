@@ -1,5 +1,6 @@
 #include "BibirbleWindow.h"
 #include "loading_dialog.h"
+#include "PersistenceManager.h"
 #include <wx/wx.h>
 
 class BibirbleApp : public wxApp {
@@ -7,8 +8,11 @@ public:
     bool OnInit() override {
         SetAppName("Bibirble");
 
-        // Show a small loading dialog that checks the verse data can be read
-        LoadingDialog dlg(nullptr);
+        // Load the player's Bible version behind a small progress dialog; the
+        // window takes the loaded verses over instead of parsing them again.
+        PersistenceManager prefs;
+        prefs.Load();
+        LoadingDialog dlg(nullptr, prefs.GetBibleVersion());
         dlg.ShowModal();
         if (!dlg.FoundFile()) {
             wxMessageBox(
@@ -16,7 +20,7 @@ public:
                 "Warning", wxOK | wxICON_WARNING);
         }
 
-        BibirbleWindow* frame = new BibirbleWindow(nullptr);
+        BibirbleWindow* frame = new BibirbleWindow(nullptr, dlg.TakeData());
         frame->Show();
         return true;
     }

@@ -46,7 +46,7 @@ wxIconBundle LoadAppIcons() {
 wxBEGIN_EVENT_TABLE(BibirbleWindow, wxFrame)
 wxEND_EVENT_TABLE()
 
-BibirbleWindow::BibirbleWindow(wxWindow* parent)
+BibirbleWindow::BibirbleWindow(wxWindow* parent, BibleData preloaded)
     : wxFrame(parent, wxID_ANY, "Bibirble", wxDefaultPosition, wxSize(500, 850)) {
     // Start in landscape on screens too short for the tall portrait window
     // (most laptops); the game layout follows the window's shape either way.
@@ -64,7 +64,12 @@ BibirbleWindow::BibirbleWindow(wxWindow* parent)
     }
 
     m_persistence.Load();
-    LoadBibleVersion(m_persistence.GetBibleVersion());
+    if (preloaded.isLoaded()) {
+        m_data = std::move(preloaded);
+        OnBibleDataLoaded();
+    } else {
+        LoadBibleVersion(m_persistence.GetBibleVersion());
+    }
     {
         std::string words;
         if (ReadWordListText(words)) m_words.Load(words);
@@ -800,6 +805,10 @@ void BibirbleWindow::LoadBibleVersion(const std::string& id) {
     if (!m_data.loadVersion(wanted) && &wanted != &BibleVersions().front()) {
         m_data.loadVersion(BibleVersions().front());  // fall back to the World English Bible
     }
+    OnBibleDataLoaded();
+}
+
+void BibirbleWindow::OnBibleDataLoaded() {
     if (!m_data.isLoaded()) return;
     // Story pools are resolved against the loaded verses, so they're rebuilt
     // for each version; progress is keyed by World English Bible references.

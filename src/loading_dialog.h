@@ -1,19 +1,13 @@
 #pragma once
 #include <wx/wx.h>
 #include <thread>
-#include <fstream>
-#include <sstream>
-#include <random>
 #include <chrono>
-#include <vector>
 #include <string>
-#include <nlohmann/json.hpp>
 #include "BibleData.h"
-#include "EmbeddedData.h"
 
-// A loader that reads a local JSON array of objects and extracts the "text" fields using nlohmann::json.
-// It runs on a background thread, animates the gauge via wxEvtHandler::CallAfter(), and stores the
-// selected text.
+// Loads a Bible version (BibleData::loadVersion) on a background thread while showing a gauge, then hands
+// it to the caller via TakeData() so the main window doesn't parse the verse file a second time. The gauge
+// is animated via wxEvtHandler::CallAfter().
 //
 // This dialog is shown via ShowModal() from inside wxApp::OnInit(), before the app's main event loop
 // has started. That matters: the free-function wxCallAfter(fn) (and this project's old
@@ -25,10 +19,12 @@
 class LoadingDialog : public wxDialog
 {
 public:
-    // Checks the default Bible version (the World English Bible) can be read.
-    explicit LoadingDialog(wxWindow* parent)
+    // Loads the version with this id (BibleVersions.h), falling back to the World English Bible if it
+    // can't be read -- the same fallback BibirbleWindow::LoadBibleVersion() uses.
+    LoadingDialog(wxWindow* parent, const std::string& versionId)
         : wxDialog(parent, wxID_ANY, "Loading", wxDefaultPosition, wxSize(320, 110)),
-          m_gauge(new wxGauge(this, wxID_ANY, 100))
+          m_gauge(new wxGauge(this, wxID_ANY, 100)),
+          m_versionId(versionId)
     {
         wxBoxSizer* s = new wxBoxSizer(wxVERTICAL);
         s->Add(new wxStaticText(this, wxID_ANY, "Loading..."), 0, wxALL | wxALIGN_CENTER, 10);
@@ -41,8 +37,8 @@ public:
         });
     }
 
-    // After the dialog finishes (ShowModal returns), call this to obtain the loaded text.
-    const std::string& GetLoadedText() const { return m_loadedText; }
+    // After the dialog finishes (ShowModal returns), take ownership of the loaded data.
+    BibleData TakeData() { return std::move(m_data); }
     bool FoundFile() const { return m_foundFile; }
 
 private:
@@ -51,44 +47,16 @@ private:
         const auto startedAt = std::chrono::steady_clock::now();
         constexpr auto kMinLoadVisible = std::chrono::milliseconds(1500);
 
-        std::string fileContent;
-        m_foundFile = ReadBibleDataText(BibleVersions().front(), fileContent);
-
-        // Parse using nlohmann::json
-        std::vector<std::string> texts;
-        if (!fileContent.empty()) {
-            try {
-                auto j = nlohmann::json::parse(fileContent);
-                if (j.is_array()) {
-                    for (const auto& item : j) {
-                        if (item.contains("text") && item["text"].is_string()) {
-                            texts.push_back(item["text"].get<std::string>());
-                        }
-                    }
-                }
-            } catch (const std::exception&) {
-                // Keep texts empty. Presence/readability is tracked by m_foundFile.
-            }
+        const BibleVersion& wanted = FindBibleVersion(m_versionId);
+        if (!m_data.loadVersion(wanted) && &wanted != &BibleVersions().front()) {
+            m_data.loadVersion(BibleVersions().front());
         }
+        m_foundFile = m_data.isLoaded();
 
         // Animate progress with a guaranteed minimum visible duration.
-        for (int v = 0; v <= 90; v += 5) {
+        for (int v = 0; v <= 100; v += 5) {
             this->CallAfter([this, v]() { m_gauge->SetValue(v); });
             std::this_thread::sleep_for(std::chrono::milliseconds(55));
-        }
-
-        std::mt19937 rng(static_cast<unsigned>(std::chrono::high_resolution_clock::now().time_since_epoch().count()));
-        if (!texts.empty()) {
-            std::uniform_int_distribution<std::size_t> dist(0, texts.size() - 1);
-            std::size_t idx = dist(rng);
-            m_loadedText = texts[idx];
-        } else {
-            m_loadedText = "";
-        }
-
-        for (int v = 90; v <= 100; v += 2) {
-            this->CallAfter([this, v]() { m_gauge->SetValue(v); });
-            std::this_thread::sleep_for(std::chrono::milliseconds(35));
         }
 
         const auto elapsed = std::chrono::steady_clock::now() - startedAt;
@@ -100,6 +68,7 @@ private:
     }
 
     wxGauge* m_gauge;
-    std::string m_loadedText;
+    BibleData m_data;
+    std::string m_versionId;
     bool m_foundFile = false;
 };

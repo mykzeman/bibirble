@@ -17,7 +17,9 @@
 
 class BibirbleWindow : public wxFrame {
 public:
-    explicit BibirbleWindow(wxWindow* parent);
+    // preloaded: verses already loaded (by LoadingDialog) for the saved Bible
+    // version; if it's empty, the window loads the version itself.
+    BibirbleWindow(wxWindow* parent, BibleData preloaded = BibleData());
 
 private:
     void SetupUi();
@@ -66,6 +68,8 @@ private:
     // Loads a Bible version (falling back to the World English Bible) and
     // rebuilds Story Mode's pools and progress for it.
     void LoadBibleVersion(const std::string& id);
+    // Rebuilds what depends on the loaded verses (Story Mode pools/progress).
+    void OnBibleDataLoaded();
     // Switches to the version picked in Settings, if it changed. Called
     // between games so a game never mixes two versions.
     void ApplyBibleVersionSetting();
