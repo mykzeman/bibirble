@@ -120,5 +120,6 @@ private:
 };
 
 // "genesis 1:1": how a verse is stored in the save file, so saves survive
-// changes to bible_sections.json's order.
+// changes to bible_sections.json's order and switching Bible versions (it
+// uses the World English Bible's numbering, Verse::stdChapter/stdVerse).
 std::string VerseKey(const Verse& v);

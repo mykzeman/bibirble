@@ -46,7 +46,7 @@ wxIconBundle LoadAppIcons() {
 wxBEGIN_EVENT_TABLE(BibirbleWindow, wxFrame)
 wxEND_EVENT_TABLE()
 
-BibirbleWindow::BibirbleWindow(wxWindow* parent, const std::string& dataPath)
+BibirbleWindow::BibirbleWindow(wxWindow* parent)
     : wxFrame(parent, wxID_ANY, "Bibirble", wxDefaultPosition, wxSize(500, 850)) {
     // Start in landscape on screens too short for the tall portrait window
     // (most laptops); the game layout follows the window's shape either way.
@@ -63,21 +63,9 @@ BibirbleWindow::BibirbleWindow(wxWindow* parent, const std::string& dataPath)
         });
     }
 
-    const std::string resolvedPath = dataPath.empty()
-        ? BibleData::ResolveDataFilePath("bible_sections.json")
-        : dataPath;
-    m_data.loadData(resolvedPath);
-
     m_persistence.Load();
-
-    if (m_data.isLoaded()) {
-        m_storyMap.Load(m_data);
-        m_story.FromJson(m_persistence.GetStory(), m_data);
-        if (m_storyMap.IsLoaded()) {
-            // Drop a saved attempt whose level no longer exists in the map.
-            if (m_story.Run().active && !m_storyMap.FindLevel(m_story.Run().levelKey)) m_story.ClearRun();
-            m_story.UpdateUnlocks(m_storyMap);
-        }
+    LoadBibleVersion(m_persistence.GetBibleVersion());
+    {
         std::string words;
         if (ReadWordListText(words)) m_words.Load(words);
         for (const auto& answer : m_storyMap.AllAnswers()) m_words.Add(answer);
@@ -88,6 +76,7 @@ BibirbleWindow::BibirbleWindow(wxWindow* parent, const std::string& dataPath)
 
     SetupUi();
 
+    m_settingsScreen->SetBibleVersion(m_data.version().id);
     if (m_persistence.HasLastSeed()) {
         wxString seedStr = wxString::Format("%lld", (long long)m_persistence.GetLastSeed());
         m_settingsScreen->SetSeedText(seedStr);
@@ -399,7 +388,19 @@ void BibirbleWindow::OnOpenSettings() {
     ShowSettingsScreen();
 }
 
+void BibirbleWindow::ApplyBibleVersionSetting() {
+    const std::string version = m_settingsScreen->GetBibleVersion();
+    if (version == m_data.version().id) return;
+    SaveStory();  // keyed by World English Bible references, so it carries over
+    LoadBibleVersion(version);
+    m_persistence.SetBibleVersion(m_data.version().id);
+    m_settingsScreen->SetBibleVersion(m_data.version().id);
+}
+
 void BibirbleWindow::OnSettingsBack() {
+    // A new Bible version applies to the next game, never the one being
+    // played (its verse and book list came from the old version).
+    if (m_settingsReturnTo != ReturnScreen::Game) ApplyBibleVersionSetting();
     if (m_settingsReturnTo == ReturnScreen::Game) {
         ShowGamePanel();
     } else {
@@ -438,6 +439,7 @@ void BibirbleWindow::OnViewSetSeed() {
 
 
 void BibirbleWindow::StartNewGame(GameMode mode, bool hardMode, const wxString& seedText) {
+    ApplyBibleVersionSetting();
     if (!m_data.isLoaded()) {
         m_revealPanel->SetLabel("Failed to load data. Please ensure bible_sections.json is in the directory.");
         m_submitBtn->Enable(false);
@@ -694,7 +696,7 @@ int BibirbleWindow::ProcessTurn() {
     if (bookGuess == m_state.targetVerse.book) {
         bookColor = GuessColor::Green;
         correctCount++;
-    } else if (m_data.getBookArea(bookGuess) == m_state.targetVerse.area) {
+    } else if (m_state.BookGroup(bookGuess, m_data) == m_state.BookGroup(m_state.targetVerse.book, m_data)) {
         bookColor = GuessColor::Yellow;
     } else {
         bookColor = GuessColor::Gray;
@@ -780,7 +782,7 @@ void BibirbleWindow::FocusPrev() {
 }
 
 void BibirbleWindow::OnShare(wxCommandEvent& event) {
-    wxString shareText = wxString::FromUTF8(m_state.BuildShareText().c_str());
+    wxString shareText = wxString::FromUTF8(m_state.BuildShareText(m_data.version().shortName).c_str());
 
     if (wxTheClipboard->Open()) {
         wxTheClipboard->SetData(new wxTextDataObject(shareText));
@@ -793,6 +795,23 @@ void BibirbleWindow::OnShare(wxCommandEvent& event) {
 
 // ---------------------------------------------------------------- Story Mode
 
+void BibirbleWindow::LoadBibleVersion(const std::string& id) {
+    const BibleVersion& wanted = FindBibleVersion(id);
+    if (!m_data.loadVersion(wanted) && &wanted != &BibleVersions().front()) {
+        m_data.loadVersion(BibleVersions().front());  // fall back to the World English Bible
+    }
+    if (!m_data.isLoaded()) return;
+    // Story pools are resolved against the loaded verses, so they're rebuilt
+    // for each version; progress is keyed by World English Bible references.
+    m_storyMap.Load(m_data);
+    m_story.FromJson(m_persistence.GetStory(), m_data);
+    if (m_storyMap.IsLoaded()) {
+        // Drop a saved attempt whose level no longer exists in the map.
+        if (m_story.Run().active && !m_storyMap.FindLevel(m_story.Run().levelKey)) m_story.ClearRun();
+        m_story.UpdateUnlocks(m_storyMap);
+    }
+}
+
 bool BibirbleWindow::AllowMature() const {
     return m_settingsScreen->GetR18Mode();
 }
@@ -802,6 +821,7 @@ void BibirbleWindow::SaveStory() {
 }
 
 void BibirbleWindow::OnOpenStory() {
+    ApplyBibleVersionSetting();
     if (!m_data.isLoaded()) {
         wxMessageBox("Story Mode needs the Bible data, which didn't load.", "Bibirble", wxOK | wxICON_WARNING);
         return;
@@ -817,7 +837,7 @@ void BibirbleWindow::ShowStoryMap() {
 
 void BibirbleWindow::OnStoryPlay(const std::string& levelKey, bool hardMode) {
     const StoryLevel* level = m_storyMap.FindLevel(levelKey);
-    if (!level || !m_story.IsUnlocked(levelKey)) return;
+    if (!level || !level->available || !m_story.IsUnlocked(levelKey)) return;
 
     const StoryRun& run = m_story.Run();
     const bool resume = run.active && run.levelKey == levelKey;

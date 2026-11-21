@@ -66,7 +66,8 @@ void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress,
     // An attempt in progress: offer to continue it.
     const StoryRun& run = progress.Run();
     if (run.active) {
-        if (const StoryLevel* lvl = map.FindLevel(run.levelKey)) {
+        const StoryLevel* lvl = map.FindLevel(run.levelKey);
+        if (lvl && lvl->available) {
             wxPanel* card = new wxPanel(this);
             card->SetBackgroundColour(*wxWHITE);
             wxBoxSizer* cs = new wxBoxSizer(wxHORIZONTAL);
@@ -147,6 +148,23 @@ void StoryMapScreen::AddLevelRow(wxSizer* sizer, const StoryLevel& level, const 
 
     const LevelProgress* lp = progress.Get(level.key);
     const int stars = lp ? lp->stars.Total() : 0;
+    if (!level.available) {
+        // This Bible version doesn't have the level's verses.
+        row->SetBackgroundColour(wxColour(235, 235, 235));
+        wxStaticText* t = new wxStaticText(row, wxID_ANY, name);
+        t->SetFont(BoldFont(11));
+        info->Add(t, 0, wxBOTTOM, 2);
+        info->Add(new wxStaticText(row, wxID_ANY, StarString(stars, level.MaxStars())), 0, wxBOTTOM, 2);
+        wxStaticText* note = new wxStaticText(row, wxID_ANY, wxString::FromUTF8(
+            "Not in the " + std::string(bible.version().name) + ". Pick another Bible in Settings to play it."));
+        note->SetForegroundColour(wxColour(120, 120, 120));
+        note->Wrap(320);
+        info->Add(note, 0);
+        rs->Add(info, 1, wxALL, 8);
+        row->SetSizer(rs);
+        sizer->Add(row, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 8);
+        return;
+    }
     wxStaticText* t = new wxStaticText(row, wxID_ANY, name);
     t->SetFont(BoldFont(11));
     info->Add(t, 0, wxBOTTOM, 2);

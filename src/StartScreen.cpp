@@ -134,6 +134,14 @@ void StartScreen::SetupUi() {
 
     addHeading("New in this update");
     addItems({
+        "Bible versions: pick from 32 public-domain Bibles in Settings, like "
+        "the King James Version, Douay-Rheims, Young's Literal and the "
+        "Septuagint. Story Mode works in every version, and Bibles with the "
+        "Deuterocanon add new areas: Prophet Alternatives and Maccabees.",
+        "Hard mode: a yellow book now means the same author (like Moses or "
+        "Paul), and book hints work in hard mode too, like the web version.",
+        "Sharing: no spoilers. The share text shows your grid and score, "
+        "not the answer.",
         "Story Mode: journey through the Bible from Creation to the early "
         "church. Each level tells part of the story and asks you 3 verses. "
         "Earn up to 7 stars per level to unlock what comes next, and look "

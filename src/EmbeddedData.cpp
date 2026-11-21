@@ -1,8 +1,11 @@
 #include "EmbeddedData.h"
 #include "BibleData.h"
 
+#include <cstring>
 #include <fstream>
 #include <sstream>
+
+#include <zlib.h>
 
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
@@ -14,13 +17,15 @@
 #include <windows.h>
 #endif
 
-// Linux: CMake generates EmbeddedDataBlob.cpp, whose .incbin copies
-// bible_sections.json and icons/bibirble.png into the binary between these
+// Linux: CMake generates EmbeddedDataBlob.cpp, whose .incbin copies the
+// Bible versions' verse files and icons/bibirble.png into the binary between these
 // symbols, and defines BIBIRBLE_HAS_INCBIN, so the Linux build is a single
 // file too.
 #if !defined(_WIN32) && defined(BIBIRBLE_HAS_INCBIN)
-extern "C" const char bibirble_data_start[];
-extern "C" const char bibirble_data_end[];
+// Every Bible version (bibles/<id>.json.gz), listed by the generated file.
+struct EmbeddedBible { const char* id; const char* start; const char* end; };
+extern const EmbeddedBible kEmbeddedBibles[];
+extern const int kEmbeddedBibleCount;
 extern "C" const char bibirble_icon_start[];
 extern "C" const char bibirble_icon_end[];
 extern "C" const char bibirble_story_start[];
@@ -47,27 +52,62 @@ bool ReadEmbeddedResource(std::string& out, const wchar_t* name = L"BIBLE_SECTIO
 }
 #endif
 
+// Unpacks gzip data in place (the Bible versions ship as .json.gz). Data
+// that isn't gzipped (a plain .json) is left as it is.
+bool Gunzip(std::string& data) {
+    if (data.size() < 2 || static_cast<unsigned char>(data[0]) != 0x1f ||
+        static_cast<unsigned char>(data[1]) != 0x8b) {
+        return true;
+    }
+    z_stream z;
+    std::memset(&z, 0, sizeof(z));
+    if (inflateInit2(&z, 16 + MAX_WBITS) != Z_OK) return false;
+    z.next_in = reinterpret_cast<Bytef*>(&data[0]);
+    z.avail_in = static_cast<uInt>(data.size());
+    std::string out;
+    char buffer[1 << 16];
+    int ret;
+    do {
+        z.next_out = reinterpret_cast<Bytef*>(buffer);
+        z.avail_out = sizeof(buffer);
+        ret = inflate(&z, Z_NO_FLUSH);
+        if (ret != Z_OK && ret != Z_STREAM_END) {
+            inflateEnd(&z);
+            return false;
+        }
+        out.append(buffer, sizeof(buffer) - z.avail_out);
+    } while (ret != Z_STREAM_END);
+    inflateEnd(&z);
+    data.swap(out);
+    return true;
+}
+
 }  // namespace
 
-bool ReadBibleDataText(const std::string& preferredPath, std::string& out) {
+bool ReadBibleDataText(const BibleVersion& version, std::string& out) {
     out.clear();
 
-    const std::string resolvedPath = BibleData::ResolveDataFilePath(preferredPath);
+    const std::string resolvedPath = BibleData::ResolveDataFilePath(version.file);
     if (!resolvedPath.empty()) {
         std::ifstream ifs(resolvedPath, std::ios::binary);
         if (ifs) {
             std::ostringstream ss;
             ss << ifs.rdbuf();
             out = ss.str();
-            if (!out.empty()) return true;
+            if (!out.empty() && Gunzip(out)) return true;
         }
     }
 
 #ifdef _WIN32
-    return ReadEmbeddedResource(out);
+    return ReadEmbeddedResource(out, version.resource) && Gunzip(out);
 #elif defined(BIBIRBLE_HAS_INCBIN)
-    out.assign(bibirble_data_start, bibirble_data_end);
-    return !out.empty();
+    for (int i = 0; i < kEmbeddedBibleCount; ++i) {
+        if (std::strcmp(kEmbeddedBibles[i].id, version.id) == 0) {
+            out.assign(kEmbeddedBibles[i].start, kEmbeddedBibles[i].end);
+            return !out.empty() && Gunzip(out);
+        }
+    }
+    return false;
 #else
     return false;
 #endif

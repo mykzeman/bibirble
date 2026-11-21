@@ -184,3 +184,45 @@ continue. See `docs/STORY_MODE.md` §3.5.
 - The "World English Bible Version" tagline moved from the top of the window to a new **Credits**
   section in Settings (Bible text, word list, icon/original game, Wordle, wxWidgets, nlohmann/json).
   Settings now scrolls.
+
+## Bible versions
+
+Settings has a Bible version picker: World English Bible (default), King James Version, Douay-Rheims
+1899 American Edition and Catholic Public Domain Version.
+
+- Data: each version is split into one file per book under `tools/bibles/<version>/` (the WEB files moved
+  there from `tools/`). `tools/split_bible.py` does the splitting; `tools/sort.py` now builds
+  `bible_sections*.json` for every version (one verse per line, about 7 MB each instead of 9 MB; the WEB
+  verses are unchanged, so the Daily is too) and copies them to Bibirble-web.
+- Douay-Rheims comes from yoarikso/douayrheimsbible. The first DR file tried skipped 46 chapters and
+  numbered the rest straight on (its "Ruth 2" was Ruth 4), so it was replaced. This one lacks only
+  Malachi 4 and Esther 11-16.
+- The Douay-Rheims and CPDV number most Psalms like the Vulgate (Psalm 22 = Psalm 23). sort.py gives
+  each such verse a `"ref"` (its World English Bible place), lining psalms up by their wording. Useful
+  verses, Christmas verses, Story pools and Story save keys use it, so they work in every version and
+  Story progress carries over between versions.
+- The deuterocanonical books (Tobit, Judith, Wisdom, Sirach, Baruch, 1-2 Maccabees) are in the book
+  order, names and areas.
+- Story Mode: a version missing a passage (DR's Malachi 4) skips it; `check_story_map.py` checks every
+  version.
+- All four versions are embedded (`Bibirble.rc`, `BIBIRBLE_BLOBS` in CMakeLists.txt).
+- Share text names the version; Credits name every translation and data source.
+- Fix: `calculateSliceSteps` rounded down where data.js rounds up (no visible change with 7 rows).
+
+## 32 Bible versions, Prophet Alternatives and Maccabees areas, web-style hard mode and sharing
+
+- main's `translations/` (31 ebible.org translations) was replaced: 21 of them had saved every book's
+  chapter N to the same file, so only the last book survived. `tools/fetch_ebible.py` re-downloads them
+  complete and splits them into `tools/bibles/<id>/<book>.json`; KJV and Douay-Rheims now come from there too
+  (the ebible DRA is complete). `tools/bible_versions.json` lists all 32 versions (31 ebible minus the WEB
+  duplicate, plus the CPDV); Psalm 151 is skipped.
+- `sort.py` writes gzipped `bibles/<id>.json.gz` (42 MB for all 32, instead of ~230 MB of JSON), detects
+  Vulgate/Septuagint psalm numbering by itself, and generates the version lists for both games. The WEB
+  verses are unchanged (same Daily).
+- C++ reads the gzipped files with zlib; CMake embeds every `bibles/*.json.gz` (Windows: `bibles/bibles.rc`).
+- New books and areas: Wisdom, Sirach, Prayer of Manasseh and Psalms of Solomon join Poetry; Tobit, Judith and
+  Greek Esther join Small Stories; 1 Esdras joins History; new **Prophet Alternatives** (Baruch, Letter of
+  Jeremiah, Greek Daniel, Song of the Three, Susanna, Bel, 2 Esdras) and **Maccabees** (1-4) areas.
+- Story Mode in partial Bibles: a level without 3 verses in that version shows "Not in this Bible".
+- Like the web version: hard mode's yellow book means the same author (`BibleData::getBookAuthor`), book
+  hints work in hard mode, and the share text is spoiler-free ("Bibirble Daily 2026-11-23 KJV 4/7*" + grid).
