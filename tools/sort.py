@@ -1,57 +1,56 @@
 """Builds each Bible version's verse file from the per-book files in tools/bibles/<version>/.
 
-Writes bible_sections.json (World English Bible, the default) and
-bible_sections_<version>.json for the others, and copies them into
-../Bibirble-web/scripts/ when the web repo is next to this one.
+The versions are listed in tools/bible_versions.json. For each one this writes
+bibles/<id>.json.gz (embedded in the program), and when the web repo is next to
+this one, ../Bibirble-web/scripts/bibles/<id>.json.gz plus a plain
+../Bibirble-web/scripts/bible_sections.json for the World English Bible (the
+default, so it loads on any browser). It also generates the version lists:
+src/BibleVersions.h, bibles/bibles.rc and ../Bibirble-web/scripts/versions.js.
 
 Run from the repo root:  python tools/sort.py
 
 Each verse is {testament, area, book, chapter, verse, text}, plus:
   "mature": true  R18 content, hidden unless R18 mode is on.
   "ref": [c, v]   the verse's place in the World English Bible's numbering when
-                  this version numbers it differently (the Douay-Rheims and
-                  CPDV number most Psalms one lower). "ref": null means the
-                  verse has no World English Bible match. Story Mode, Useful
-                  verses and Christmas verses look verses up by this standard
-                  reference, so they find the same passage in every version.
-                  Players still see and guess the version's own numbers.
+                  this version numbers it differently (the Douay-Rheims, CPDV
+                  and Septuagints number most Psalms one lower). "ref": null
+                  means the verse has no World English Bible match. Story Mode,
+                  Useful verses and Christmas verses look verses up by this
+                  standard reference, so they find the same passage in every
+                  version. Players still see and guess the version's own numbers.
 """
+import gzip
 import json
 import re
-import shutil
 from pathlib import Path
 
 from content_filters import is_mature_text
 
 BIBLES = Path("tools/bibles")
+OUT = Path("bibles")
 WEB_SCRIPTS = Path("../Bibirble-web/scripts")
-
-# Version id -> output file. Keep in sync with Bibirble-web's scripts/versions.js
-# and bibirble's src/BibleVersions.h.
-VERSIONS = {
-    "web": "bible_sections.json",
-    "kjv": "bible_sections_kjv.json",
-    "dr": "bible_sections_dr.json",
-    "cpdv": "bible_sections_cpdv.json",
-}
-# Versions that number the Psalms (and Daniel 3) like the Latin Vulgate.
-VULGATE_NUMBERING = {"dr", "cpdv"}
+VERSIONS = json.loads(Path("tools/bible_versions.json").read_text(encoding="utf-8"))
+DEFAULT_VERSION = "web"
 
 OLD_TESTAMENT = ["genesis", "exodus", "leviticus", "numbers", "deuteronomy", "joshua", "judges", "ruth",
                  "1samuel", "2samuel", "1kings", "2kings", "1chronicles", "2chronicles", "ezra", "nehemiah",
-                 "tobit", "judith", "esther", "job", "psalms", "proverbs", "ecclesiastes", "songofsolomon",
-                 "wisdom", "sirach", "isaiah", "jeremiah", "lamentations", "baruch", "ezekiel", "daniel",
-                 "hosea", "joel", "amos", "obadiah", "jonah", "micah", "nahum", "habakkuk", "zephaniah",
-                 "haggai", "zechariah", "malachi", "1maccabees", "2maccabees"]
+                 "1esdras", "2esdras", "tobit", "judith", "esther", "esthergreek", "job", "psalms", "psalm151",
+                 "prayerofmanasseh", "proverbs", "ecclesiastes", "songofsolomon", "wisdom", "sirach",
+                 "psalmsofsolomon", "isaiah", "jeremiah", "lamentations", "baruch", "letterofjeremiah", "ezekiel",
+                 "daniel", "danielgreek", "songofthethree", "susanna", "bel", "hosea", "joel", "amos", "obadiah",
+                 "jonah", "micah", "nahum", "habakkuk", "zephaniah", "haggai", "zechariah", "malachi",
+                 "1maccabees", "2maccabees", "3maccabees", "4maccabees"]
 # Must match getBookArea() in src/BibleData.cpp and AREAS in Bibirble-web's scripts/books.js.
-# The deuterocanonical books (Douay-Rheims and CPDV) join the areas they fit.
+# The deuterocanonical / apocryphal books (only some versions have them) join the areas they fit.
 AREAS = {
     "Torah": OLD_TESTAMENT[0:5],
     "Historical": ["joshua", "judges", "1samuel", "2samuel", "1kings", "2kings", "1chronicles", "2chronicles",
-                   "nehemiah", "1maccabees", "2maccabees"],
-    "Poems": ["psalms", "proverbs", "ecclesiastes", "songofsolomon", "lamentations", "wisdom", "sirach"],
-    "Small stories": ["job", "esther", "jonah", "ruth", "ezra", "tobit", "judith"],
-    "Prophets Major": ["isaiah", "jeremiah", "ezekiel", "daniel", "baruch"],
+                   "nehemiah", "1maccabees", "2maccabees", "3maccabees", "4maccabees", "1esdras"],
+    "Poems": ["psalms", "proverbs", "ecclesiastes", "songofsolomon", "lamentations", "wisdom", "sirach",
+              "psalm151", "prayerofmanasseh", "psalmsofsolomon", "songofthethree"],
+    "Small stories": ["job", "esther", "jonah", "ruth", "ezra", "tobit", "judith", "esthergreek", "susanna", "bel"],
+    "Prophets Major": ["isaiah", "jeremiah", "ezekiel", "daniel", "baruch", "letterofjeremiah", "danielgreek",
+                       "2esdras"],
     "Prophets Minor": ["hosea", "joel", "amos", "obadiah", "micah", "nahum", "habakkuk", "zephaniah", "haggai",
                        "zechariah", "malachi"],
     "Gospel": ["matthew", "mark", "luke", "john"],
@@ -93,6 +92,10 @@ def read_book(path):
             for verse, text in vs.items():
                 verses[(int(chapter), int(verse))] = " ".join(text.split())
     return verses
+
+
+def overlap(a, b):
+    return len(words(a) & words(b))
 
 
 def read_version(version):
@@ -173,6 +176,15 @@ def daniel_refs(book_verses):
     return refs
 
 
+def numbers_psalms_like_vulgate(psalms, web_psalms):
+    """True if this version's Psalm 22 reads like the World English Bible's Psalm 23
+    (the Vulgate and Septuagint join Psalms 9 and 10, so most psalms are one lower)."""
+    mine = " ".join(t for (c, _), t in psalms.items() if c == 22)
+    web22 = " ".join(t for (c, _), t in web_psalms.items() if c == 22)
+    web23 = " ".join(t for (c, _), t in web_psalms.items() if c == 23)
+    return bool(mine) and overlap(mine, web23) > overlap(mine, web22)
+
+
 def build(version, web_books):
     books = read_version(version)
     entries = []
@@ -180,9 +192,9 @@ def build(version, web_books):
         testament = "Old Testament" if book in OLD_TESTAMENT else "New Testament"
         area = next(a for a, bs in AREAS.items() if book in bs)
         refs = {}
-        if version in VULGATE_NUMBERING and book == "psalms":
+        if book == "psalms" and numbers_psalms_like_vulgate(verses, web_books["psalms"]):
             refs = psalm_refs(verses, web_books["psalms"])
-        elif version in VULGATE_NUMBERING and book == "daniel":
+        elif book == "daniel" and (3, 91) in verses:  # the Song of the Three inside chapter 3
             refs = daniel_refs(verses)
         for (chapter, verse), text in verses.items():
             if chapter > MAX_REFERENCE_NUMBER or verse > MAX_REFERENCE_NUMBER:
@@ -201,22 +213,102 @@ def build(version, web_books):
     return sorted(entries, key=lambda x: (x["book"], x["chapter"], x["verse"]))
 
 
-def write(path, entries):
+def to_json(entries):
     # One verse per line: about half the size of an indented file, still diffable.
-    body = ",\n".join(json.dumps(e, ensure_ascii=False) for e in entries)
-    Path(path).write_text("[\n" + body + "\n]\n", encoding="utf-8")
+    return "[\n" + ",\n".join(json.dumps(e, ensure_ascii=False) for e in entries) + "\n]\n"
+
+
+def write_gz(path, text):
+    # mtime=0 so rebuilding unchanged data gives byte-identical files (no git churn).
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "wb") as raw, gzip.GzipFile(fileobj=raw, mode="wb", mtime=0, compresslevel=9) as gz:
+        gz.write(text.encode("utf-8"))
+
+
+def write_if_changed(path, text):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if not path.exists() or path.read_text(encoding="utf-8") != text:
+        path.write_text(text, encoding="utf-8")
+
+
+def c_string(text):
+    return json.dumps(text, ensure_ascii=True)
+
+
+def write_version_lists():
+    header = [
+        "#pragma once",
+        "",
+        "// Generated by tools/sort.py from tools/bible_versions.json. Don't edit by hand.",
+        "",
+        "#include <string>",
+        "#include <vector>",
+        "",
+        "// The Bible translations players can pick in Settings. Each one's verses are",
+        "// built by tools/sort.py into bibles/<id>.json.gz, which is embedded in the",
+        "// program (Bibirble.rc / bibles/bibles.rc on Windows, .incbin on Linux).",
+        "struct BibleVersion {",
+        "    const char* id;         // saved in settings; \"web\" is the default",
+        "    const char* name;       // \"World English Bible\"",
+        "    const char* shortName;  // \"WEB\": shown in share text",
+        "    const char* file;       // bibles/<id>.json.gz",
+        "    const wchar_t* resource;  // bibles/bibles.rc RCDATA name (Windows)",
+        "};",
+        "",
+        "inline const std::vector<BibleVersion>& BibleVersions() {",
+        "    static const std::vector<BibleVersion> versions = {",
+    ]
+    for v in VERSIONS:
+        header.append(f'        {{{c_string(v["id"])}, {c_string(v["name"])}, {c_string(v["short"])}, '
+                      f'{c_string("bibles/" + v["id"] + ".json.gz")}, L{c_string("BIBLE_" + v["id"].upper())}}},')
+    header += [
+        "    };",
+        "    return versions;",
+        "}",
+        "",
+        "// The version with this id, or the World English Bible if there's none.",
+        "inline const BibleVersion& FindBibleVersion(const std::string& id) {",
+        "    for (const auto& v : BibleVersions()) {",
+        "        if (id == v.id) return v;",
+        "    }",
+        "    return BibleVersions().front();",
+        "}",
+        "",
+    ]
+    write_if_changed(Path("src/BibleVersions.h"), "\n".join(header))
+
+    rc = ["// Generated by tools/sort.py: every Bible version, compiled into Bibirble.exe",
+          "// (included from Bibirble.rc). Names match BibleVersion::resource."]
+    rc += [f'BIBLE_{v["id"].upper()} RCDATA "bibles/{v["id"]}.json.gz"' for v in VERSIONS]
+    write_if_changed(OUT / "bibles.rc", "\n".join(rc) + "\n")
+
+    if WEB_SCRIPTS.is_dir():
+        js = ["// Generated by bibirble's tools/sort.py from tools/bible_versions.json. Don't edit by hand.",
+              "// The Bible translations players can pick in Settings. Only the picked",
+              "// version's verses are downloaded: scripts/bibles/<id>.json.gz (gzipped), or",
+              "// the plain scripts/bible_sections.json for the World English Bible.",
+              "export const VERSIONS = ["]
+        for v in VERSIONS:
+            file = "bible_sections.json" if v["id"] == DEFAULT_VERSION else f"bibles/{v['id']}.json.gz"
+            js.append(f'    {{ id: {c_string(v["id"])}, name: {json.dumps(v["name"], ensure_ascii=False)}, '
+                      f'short: {c_string(v["short"])}, file: {c_string(file)} }},')
+        js[-1] = js[-1].rstrip(",")
+        js.append("];")
+        write_if_changed(WEB_SCRIPTS / "versions.js", "\n".join(js) + "\n")
 
 
 def main():
-    web_books = read_version("web")
-    for version, out in VERSIONS.items():
-        entries = build(version, web_books)
-        write(out, entries)
-        print(f"{version}: {len(entries)} verses -> {out}")
+    web_books = read_version(DEFAULT_VERSION)
+    for v in VERSIONS:
+        text = to_json(build(v["id"], web_books))
+        write_gz(OUT / f"{v['id']}.json.gz", text)
         if WEB_SCRIPTS.is_dir():
-            shutil.copyfile(out, WEB_SCRIPTS / out)
-    if WEB_SCRIPTS.is_dir():
-        print(f"copied to {WEB_SCRIPTS}")
+            write_gz(WEB_SCRIPTS / "bibles" / f"{v['id']}.json.gz", text)
+            if v["id"] == DEFAULT_VERSION:
+                write_if_changed(WEB_SCRIPTS / "bible_sections.json", text)
+        print(f"{v['id']}: {text.count(chr(10)) - 1} verses")
+    write_version_lists()
+    print(f"wrote {OUT}/, src/BibleVersions.h" + (f" and {WEB_SCRIPTS}/" if WEB_SCRIPTS.is_dir() else ""))
 
 
 if __name__ == "__main__":
