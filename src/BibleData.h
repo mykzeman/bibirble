@@ -64,6 +64,9 @@ public:
     std::vector<std::string> getBooks(const std::vector<int>& indices) const;
     std::string getRevealedText(const Verse& verse, int stage);
     std::string getBookArea(const std::string& bookName) const;
+    // Who traditionally wrote a book ("Moses", "Paul", "Unknown"...): hard
+    // mode's yellow book clue means the same author, like the web version.
+    static std::string getBookAuthor(const std::string& book);
     // Tidy name to show players ("1samuel" -> "1 Samuel", "songofsolomon" ->
     // "Song of Solomon"). Game logic keeps using the dataset keys.
     static std::string BookDisplayName(const std::string& book);

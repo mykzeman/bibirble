@@ -154,18 +154,21 @@ bool BibleData::verseExists(const std::string& book, int chapter, int verse) con
 }
 
 namespace {
-// Traditional book order, Genesis to Revelation. The deuterocanonical books
-// (Douay-Rheims and CPDV only) sit where Catholic Bibles put them. Keep in sync with
+// Traditional book order, Genesis to Revelation. The deuterocanonical and
+// apocryphal books (only some versions have them) sit near the books they
+// belong with. Keep in sync with
 // Bibirble-web's scripts/books.js.
 const std::vector<std::string>& BookOrder() {
     static const std::vector<std::string> ORDER = {
         "genesis", "exodus", "leviticus", "numbers", "deuteronomy",
         "joshua", "judges", "ruth", "1samuel", "2samuel", "1kings", "2kings",
-        "1chronicles", "2chronicles", "ezra", "nehemiah", "tobit", "judith", "esther", "job",
-        "psalms", "proverbs", "ecclesiastes", "songofsolomon", "wisdom", "sirach", "isaiah",
-        "jeremiah", "lamentations", "baruch", "ezekiel", "daniel", "hosea", "joel", "amos",
+        "1chronicles", "2chronicles", "ezra", "nehemiah", "1esdras", "2esdras", "tobit", "judith",
+        "esther", "esthergreek", "job", "psalms", "prayerofmanasseh", "proverbs",
+        "ecclesiastes", "songofsolomon", "wisdom", "sirach", "psalmsofsolomon", "isaiah",
+        "jeremiah", "lamentations", "baruch", "letterofjeremiah", "ezekiel", "daniel", "danielgreek",
+        "songofthethree", "susanna", "bel", "hosea", "joel", "amos",
         "obadiah", "jonah", "micah", "nahum", "habakkuk", "zephaniah", "haggai",
-        "zechariah", "malachi", "1maccabees", "2maccabees",
+        "zechariah", "malachi", "1maccabees", "2maccabees", "3maccabees", "4maccabees",
         "matthew", "mark", "luke", "john", "acts", "romans", "1corinthians",
         "2corinthians", "galatians", "ephesians", "philippians", "colossians",
         "1thessalonians", "2thessalonians", "1timothy", "2timothy", "titus",
@@ -210,7 +213,12 @@ const std::map<std::string, std::string>& BookNames() {
         {"2peter", "2 Peter"}, {"1john", "1 John"}, {"2john", "2 John"},
         {"3john", "3 John"}, {"jude", "Jude"}, {"revelation", "Revelation"},
         {"tobit", "Tobit"}, {"judith", "Judith"}, {"wisdom", "Wisdom"}, {"sirach", "Sirach"},
-        {"baruch", "Baruch"}, {"1maccabees", "1 Maccabees"}, {"2maccabees", "2 Maccabees"}
+        {"baruch", "Baruch"}, {"1maccabees", "1 Maccabees"}, {"2maccabees", "2 Maccabees"},
+        {"3maccabees", "3 Maccabees"}, {"4maccabees", "4 Maccabees"}, {"1esdras", "1 Esdras"},
+        {"2esdras", "2 Esdras"}, {"esthergreek", "Esther (Greek)"},
+        {"prayerofmanasseh", "Prayer of Manasseh"}, {"psalmsofsolomon", "Psalms of Solomon"},
+        {"letterofjeremiah", "Letter of Jeremiah"}, {"danielgreek", "Daniel (Greek)"},
+        {"songofthethree", "Song of the Three"}, {"susanna", "Susanna"}, {"bel", "Bel and the Dragon"}
     };
     return NAMES;
 }
@@ -252,13 +260,18 @@ std::vector<std::string> BibleData::getBooks(const std::vector<int>& indices) co
 }
 
 std::string BibleData::getBookArea(const std::string& bookName) const {
+    // Must match AREAS in tools/sort.py and Bibirble-web's scripts/books.js.
+    // New areas hold at most 8 books (only the original areas and Paul's
+    // letters are bigger).
     static const std::map<std::string, std::vector<std::string>> AREAS = {
         {"Torah", {"genesis", "exodus", "leviticus", "numbers", "deuteronomy"}},
-        {"Historical", {"joshua", "judges", "1samuel", "2samuel", "1kings", "2kings", "1chronicles", "2chronicles", "nehemiah", "1maccabees", "2maccabees"}},
-        {"Poems", {"psalms", "proverbs", "ecclesiastes", "songofsolomon", "lamentations", "wisdom", "sirach"}},
-        {"Small stories", {"job", "esther", "jonah", "ruth", "ezra", "tobit", "judith"}},
-        {"Prophets Major", {"isaiah", "jeremiah", "ezekiel", "daniel", "baruch"}},
+        {"Historical", {"joshua", "judges", "1samuel", "2samuel", "1kings", "2kings", "1chronicles", "2chronicles", "nehemiah", "1esdras"}},
+        {"Poems", {"psalms", "proverbs", "ecclesiastes", "songofsolomon", "lamentations", "wisdom", "sirach", "prayerofmanasseh", "psalmsofsolomon"}},
+        {"Small stories", {"job", "esther", "jonah", "ruth", "ezra", "tobit", "judith", "esthergreek"}},
+        {"Prophets Major", {"isaiah", "jeremiah", "ezekiel", "daniel"}},
         {"Prophets Minor", {"hosea", "joel", "amos", "obadiah", "micah", "nahum", "habakkuk", "zephaniah", "haggai", "zechariah", "malachi"}},
+        {"Prophet alternatives", {"baruch", "letterofjeremiah", "danielgreek", "songofthethree", "susanna", "bel", "2esdras"}},
+        {"Maccabees", {"1maccabees", "2maccabees", "3maccabees", "4maccabees"}},
         {"Gospel", {"matthew", "mark", "luke", "john"}},
         {"Acts from Hebrews", {"acts", "hebrews"}},
         {"Pauls letters", {"romans", "1corinthians", "2corinthians", "galatians", "ephesians", "philippians", "colossians", "1thessalonians", "2thessalonians", "1timothy", "2timothy", "titus", "philemon"}},
@@ -352,4 +365,51 @@ std::string BibleData::getRevealedText(const Verse& verse, int stage) {
         result += maskedVerse[i];
     }
     return result;
+}
+
+std::string BibleData::getBookAuthor(const std::string& book) {
+    // Hard mode groups books by who traditionally wrote them, so a yellow
+    // book means "same author". Books whose writer isn't known share
+    // "Unknown". Must match AUTHORS in Bibirble-web's scripts/books.js.
+    static const std::map<std::string, std::vector<std::string>> AUTHORS = {
+        {"Moses", {"genesis", "exodus", "leviticus", "numbers", "deuteronomy"}},
+        {"Joshua", {"joshua"}},
+        {"Samuel", {"judges", "ruth", "1samuel", "2samuel"}},
+        {"Jeremiah", {"1kings", "2kings", "jeremiah", "lamentations", "letterofjeremiah"}},
+        {"Ezra and Nehemiah", {"1chronicles", "2chronicles", "ezra", "nehemiah", "1esdras", "2esdras"}},
+        {"David", {"psalms"}},
+        {"Solomon", {"proverbs", "ecclesiastes", "songofsolomon", "wisdom"}},
+        {"Ben Sira", {"sirach"}},
+        {"Baruch", {"baruch"}},
+        {"Isaiah", {"isaiah"}},
+        {"Ezekiel", {"ezekiel"}},
+        {"Daniel", {"daniel", "danielgreek"}},
+        {"Hosea", {"hosea"}},
+        {"Joel", {"joel"}},
+        {"Amos", {"amos"}},
+        {"Obadiah", {"obadiah"}},
+        {"Jonah", {"jonah"}},
+        {"Micah", {"micah"}},
+        {"Nahum", {"nahum"}},
+        {"Habakkuk", {"habakkuk"}},
+        {"Zephaniah", {"zephaniah"}},
+        {"Haggai", {"haggai"}},
+        {"Zechariah", {"zechariah"}},
+        {"Malachi", {"malachi"}},
+        {"Matthew", {"matthew"}},
+        {"Mark", {"mark"}},
+        {"Luke", {"luke", "acts"}},
+        {"John", {"john", "1john", "2john", "3john", "revelation"}},
+        {"Paul", {"romans", "1corinthians", "2corinthians", "galatians", "ephesians", "philippians", "colossians", "1thessalonians", "2thessalonians", "1timothy", "2timothy", "titus", "philemon"}},
+        {"Peter", {"1peter", "2peter"}},
+        {"Jesus' brothers", {"james", "jude"}},
+        {"Unknown", {"job", "esther", "hebrews", "tobit", "judith", "esthergreek", "songofthethree", "susanna", "bel",
+                     "1maccabees", "2maccabees", "3maccabees", "4maccabees", "prayerofmanasseh", "psalmsofsolomon"}}
+    };
+    for (const auto& author : AUTHORS) {
+        for (const auto& b : author.second) {
+            if (b == book) return author.first;
+        }
+    }
+    return "";
 }

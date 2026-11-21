@@ -21,6 +21,8 @@ include(${wxWidgets_USE_FILE})
 
 # Find nlohmann_json (for JSON parsing)
 find_package(nlohmann_json REQUIRED)
+# The Bible versions ship gzipped (bibles/*.json.gz); zlib unpacks them.
+find_package(ZLIB REQUIRED)
 
 # Source files
 set(SOURCES
@@ -72,12 +74,23 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(BIBIRBLE_ICON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/icons/bibirble.png")
     set(BIBIRBLE_STORY_FILE "${CMAKE_CURRENT_SOURCE_DIR}/story_map.json")
     set(BIBIRBLE_WORDS_FILE "${CMAKE_CURRENT_SOURCE_DIR}/data/words.txt")
-    # symbol prefix -> file. One verse file per Bible version (src/BibleVersions.h).
-    set(BIBIRBLE_BLOBS
-        "data|${CMAKE_CURRENT_SOURCE_DIR}/bible_sections.json"
-        "kjv|${CMAKE_CURRENT_SOURCE_DIR}/bible_sections_kjv.json"
-        "dr|${CMAKE_CURRENT_SOURCE_DIR}/bible_sections_dr.json"
-        "cpdv|${CMAKE_CURRENT_SOURCE_DIR}/bible_sections_cpdv.json"
+    # symbol prefix -> file: every Bible version (bibles/<id>.json.gz, built by
+    # tools/sort.py) plus the other data files.
+    set(BIBIRBLE_BLOBS "")
+    set(BIBIRBLE_BIBLE_TABLE "")
+    set(BIBIRBLE_BIBLE_ROWS "")
+    file(GLOB BIBIRBLE_BIBLE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/bibles/*.json.gz")
+    foreach(bible IN LISTS BIBIRBLE_BIBLE_FILES)
+        get_filename_component(bible_name "${bible}" NAME)
+        string(REPLACE ".json.gz" "" bible_id "${bible_name}")
+        list(APPEND BIBIRBLE_BLOBS "bible_${bible_id}|${bible}")
+        string(APPEND BIBIRBLE_BIBLE_TABLE
+            "extern \"C\" const char bibirble_bible_${bible_id}_start[];\n"
+            "extern \"C\" const char bibirble_bible_${bible_id}_end[];\n")
+        string(APPEND BIBIRBLE_BIBLE_ROWS
+            "    {\"${bible_id}\", bibirble_bible_${bible_id}_start, bibirble_bible_${bible_id}_end},\n")
+    endforeach()
+    list(APPEND BIBIRBLE_BLOBS
         "icon|${BIBIRBLE_ICON_FILE}"
         "story|${BIBIRBLE_STORY_FILE}"
         "words|${BIBIRBLE_WORDS_FILE}")
@@ -103,7 +116,15 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         "__asm__(\n"
         "    \".section .rodata\\n\"\n"
         "${BIBIRBLE_BLOB_ASM}"
-        "    \".previous\\n\");\n")
+        "    \".previous\\n\");\n"
+        "\n"
+        "// The embedded Bible versions, looked up by id in src/EmbeddedData.cpp.\n"
+        "${BIBIRBLE_BIBLE_TABLE}"
+        "struct EmbeddedBible { const char* id; const char* start; const char* end; };\n"
+        "extern const EmbeddedBible kEmbeddedBibles[] = {\n"
+        "${BIBIRBLE_BIBLE_ROWS}"
+        "};\n"
+        "extern const int kEmbeddedBibleCount = sizeof(kEmbeddedBibles) / sizeof(kEmbeddedBibles[0]);\n")
     set_source_files_properties("${BIBIRBLE_BLOB_CPP}" PROPERTIES
         OBJECT_DEPENDS "${BIBIRBLE_BLOB_FILES}")
     set_source_files_properties(src/EmbeddedData.cpp PROPERTIES
@@ -115,13 +136,15 @@ endif()
 add_executable(Bibirble ${SOURCES})
 
 # Link libraries
-target_link_libraries(Bibirble ${wxWidgets_LIBRARIES} nlohmann_json::nlohmann_json)
+target_link_libraries(Bibirble ${wxWidgets_LIBRARIES} nlohmann_json::nlohmann_json ZLIB::ZLIB)
 
 # Story Mode logic tests (no wx needed): cmake --build build --target story_tests && ctest --test-dir build
 enable_testing()
 add_executable(story_tests
     tests/story_tests.cpp
     src/BibleData.cpp
+    src/GameState.cpp
+    src/SeededRandom.cpp
     src/EmbeddedData.cpp
     src/StoryMap.cpp
     src/StoryProgress.cpp
@@ -132,7 +155,7 @@ if(DEFINED BIBIRBLE_BLOB_CPP)
 endif()
 target_include_directories(story_tests PRIVATE src)
 target_compile_definitions(story_tests PRIVATE BIBIRBLE_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
-target_link_libraries(story_tests nlohmann_json::nlohmann_json)
+target_link_libraries(story_tests nlohmann_json::nlohmann_json ZLIB::ZLIB)
 add_test(NAME story_tests COMMAND story_tests)
 
 # Set startup project on Windows

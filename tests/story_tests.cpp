@@ -1,7 +1,8 @@
 // Story Mode logic tests (no wx). Built by CMake as `story_tests`, run with ctest.
-// BIBIRBLE_SOURCE_DIR points at the repo so the real bible_sections.json and
-// story_map.json can be checked too.
+// BIBIRBLE_SOURCE_DIR points at the repo so the real story_map.json can be
+// checked too; the Bible versions come from bibles/ (or the embedded copies).
 #include "BibleData.h"
+#include "GameState.h"
 #include "StoryMap.h"
 #include "StoryProgress.h"
 #include "WordPuzzle.h"
@@ -282,12 +283,23 @@ void TestBibleVersions(const std::string& dir) {
         const bool ok = storyMap.LoadFromText(map, bible);
         for (const auto& e : storyMap.Errors()) std::printf("  %s map error: %s\n", version.id, e.c_str());
         CHECK(ok);
-        CHECK(bible.getUsefulVerseIndices().size() > 1000);
-        CHECK(bible.getChristmasVerseIndices().size() > 60);
+        // Whole Bibles (not the Septuagints, Tanakhs or partial ones) have
+        // nearly every Useful and Christmas verse.
+        const auto books = bible.getAllBooks();
+        const bool whole = std::find(books.begin(), books.end(), "genesis") != books.end() &&
+                           std::find(books.begin(), books.end(), "revelation") != books.end() &&
+                           books.size() >= 66;
+        if (whole) {
+            CHECK(bible.getUsefulVerseIndices().size() > 1000);
+            CHECK(bible.getChristmasVerseIndices().size() > 60);
+        }
         // A Story attempt saved in one version carries on in another.
         StoryProgress loaded;
         loaded.FromJson(saved, bible);
-        CHECK(loaded.Run().active && loaded.Run().levelKey == "creation.eden");
+        // (Not in Bibles without Genesis, like Tyndale's New Testament.)
+        if (storyMap.FindLevel("creation.eden")->available) {
+            CHECK(loaded.Run().active && loaded.Run().levelKey == "creation.eden");
+        }
     }
 
     // The Douay-Rheims numbers most Psalms one lower: its Psalm 22 is the
@@ -297,20 +309,64 @@ void TestBibleVersions(const std::string& dir) {
     const int shepherd = dr.findStdRef("psalms", 23, 1);
     CHECK(shepherd >= 0 && dr.getVerseAtIndex(shepherd).chapter == 22);
     CHECK(dr.getVerseAtIndex(shepherd).text.find("ruleth me") != std::string::npos);
-    CHECK(dr.getBookArea("tobit") == "Small stories" && dr.getBookArea("1maccabees") == "Historical");
+    CHECK(dr.getBookArea("tobit") == "Small stories" && dr.getBookArea("1maccabees") == "Maccabees");
     CHECK(BibleData::BookDisplayName("2maccabees") == "2 Maccabees");
     std::vector<std::string> books = dr.getAllBooks();
     CHECK(books.size() == 73);
     CHECK(books.front() == "genesis" && books.back() == "revelation");
     CHECK(std::find(books.begin(), books.end(), "tobit") - books.begin() == 16);  // after Nehemiah
 }
+// Hard mode's yellow book means the same author (like the web version), book
+// hints work in hard mode, and the share text gives no answer away.
+void TestHardModeAndShare(const BibleData& bible) {
+    Verse target;
+    target.book = "galatians";
+    target.chapter = 5;
+    target.verse = 22;
+    target.area = bible.getBookArea("galatians");
+
+    GameState normal;
+    normal.Reset(GameMode::Random, 42, false, true, target);
+    CHECK(normal.bookHints);
+    CHECK(normal.BookGroup("romans", bible) == "Pauls letters");
+
+    GameState hard;
+    hard.Reset(GameMode::Random, 42, true, true, target);
+    CHECK(hard.bookHints);  // hints stay on in hard mode
+    CHECK(hard.BookGroup("romans", bible) == "Paul");
+    CHECK(hard.BookGroup("acts", bible) == "Luke" && hard.BookGroup("luke", bible) == "Luke");
+    CHECK(BibleData::getBookAuthor("wisdom") == "Solomon" && BibleData::getBookAuthor("danielgreek") == "Daniel");
+
+    // A yellow Luke means "same author": Acts is allowed, Romans isn't.
+    GuessRecord luke;
+    luke.bookGuess = "luke";
+    luke.bookColor = GuessColor::Yellow;
+    luke.digitGuesses = {"0", "0", "0", "0"};
+    luke.digitColors = {GuessColor::Gray, GuessColor::Gray, GuessColor::Gray, GuessColor::Gray};
+    hard.history.push_back(luke);
+    CHECK(!hard.CheckHardModeViolation("romans", {"0", "1", "0", "1"}, bible).empty());
+    CHECK(hard.CheckHardModeViolation("acts", {"0", "1", "0", "1"}, bible).empty());
+    const auto hinted = hard.FilterBooksByClues({"luke", "acts", "romans", "john"}, bible);
+    CHECK(hinted.size() == 1 && hinted[0] == "acts");
+
+    GuessRecord win;
+    win.bookGuess = "galatians";
+    win.bookColor = GuessColor::Green;
+    win.digitGuesses = {"0", "5", "2", "2"};
+    win.digitColors = {GuessColor::Green, GuessColor::Green, GuessColor::Green, GuessColor::Green};
+    hard.history.push_back(win);
+    const std::string share = hard.BuildShareText("KJV");
+    CHECK(share.rfind("Bibirble Random (seed 42) KJV 2/7*", 0) == 0);
+    CHECK(share.find("Galatians") == std::string::npos && share.find("5:22") == std::string::npos);
+    CHECK(share.find("Could you beat this score?") != std::string::npos);
+}
 }  // namespace
 
 int main() {
     const std::string dir = BIBIRBLE_SOURCE_DIR;
     BibleData bible;
-    if (!bible.loadData(dir + "/bible_sections.json")) {
-        std::printf("couldn't load bible_sections.json\n");
+    if (!bible.loadVersion(FindBibleVersion("web"))) {
+        std::printf("couldn't load the World English Bible (bibles/web.json.gz)\n");
         return 1;
     }
     TestFormulas();
@@ -320,6 +376,7 @@ int main() {
     TestWordPuzzles(bible, dir);
     TestStoryDone(bible);
     TestBibleVersions(dir);
+    TestHardModeAndShare(bible);
     std::printf("%d checks, %d failed\n", g_checks, g_failures);
     return g_failures == 0 ? 0 : 1;
 }

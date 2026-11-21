@@ -229,7 +229,10 @@ bool StoryMap::ParseLevel(const json& j, const std::string& areaId, bool isBonus
     std::sort(out.pool.begin(), out.pool.end());
     out.pool.erase(std::unique(out.pool.begin(), out.pool.end()), out.pool.end());
     if (ok && out.pool.size() < 3) {
-        fail("pool has only " + std::to_string(out.pool.size()) + " verses (needs 3+)");
+        // Partial Bibles (Tyndale's New Testament, the Septuagints...) just
+        // can't play this level; the World English Bible must have it all.
+        if (strict) fail("pool has only " + std::to_string(out.pool.size()) + " verses (needs 3+)");
+        else out.available = false;
     }
 
     if (!StarFormula::Parse(j.value("minStars", json()), out.minStars)) fail("can't read minStars");

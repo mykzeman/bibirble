@@ -54,6 +54,9 @@ struct StoryLevel {
     bool allowNoRetry = true;
     bool allowPerfect = true;
     bool isBonus = false;       // one of an area's bonusLevels
+    // False when the loaded Bible version doesn't have 3 of the level's verses
+    // (an Old-Testament-only Bible has no Gospels): shown, but not playable.
+    bool available = true;
     int MaxStars() const;
     bool Allows(BonusStar star) const;
 };

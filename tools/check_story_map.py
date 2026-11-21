@@ -1,10 +1,11 @@
 """Check story_map.json against bible_sections.json and preview the star unlock path.
 
-Usage (from the repo root):  python tools/check_story_map.py [story_map.json] [bible_sections.json ...]
+Usage (from the repo root):  python tools/check_story_map.py [story_map.json] [bibles/<id>.json.gz ...]
 
-With no Bible files given it checks every version (bible_sections*.json), World English
-Bible first: every pool reference must exist there; another version may lack one
-(it is skipped there) as long as each pool keeps 3+ verses. Pools use
+With no Bible files given it checks every version (bibles/*.json.gz), World English
+Bible first: every pool reference must exist there and every pool needs 3+ verses.
+Other versions may lack passages (skipped there); a level left with fewer than 3
+verses is shown as "not in this Bible" in that version, so it's only a note. Pools use
 World English Bible numbering; other versions match verses by their "ref" field
 (see tools/sort.py), so "psalms 23" is Psalm 22 in the Douay-Rheims.
 
@@ -17,6 +18,7 @@ minStars:         a number (e.g. 64) or a formula "ax+b" / "ax-b" / "ax", where
                   x = levels unlocked in the whole game so far, compared to the total stars in the game.
 """
 import glob
+import gzip
 import json
 import re
 import sys
@@ -85,7 +87,8 @@ def min_stars(value, x):
 
 def main():
     map_path = sys.argv[1] if len(sys.argv) > 1 else "story_map.json"
-    bible_paths = sys.argv[2:] or sorted(glob.glob("bible_sections*.json"))  # bible_sections.json sorts first
+    bible_paths = sys.argv[2:] or (["bibles/web.json.gz"] +
+                                   sorted(p for p in glob.glob("bibles/*.json.gz") if not p.endswith("/web.json.gz")))
     failed = False
     for i, bible_path in enumerate(bible_paths):
         print(f"=== {bible_path}")
@@ -96,12 +99,16 @@ def main():
 def check(map_path, bible_path, preview):
     story = json.load(open(map_path, encoding="utf-8"))
     verses_by_book = defaultdict(list)
-    for v in json.load(open(bible_path, encoding="utf-8")):
+    opener = gzip.open if bible_path.endswith(".gz") else open
+    with opener(bible_path, "rt", encoding="utf-8") as f:
+        bible = json.load(f)
+    for v in bible:
         ref = v.get("ref", [v["chapter"], v["verse"]])
         if ref is not None:
             verses_by_book[v["book"]].append(tuple(ref))
 
     errors = []
+    unavailable = []
     area_ids = set()
     for area in story["areas"]:
         if area["id"] in area_ids:
@@ -139,12 +146,17 @@ def check(map_path, bible_path, preview):
                 for b in between:
                     errors += [f"{key}: {e}" for e in check_story(b, "between")]
             if len(pool) < 3:
-                errors.append(f"{key}: pool has only {len(pool)} verses (needs 3+)")
+                if preview:
+                    errors.append(f"{key}: pool has only {len(pool)} verses (needs 3+)")
+                else:
+                    unavailable.append(key)
             lvl["_size"] = len(pool)
         if area.get("bonusArea") and area.get("unlock") != "perfect":
             errors.append(f"{area['id']}: bonus area needs \"unlock\": \"perfect\"")
 
     if not preview:
+        if unavailable:
+            print(f"  note: {len(unavailable)} levels aren't in this version (fewer than 3 verses)")
         return report(errors)
 
     # Unlock preview: the player plays the main path in order and passes every level.

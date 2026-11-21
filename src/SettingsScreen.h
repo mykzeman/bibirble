@@ -18,7 +18,7 @@ public:
 
     bool GetHardMode() const;
     bool GetUsefulOnly() const;
-    // Book hints are an assist, so they're off whenever hard mode is on.
+    // Book hints work in hard mode too (they follow authors there).
     bool GetBookHints() const;
     // R18 mode only turns on after a date-of-birth check (18 or older).
     bool GetR18Mode() const;

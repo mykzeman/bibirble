@@ -696,7 +696,7 @@ int BibirbleWindow::ProcessTurn() {
     if (bookGuess == m_state.targetVerse.book) {
         bookColor = GuessColor::Green;
         correctCount++;
-    } else if (m_data.getBookArea(bookGuess) == m_state.targetVerse.area) {
+    } else if (m_state.BookGroup(bookGuess, m_data) == m_state.BookGroup(m_state.targetVerse.book, m_data)) {
         bookColor = GuessColor::Yellow;
     } else {
         bookColor = GuessColor::Gray;
@@ -837,7 +837,7 @@ void BibirbleWindow::ShowStoryMap() {
 
 void BibirbleWindow::OnStoryPlay(const std::string& levelKey, bool hardMode) {
     const StoryLevel* level = m_storyMap.FindLevel(levelKey);
-    if (!level || !m_story.IsUnlocked(levelKey)) return;
+    if (!level || !level->available || !m_story.IsUnlocked(levelKey)) return;
 
     const StoryRun& run = m_story.Run();
     const bool resume = run.active && run.levelKey == levelKey;

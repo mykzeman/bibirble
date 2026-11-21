@@ -13,7 +13,7 @@ without it still use every verse.
 
 Writes src/UsefulVerses.h and, when the web repo is next to this one,
 ../Bibirble-web/scripts/useful.js, so both games share the same pool.
-The pool is picked from the World English Bible (bible_sections.json) in its
+The pool is picked from the World English Bible (bibles/web.json.gz) in its
 numbering; the other Bible versions find the same verses by their "ref"
 (see sort.py), so this only needs running once.
 
@@ -23,6 +23,7 @@ Run from the repo root:
     python tools/pick_useful.py --count 500 --explain "john 3:16"
 """
 import argparse
+import gzip
 import json
 import re
 from pathlib import Path
@@ -319,7 +320,7 @@ def write_js(path, refs):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--data", default="bible_sections.json")
+    parser.add_argument("--data", default="bibles/web.json.gz")
     parser.add_argument("--must-include", default="tools/useful_must_include.txt")
     parser.add_argument("--count", type=int, default=1200, help="pool size (default: 1200)")
     parser.add_argument("--header", default="src/UsefulVerses.h")
@@ -329,7 +330,9 @@ def main():
     parser.add_argument("--explain", metavar="REF", help='show the score of one verse, e.g. "john 3:16"')
     args = parser.parse_args()
 
-    verses = json.loads(Path(args.data).read_text(encoding="utf-8"))
+    opener = gzip.open if args.data.endswith(".gz") else open
+    with opener(args.data, "rt", encoding="utf-8") as f:
+        verses = json.load(f)
 
     if args.explain:
         book, cv = args.explain.split()

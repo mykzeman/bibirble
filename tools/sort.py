@@ -5,7 +5,7 @@ bibles/<id>.json.gz (embedded in the program), and when the web repo is next to
 this one, ../Bibirble-web/scripts/bibles/<id>.json.gz plus a plain
 ../Bibirble-web/scripts/bible_sections.json for the World English Bible (the
 default, so it loads on any browser). It also generates the version lists:
-src/BibleVersions.h, bibles/bibles.rc and ../Bibirble-web/scripts/versions.js.
+src/BibleVersions.h, bibles/bibles.rc and ../Bibirble-web/scripts/version_list.js.
 
 Run from the repo root:  python tools/sort.py
 
@@ -34,7 +34,7 @@ DEFAULT_VERSION = "web"
 
 OLD_TESTAMENT = ["genesis", "exodus", "leviticus", "numbers", "deuteronomy", "joshua", "judges", "ruth",
                  "1samuel", "2samuel", "1kings", "2kings", "1chronicles", "2chronicles", "ezra", "nehemiah",
-                 "1esdras", "2esdras", "tobit", "judith", "esther", "esthergreek", "job", "psalms", "psalm151",
+                 "1esdras", "2esdras", "tobit", "judith", "esther", "esthergreek", "job", "psalms",
                  "prayerofmanasseh", "proverbs", "ecclesiastes", "songofsolomon", "wisdom", "sirach",
                  "psalmsofsolomon", "isaiah", "jeremiah", "lamentations", "baruch", "letterofjeremiah", "ezekiel",
                  "daniel", "danielgreek", "songofthethree", "susanna", "bel", "hosea", "joel", "amos", "obadiah",
@@ -45,14 +45,17 @@ OLD_TESTAMENT = ["genesis", "exodus", "leviticus", "numbers", "deuteronomy", "jo
 AREAS = {
     "Torah": OLD_TESTAMENT[0:5],
     "Historical": ["joshua", "judges", "1samuel", "2samuel", "1kings", "2kings", "1chronicles", "2chronicles",
-                   "nehemiah", "1maccabees", "2maccabees", "3maccabees", "4maccabees", "1esdras"],
+                   "nehemiah", "1esdras"],
     "Poems": ["psalms", "proverbs", "ecclesiastes", "songofsolomon", "lamentations", "wisdom", "sirach",
-              "psalm151", "prayerofmanasseh", "psalmsofsolomon", "songofthethree"],
-    "Small stories": ["job", "esther", "jonah", "ruth", "ezra", "tobit", "judith", "esthergreek", "susanna", "bel"],
-    "Prophets Major": ["isaiah", "jeremiah", "ezekiel", "daniel", "baruch", "letterofjeremiah", "danielgreek",
-                       "2esdras"],
+              "prayerofmanasseh", "psalmsofsolomon"],
+    "Small stories": ["job", "esther", "jonah", "ruth", "ezra", "tobit", "judith", "esthergreek"],
+    "Prophets Major": ["isaiah", "jeremiah", "ezekiel", "daniel"],
     "Prophets Minor": ["hosea", "joel", "amos", "obadiah", "micah", "nahum", "habakkuk", "zephaniah", "haggai",
                        "zechariah", "malachi"],
+    # New areas hold at most 8 books (only the original areas and Paul's letters are bigger).
+    "Prophet alternatives": ["baruch", "letterofjeremiah", "danielgreek", "songofthethree", "susanna", "bel",
+                             "2esdras"],
+    "Maccabees": ["1maccabees", "2maccabees", "3maccabees", "4maccabees"],
     "Gospel": ["matthew", "mark", "luke", "john"],
     "Acts from Hebrews": ["acts", "hebrews"],
     "Pauls letters": ["romans", "1corinthians", "2corinthians", "galatians", "ephesians", "philippians",
@@ -294,7 +297,7 @@ def write_version_lists():
                       f'short: {c_string(v["short"])}, file: {c_string(file)} }},')
         js[-1] = js[-1].rstrip(",")
         js.append("];")
-        write_if_changed(WEB_SCRIPTS / "versions.js", "\n".join(js) + "\n")
+        write_if_changed(WEB_SCRIPTS / "version_list.js", "\n".join(js) + "\n")
 
 
 def main():

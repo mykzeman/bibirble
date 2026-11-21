@@ -84,7 +84,7 @@ void SettingsScreen::SetupUi() {
 
     wxBoxSizer* hintsRow = new wxBoxSizer(wxHORIZONTAL);
     wxStaticText* hintsLabel = new wxStaticText(card, wxID_ANY,
-        "Book hints (narrows the book list using your clues; not in hard mode)");
+        "Book hints (narrows the book list using your clues; works in hard mode too)");
     hintsLabel->Wrap(300);
     hintsRow->Add(hintsLabel, 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
     m_bookHintsCheck = new wxCheckBox(card, wxID_ANY, "");
@@ -108,12 +108,6 @@ void SettingsScreen::SetupUi() {
         event.Skip();
     });
 
-    m_hardModeCheck->Bind(wxEVT_CHECKBOX, [this, hintsLabel](wxCommandEvent& event) {
-        bool hard = m_hardModeCheck->GetValue();
-        m_bookHintsCheck->Enable(!hard);
-        hintsLabel->Enable(!hard);
-        event.Skip();
-    });
 
     wxBoxSizer* seedRow = new wxBoxSizer(wxHORIZONTAL);
     seedRow->Add(new wxStaticText(card, wxID_ANY, "Random seed"), 1, wxALIGN_CENTER_VERTICAL | wxALL, 8);
@@ -152,11 +146,10 @@ void SettingsScreen::SetupUi() {
     creditsTitle->SetFont(wxFont(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
     creditsLayout->Add(creditsTitle, 0, wxALL, 8);
     for (const char* line : {
-             "\xF0\x9F\x93\x96 Bible text: the World English Bible (WEB), King James Version (KJV), "
-             "Douay-Rheims 1899 American Edition (DRA) and Catholic Public Domain Version (CPDV), "
-             "all in the public domain.",
-             "\xF0\x9F\x93\x82 Verse data: world-english-bible by TehShrike; Bible-kjv by Arul John "
-             "(MIT License); douayrheimsbible by Johannes Pagwiwoko (MIT License).",
+             "\xF0\x9F\x93\x96 Bible text: every version is in the public domain.",
+             "\xF0\x9F\x93\x82 Verse data: the World English Bible from world-english-bible by "
+             "TehShrike; the Catholic Public Domain Version by Ronald L. Conte Jr.; every other "
+             "version from eBible.org (via the Free Use Bible API, bible.helloao.org).",
              "\xF0\x9F\x94\xA4 Story puzzle words: the ENABLE word list (public domain).",
              "\xF0\x9F\x8E\xA8 App icon and original game: Bibirble for the web.",
              "\xF0\x9F\x9F\xA9 Inspired by Wordle.",
@@ -195,7 +188,7 @@ bool SettingsScreen::GetUsefulOnly() const {
 }
 
 bool SettingsScreen::GetBookHints() const {
-    return m_bookHintsCheck && m_bookHintsCheck->GetValue() && !GetHardMode();
+    return m_bookHintsCheck && m_bookHintsCheck->GetValue();
 }
 
 bool SettingsScreen::GetR18Mode() const {

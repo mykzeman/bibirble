@@ -39,8 +39,10 @@ BOOKS = {
     "BAR": "baruch", "LJE": "letterofjeremiah", "S3Y": "songofthethree", "SUS": "susanna",
     "BEL": "bel", "DAG": "danielgreek", "1MA": "1maccabees", "2MA": "2maccabees",
     "3MA": "3maccabees", "4MA": "4maccabees", "1ES": "1esdras", "2ES": "2esdras",
-    "MAN": "prayerofmanasseh", "PS2": "psalm151", "PSS": "psalmsofsolomon",
+    "MAN": "prayerofmanasseh", "PSS": "psalmsofsolomon",
 }
+# Books left out of the game on purpose.
+SKIP = {"PS2"}  # Psalm 151
 
 
 def verse_text(content):
@@ -60,6 +62,8 @@ def split(complete, out_dir):
         old.unlink()
     written = 0
     for book in complete["books"]:
+        if book["id"] in SKIP:
+            continue
         key = BOOKS.get(book["id"])
         if not key:
             print(f"  skipped unknown book {book['id']} ({book.get('commonName')})")

@@ -25,8 +25,10 @@ src/
 
 tools/
 ├── bibles/<version>/        # One JSON file per book for each Bible version (web, kjv, dr, cpdv)
-├── split_bible.py           # Splits a whole-Bible JSON into tools/bibles/<version>/ book files
-├── sort.py                  # Builds bible_sections*.json (one per version) from the book files
+├── bible_versions.json      # The list of Bible versions (names, short names, sources)
+├── fetch_ebible.py          # Downloads the eBible.org versions into tools/bibles/<version>/ book files
+├── split_bible.py           # Splits any other whole-Bible JSON into book files
+├── sort.py                  # Builds bibles/<id>.json.gz (one per version) and the version lists
 ├── check_story_map.py       # Checks story_map.json against every version
 ├── content_filters.py       # R18 (mature) verse patterns shared by both scripts
 └── pick_useful.py           # Builds the "Useful verses only" pool (both games)
@@ -103,7 +105,7 @@ Bibirble is a small Bible-verse guessing game written in modern C++ using wxWidg
 
 **Quick links**
 - Source: https://github.com/mykzeman/bibirble
-- Data pipeline: `tools/bibles/<version>/*.json` → `tools/sort.py` → `bible_sections*.json`
+- Data pipeline: `tools/bibles/<version>/*.json` → `tools/sort.py` → `bibles/<id>.json.gz`
 
 ## Quickstart (Linux / macOS)
 
@@ -139,12 +141,11 @@ cmake --build . --config Release
 
 - `src/` - application source (UI, game logic, data loader)
 - `tools/sort.py` - builds each Bible version's verse file from its per-book JSON in `tools/bibles/`
-- `bible_sections.json` (World English Bible), `bible_sections_kjv.json`, `bible_sections_dr.json`,
-  `bible_sections_cpdv.json` - compiled verse data used at runtime
+- `bibles/<id>.json.gz` - each Bible version's compiled, gzipped verse data, embedded in the program
 
 ## Data format
 
-Each Bible version's verses are compiled into the program; a `bible_sections*.json` next to the
+Each Bible version's verses are compiled into the program; a `bibles/<id>.json.gz` next to the
 executable wins, for testing new data. Each verse entry looks like:
 
 ```json
@@ -159,7 +160,7 @@ executable wins, for testing new data. Each verse entry looks like:
 ```
 
 plus `"mature": true` for R18 verses, and `"ref": [chapter, verse]` when a version numbers a verse
-differently from the World English Bible (the Douay-Rheims and CPDV number most Psalms one lower);
+differently from the World English Bible (the Douay-Rheims, CPDV and Septuagints number most Psalms one lower);
 `"ref": null` means there's no match. Story Mode, Useful verses and Christmas verses find verses by
 that standard reference, so they pick the same passage in every version. Players still see and guess
 each version's own numbers.
@@ -170,20 +171,25 @@ To rebuild them from the book files in `tools/bibles/` (also copies them into `.
 python3 tools/sort.py
 ```
 
-To add a version, split its JSON into book files with `tools/split_bible.py`, then add it to
-`VERSIONS` in `tools/sort.py`, `src/BibleVersions.h`, `Bibirble.rc`, `CMakeLists.txt` (`BIBIRBLE_BLOBS`)
-and Bibirble-web's `scripts/versions.js`.
+To add a version, add it to `tools/bible_versions.json` (with its eBible.org id, if it has one), run
+`python3 tools/fetch_ebible.py <id>` (or `tools/split_bible.py` for other sources), then `python3 tools/sort.py`.
+`sort.py` regenerates `src/BibleVersions.h`, `bibles/bibles.rc` and Bibirble-web's `scripts/version_list.js`;
+CMake embeds every `bibles/*.json.gz` by itself. Building needs zlib (it comes with wxWidgets on most systems).
 
 ## Features
 
-- **Bible versions**: pick the World English Bible (WEB), King James Version (KJV), Douay-Rheims 1899
-  American Edition (DRA) or Catholic Public Domain Version (CPDV) in Settings. The Catholic versions add
-  Tobit, Judith, Wisdom, Sirach, Baruch and 1-2 Maccabees, sorted into the book areas. Story Mode works in
-  every version, and its progress carries over when you switch.
+- **Bible versions**: pick from 32 public-domain Bibles in Settings: the World English Bible (default), King
+  James Version, Douay-Rheims 1899, Catholic Public Domain Version, ASV, Young's Literal, Darby, Geneva 1599,
+  the Septuagints, Tanakhs, Tyndale's New Testament and more (`tools/bible_versions.json`). Bibles with the
+  Deuterocanon/Apocrypha sort those books into Poetry & Wisdom, Small Stories, History and two new areas,
+  Prophet Alternatives and Maccabees. Story Mode works in every version; in a partial Bible (an Old Testament
+  only one, say) a level it can't fill shows as "Not in this Bible". Progress carries over between versions.
+- **Hard Mode** (like the web version): a yellow book means the same author (Moses, Paul...), not the same
+  area. Book hints work in hard mode too.
 - **Daily mode**: a seeded puzzle that's the same for everyone on a given calendar day (it resets at your local midnight), and matches the web
   version's verse exactly (bit-for-bit port of its hash/seed algorithm).
 - **Random mode**: pick any seed (or generate one) for a shareable, replayable puzzle.
-- **Hard Mode**: guesses must respect previously confirmed book/area and revealed digits, and must
+- **Hard Mode**: guesses must respect previously confirmed book/author and revealed digits, and must
   reference a verse that actually exists in the dataset.
 - **Useful verses only**: a Settings toggle that limits Daily/Random games to a pool of 1200 verses
   (`src/UsefulVerses.h`), skipping genealogies, census lists, and the like. The pool is generated by
@@ -193,15 +199,16 @@ and Bibirble-web's `scripts/versions.js`.
   Verses with mature (R18) content are never picked, even from the hand-picked list. It writes both
   `src/UsefulVerses.h` and the web version's `scripts/useful.js`.
 - **Book hints**: an accessibility toggle in Settings. After each guess, later rows' book lists only show
-  books that still fit the book clues (green: that book, yellow: its area, gray: not its area). Turned off
-  in Hard Mode.
-- **R18 mode**: verses tagged `"mature": true` in `bible_sections.json` (sexual content and graphic
+  books that still fit the book clues (green: that book, yellow: its area, gray: not its area; authors in
+  Hard Mode).
+- **R18 mode**: verses tagged `"mature": true` in the verse files (sexual content and graphic
   violence, matched by `tools/content_filters.py` when `sort.py` runs) are hidden by default. Turning on R18
   mode in Settings asks for a date of birth and only switches on for players 18 or older. Useful verses
   only never includes them.
 - **Bible order**: the book dropdown lists books Genesis to Revelation.
 - **Persistence**: once-a-day lockout for Daily mode and last-used seed are remembered between launches.
-- **Share**: a Wordle-style emoji grid (🟩/🟨/⬛) plus citation, copied to the clipboard.
+- **Share**: a spoiler-free Wordle-style emoji grid (🟩/🟨/⬛) with the mode, version and score, copied to
+  the clipboard (the same text as the web version).
 
 ## Notes and known issues
 
@@ -209,9 +216,8 @@ and Bibirble-web's `scripts/versions.js`.
   Psalm 119:100-176) are skipped, because the guess row only has two chapter digits and two verse digits.
 - Book area mappings are defined in `tools/sort.py`, `src/BibleData.cpp::getBookArea()` and Bibirble-web's
   `scripts/books.js`; keep them in sync when changing categories.
-- The Douay-Rheims source has no Malachi 4 (6 verses) or Esther 11-16, so those can't come up in that
-  version; Story Mode skips them there. CPDV prologues (Sirach, Lamentations) are left out because they
-  have no chapter number.
+- CPDV prologues (Sirach, Lamentations) are left out because they have no chapter number, and Psalm 151 is
+  left out on purpose.
 
 ## Contributing
 
@@ -221,11 +227,10 @@ Contributions welcome. Suggested improvements:
 
 ## License & Credits
 
-The Bible texts (World English Bible, King James Version, Douay-Rheims 1899 American Edition and
-Catholic Public Domain Version) are in the public domain. See `LICENSE` for project licensing.
+Every Bible version in the game is in the public domain. See `LICENSE` for project licensing.
 
 Data sources:
 - World English Bible: https://github.com/TehShrike/world-english-bible
-- King James Version: https://github.com/aruljohn/Bible-kjv (MIT License, `tools/bibles/kjv/LICENSE`)
-- Douay-Rheims: https://github.com/yoarikso/douayrheimsbible (MIT License, `tools/bibles/dr/LICENSE`)
 - Catholic Public Domain Version: by Ronald L. Conte Jr., public domain
+- Every other version: eBible.org, via the Free Use Bible API (https://bible.helloao.org), fetched by
+  `tools/fetch_ebible.py`

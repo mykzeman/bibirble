@@ -28,7 +28,7 @@ public:
     int64_t seed = 0;
     bool hardMode = false;
     // Accessibility assist: narrow later rows' book lists using book clues.
-    // Never active in hard mode.
+    // Works in hard mode too (then it follows authors), like the web version.
     bool bookHints = false;
     // A Christmas verse game (December). Share text gets a tree.
     bool christmas = false;
@@ -45,9 +45,13 @@ public:
                                         const std::vector<std::string>& digitGuesses,
                                         const BibleData& data) const;
 
-    // Wordle-style emoji grid (🟩/🟨/⬛) built straight from history, plus the
-    // citation line. Only rows actually played get a line -- unlike the web
-    // version, which pads blank lines for unplayed rows on an early win.
+    // What a yellow book clue groups by: the book's area, or in hard mode
+    // its traditional author ("Moses", "Paul"), like the web version.
+    std::string BookGroup(const std::string& book, const BibleData& data) const;
+
+    // Spoiler-free share text, the same as the web version's: a title line
+    // ("Bibirble Daily 2026-11-21 WEB 4/7*"), the Wordle-style emoji grid
+    // (🟩/🟨/⬛) for the rows played, and a challenge. No answer.
     // Immune to the web's gray/grey emoji-key mismatch since there is only
     // ever one GuessColor.
     // versionName: the Bible version's short name ("KJV"), shown in the text.

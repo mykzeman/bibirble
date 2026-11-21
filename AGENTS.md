@@ -7,7 +7,7 @@
 ## Architecture
 
 ### Core Data Flow
-1. **Bible Data Pipeline**: each Bible version has one JSON file per book in `tools/bibles/<version>/` (`web` in the world-english-bible project's format; `kjv`, `dr`, `cpdv` as chapter -> verse -> text, written by `tools/split_bible.py`). `tools/sort.py` turns them into one verse file per version: `bible_sections.json` (World English Bible, the default), `bible_sections_kjv.json`, `bible_sections_dr.json`, `bible_sections_cpdv.json`, and copies them to Bibirble-web
+1. **Bible Data Pipeline**: the versions are listed in `tools/bible_versions.json`. Each has one JSON file per book in `tools/bibles/<version>/` (`web` in the world-english-bible project's format; the rest as chapter -> verse -> text, written by `tools/fetch_ebible.py` for the eBible.org versions or `tools/split_bible.py` for others). `tools/sort.py` turns them into `bibles/<id>.json.gz` (gzipped, embedded) and generates `src/BibleVersions.h`, `bibles/bibles.rc` and Bibirble-web's `scripts/version_list.js` + `scripts/bibles/` (the web keeps a plain `scripts/bible_sections.json` for the World English Bible)
 2. **Game Loader**: `BibleData::loadVersion()` parses the version picked in Settings (`src/BibleVersions.h`; saved by PersistenceManager as `bibleVersion`), populating verse objects with `{testament, area, book, chapter, verse, text}` plus a standard reference (`stdChapter`/`stdVerse`, from the file's `"ref"`): the verse's World English Bible numbering. Useful verses, Christmas verses, Story Mode pools and Story save data all use the standard reference (`BibleData::findStdRef()`), so they work in every version (the Douay-Rheims' Psalm 22 is psalms 23). Guessing and the shown answer use the version's own numbers. A new version from Settings applies between games (`ApplyBibleVersionSetting()`), never mid-game
 3. **Mode/seed selection**: `StartScreen`/`SettingsScreen` pick Daily vs. Random, a seed, and Hard Mode; `SeededRandom` resolves that into a verse index (`GetDailySeed()` for Daily, `HashStringToInt()`/`GenerateRandomSeed()` for Random) via `BibleData::getVerseAtIndex()`
 4. **Game Loop**: `BibirbleWindow` owns a `GameState` (single source of truth for mode/seed/stage/history), processes turns, and uses `getRevealedText()` with difficulty stages
@@ -33,7 +33,7 @@
 2. `src/BibleData.cpp`: getBookArea() static map (queried by UI for book color feedback)
 3. Bibirble-web's `scripts/books.js`: AREAS
 
-When modifying book categories, update ALL of them identically. The list of Bible versions is likewise in `tools/sort.py` (VERSIONS), `src/BibleVersions.h`, `Bibirble.rc`, `CMakeLists.txt` (`BIBIRBLE_BLOBS`) and Bibirble-web's `scripts/versions.js`.
+When modifying book categories, update ALL of them identically. Hard mode's authors (`BibleData::getBookAuthor()`) must likewise match AUTHORS in Bibirble-web's `scripts/books.js`. The list of Bible versions lives only in `tools/bible_versions.json`; everything else is generated from it by `tools/sort.py`. New areas hold at most 8 books (only the original areas and Paul's letters are bigger).
 
 ## Build & Development Workflow
 
@@ -57,13 +57,13 @@ When modifying book categories, update ALL of them identically. The list of Bibl
 
 ### Data Pipeline
 ```bash
-python tools/sort.py  # from the repo root: reads tools/bibles/<version>/*.json, writes bible_sections*.json
+python tools/sort.py  # from the repo root: reads tools/bibles/<version>/*.json, writes bibles/<id>.json.gz
 python tools/check_story_map.py
 ```
 
-New source data: `python tools/split_bible.py <version> <whole-bible.json or folder>` writes `tools/bibles/<version>/`. It strips CPDV's `<I>speaker</I>` labels and stray markup.
+New source data: `python tools/fetch_ebible.py [ids]` re-downloads the eBible.org versions; `python tools/split_bible.py <version> <whole-bible.json or folder>` splits anything else. Psalm 151 is skipped on purpose.
 
-Every version's `bible_sections*.json` is compiled into the program (`Bibirble.rc` on Windows, a CMake-generated `.incbin` blob on Linux) so the game ships as a single file; `src/EmbeddedData.cpp` reads it. A `bible_sections*.json` found on disk (see `BibleData::ResolveDataFilePath()`) still wins, so new `tools/sort.py` output can be tested without rebuilding. macOS has no embedded copy yet and still needs the file next to the app.
+Every `bibles/*.json.gz` is compiled into the program (`Bibirble.rc` -> `bibles/bibles.rc` on Windows; a CMake-generated `.incbin` blob plus id table on Linux) and unpacked with zlib so the game ships as a single file; `src/EmbeddedData.cpp` reads it. A `bibles/<id>.json.gz` found on disk (see `BibleData::ResolveDataFilePath()`) still wins, so new `tools/sort.py` output can be tested without rebuilding. macOS has no embedded copy yet and still needs the file next to the app.
 
 The app icon lives in `icons/` (artwork copied from Bibirble-web's `icons/`): `bibirble.ico` is the `appicon` resource in `Bibirble.rc` (Explorer icon + title bar on Windows), and `bibirble.png` is `.incbin`'d on Linux and set as the window icon by `LoadAppIcons()` in `BibirbleWindow.cpp`. `bibirble.desktop` adds it to a Linux app menu.
 
@@ -100,7 +100,7 @@ Verse and story text is UTF-8 (curly quotes, dashes, emoji). Always convert it w
 
 Story Mode's logic has tests: `cmake --build build --target story_tests && ctest --test-dir build`. Everything else is tested by hand:
 1. Build project
-2. Ensure the `bible_sections*.json` files are built (they're embedded)
+2. Ensure `bibles/*.json.gz` are built (they're embedded)
 3. Run executable and manually test game flow
 4. Verify color feedback and verse reveal progression
 ## Project History
