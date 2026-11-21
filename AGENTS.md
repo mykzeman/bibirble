@@ -41,7 +41,13 @@ When modifying book categories, update ALL of them identically. Hard mode's auth
 ```powershell
 .\build.ps1              # Build Release (creates ./build/ directory)
 .\build.ps1 -BuildType Debug
-.\build\Bibirble.exe     # Run executable
+.\build\Release\Bibirble.exe   # Run executable
+.\build.ps1 -Triplet x64-windows   # DLL build instead (needs the DLLs + VC++ Redistributable)
+```
+
+`build.ps1` defaults to the vcpkg `x64-windows-static` triplet, and `CMakeLists.txt` switches to the static MSVC runtime (`/MT`) for `-static` triplets, so `Bibirble.exe` is a true single file: no wxWidgets/zlib DLLs and no Visual C++ Redistributable. One-time setup on a new machine:
+```powershell
+C:\vcpkg\vcpkg install wxwidgets zlib nlohmann-json --triplet x64-windows-static
 ```
 
 ### Linux/macOS Development

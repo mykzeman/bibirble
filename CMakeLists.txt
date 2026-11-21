@@ -1,4 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
+
+# Static vcpkg triplets (x64-windows-static, build.ps1's default) link
+# wxWidgets, zlib and the MSVC runtime into the exe, so Bibirble.exe needs no
+# DLLs and no Visual C++ Redistributable. Must match the triplet's static CRT.
+if(VCPKG_TARGET_TRIPLET MATCHES "-static$")
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 project(Bibirble)
 
 set(CMAKE_CXX_STANDARD 17)
