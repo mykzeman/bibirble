@@ -6,7 +6,7 @@
 <ul>
 <li>A 64-bit PC (x86-64). ARM computers such as the Raspberry Pi are not supported.</li>
 <li>A desktop (X11 or Wayland) with a screen of at least 1024 x 768. The window can shrink to 420 x 420, but a game only shows every guess row and the Submit Answer button at about 420 x 850 (tall) or 900 x 620 (wide) and bigger.</li>
-<li>About 50 MB of disk space (the program is 47 MB) and 256 MB of free memory (it uses about 165 MB while playing).</li>
+<li>About 50 MB of disk space (the program is 47 MB) and 256 MB of free memory (it uses about 165 to 170 MB while playing).</li>
 </ul>
 
 <h2>Linux version</h2>
@@ -37,18 +37,18 @@
 <p>To add it to your app menu, copy <code>bibirble.desktop</code> from the source code to <code>~/.local/share/applications/</code> and set its <code>Exec=</code> line to where you saved <code>Bibirble</code>.</p>
 
 <h2>What these requirements come from</h2>
-<p>Worked out from the build itself (commit f2b80c6, pull request #17, built on Ubuntu 24.04 with GCC 13.3): the libraries it links to are wxWidgets 3.2 (core and base), zlib, libstdc++, libgcc and glibc; the newest symbol versions it uses are GLIBC_2.38 and GLIBCXX_3.4.32.</p>
+<p>Worked out from the build itself (commit a8937c7, pull request #18, built on Ubuntu 24.04 with GCC 13.3): the libraries it links to are wxWidgets 3.2 (core and base), zlib, libstdc++, libgcc and glibc; the newest symbol versions it uses are GLIBC_2.38 and GLIBCXX_3.4.32.</p>
 <ul>
 <li><code>libwx_gtk3u_core-3.2.so.0</code> and <code>libwx_baseu-3.2.so.0</code>: wxWidgets 3.2 (<code>libwxgtk3.2-1t64</code> on Ubuntu/Debian, <code>wxGTK</code> on Fedora, <code>wxwidgets-gtk3</code> on Arch)</li>
 <li><code>libz.so.1</code>: zlib (<code>zlib1g</code>, <code>zlib</code>, <code>zlib</code>)</li>
 <li><code>libstdc++.so.6</code>, <code>libgcc_s.so.1</code>, <code>libm.so.6</code>, <code>libc.so.6</code>: part of every Linux system</li>
 </ul>
 <h2>Measured on this build</h2>
-<p>Run on a 4-core x86-64 machine with 16 GB of memory under a virtual X display (no window manager), five times:</p>
+<p>Run on a 4-core x86-64 machine with 16 GB of memory under a virtual X display (no window manager), five times. Pull request #18 only changes this page, so the program is the same as pull request #17's (commit f2b80c6) and the numbers match it:</p>
 <ul>
 <li>Program size: 49,147,528 bytes (about 47 MB).</li>
-<li>Time to the first window: about 1.8 seconds (1.80 to 1.88), most of it the loading screen.</li>
-<li>Memory on the start screen: about 153 MB; in a game: about 165 MB; on the Story Mode map: about 159 MB.</li>
+<li>Time to the first window: about 1.8 seconds (1.80 to 1.87), most of it the loading screen; about 2.2 seconds the very first time, before the program is in the disk cache.</li>
+<li>Memory on the start screen: about 157 to 162 MB; in a game: about 164 to 169 MB; on the Story Mode map: about 158 MB.</li>
 <li>CPU while sitting idle: almost none (0 to 1 hundredths of a second over 5 seconds).</li>
 <li>Window sizes in a game: 420 x 850 and 900 x 620 show everything. At 420 x 420 the number keys cover the guess rows and Submit Answer is hidden; at 421 x 420 (wide) the guess rows are squeezed to a sliver; at 420 x 600 and 800 x 560 the last rows and Submit Answer are cut off. Enter still submits a guess.</li>
 <li>Story Mode tests (<code>story_tests</code>): all pass.</li>
