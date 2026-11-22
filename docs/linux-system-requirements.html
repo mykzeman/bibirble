@@ -1,0 +1,40 @@
+<h1>Bibirble for Linux: system requirements</h1>
+
+<p>Bibirble is a single program file. Every Bible version, the Story Mode map and its word list are built into it.</p>
+
+<h2>Computer</h2>
+<ul>
+<li>A 64-bit PC (x86-64). ARM computers such as the Raspberry Pi are not supported.</li>
+<li>A desktop with a screen (X11 or Wayland) at least 420 x 420 pixels.</li>
+<li>About 50 MB of disk space and 256 MB of free memory.</li>
+</ul>
+
+<h2>Linux version</h2>
+<p>It needs glibc 2.38 or newer and the C++ library from GCC 13 or newer, which these have:</p>
+<ul>
+<li>Ubuntu 24.04 or newer</li>
+<li>Linux Mint 22 or newer</li>
+<li>Debian 13 (trixie) or newer</li>
+<li>Fedora 39 or newer</li>
+<li>Arch Linux, Manjaro and other up-to-date rolling releases</li>
+</ul>
+<p>Older versions, such as Ubuntu 22.04 or Debian 12, can't run it.</p>
+
+<h2>Libraries to install</h2>
+<p>It uses wxWidgets 3.2 (GTK 3) and zlib. Install them once:</p>
+<ul>
+<li>Ubuntu, Linux Mint, Debian: <code>sudo apt install libwxgtk3.2-1t64 zlib1g</code></li>
+<li>Fedora: <code>sudo dnf install wxGTK zlib</code></li>
+<li>Arch Linux, Manjaro: <code>sudo pacman -S wxwidgets-gtk3 zlib</code></li>
+</ul>
+
+<h2>Running it</h2>
+<ol>
+<li>Download <code>Bibirble</code>.</li>
+<li>Make it runnable: <code>chmod +x Bibirble</code></li>
+<li>Start it: <code>./Bibirble</code></li>
+</ol>
+<p>To add it to your app menu, copy <code>bibirble.desktop</code> from the source code to <code>~/.local/share/applications/</code> and set its <code>Exec=</code> line to where you saved <code>Bibirble</code>.</p>
+
+<h2>What these requirements come from</h2>
+<p>Worked out from the build itself (version 6be33dd, built on Ubuntu 24.04): the libraries it links to are wxWidgets 3.2 (core and base), zlib, libstdc++, libgcc and glibc; the newest symbol versions it uses are GLIBC_2.38 and GLIBCXX_3.4.32.</p>

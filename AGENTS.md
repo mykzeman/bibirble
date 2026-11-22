@@ -128,3 +128,20 @@ persistence (`PersistenceManager`), and a Wordle-style emoji share grid (`GameSt
 `CHANGES.md` for the detailed commit-by-commit history of that work, including three bug fixes made along the
 way: Nehemiah was miscategorized as a minor prophet, `getRevealedText()` could only ever reveal the first
 occurrence of a repeated word, and the loading screen could hang forever (see the CallAfter note above).
+
+## Every pull request: Linux system requirements HTML
+
+Any agent (Claude or otherwise): every time a pull request goes out (opened, or more commits pushed to an
+open one), update `docs/linux-system-requirements.html` to match that build, commit it on the PR's branch,
+and send it to the user. Plain HTML with **no styling** (no `<style>`, `style=`, `class`, CSS or scripts)
+and **no metadata** (no doctype, `<html>`, `<head>`, `<meta>`, `<title>`): start straight with `<h1>`.
+Work the requirements out from the actual Linux build (`readelf -d` for the linked libraries,
+`objdump -T` for the newest GLIBC/GLIBCXX versions). The full checklist is in `CLAUDE.md`.
+
+## Documentation style
+
+Any agent writing documentation must match the existing docs: read the neighbouring doc first and copy its
+shape (README features list, AGENTS.md component entries, one appended `## Title` section per change in
+CHANGES.md, numbered sections in design docs, plain HTML with no styling or metadata for HTML docs). The
+full checklist is in `CLAUDE.md`.
+

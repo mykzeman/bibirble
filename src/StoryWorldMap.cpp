@@ -99,7 +99,7 @@ wxRect StoryWorldMap::ZoomOutButton() const {
 int StoryWorldMap::HitTest(const wxPoint& at) const {
     if (Zoomed() && ZoomOutButton().Contains(at)) return kZoomOut;
     const int reach = PinRadius() + 4;
-    auto near = [&](const wxPoint& c, long& dist) {
+    auto isNear = [&](const wxPoint& c, long& dist) {
         const long dx = at.x - c.x, dy = at.y - c.y;
         dist = dx * dx + dy * dy;
         return dist <= long(reach) * reach;
@@ -108,12 +108,12 @@ int StoryWorldMap::HitTest(const wxPoint& at) const {
     long bestDist = 0, dist = 0;
     for (size_t i = 0; i < m_pins.size(); ++i) {
         if (!PinVisible(m_pins[i])) continue;
-        if (near(ToScreen(m_pins[i].x, m_pins[i].y), dist) && (best == -1 || dist < bestDist)) {
+        if (isNear(ToScreen(m_pins[i].x, m_pins[i].y), dist) && (best == -1 || dist < bestDist)) {
             best = static_cast<int>(i);
             bestDist = dist;
         }
     }
-    if (!Zoomed() && m_closeUp.IsSet() && near(ToScreen(m_closeUp.pinX, m_closeUp.pinY), dist) &&
+    if (!Zoomed() && m_closeUp.IsSet() && isNear(ToScreen(m_closeUp.pinX, m_closeUp.pinY), dist) &&
         (best == -1 || dist < bestDist)) {
         best = kCloseUpPin;
     }

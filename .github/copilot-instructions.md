@@ -105,3 +105,10 @@ Originally I worked on it a year ago but stopped . Recently I made AI recreate t
 
 ### what i need you to do
 manage  and see if ther are any files that are not inculed within the main loop and needed for delevopment. Fully intergrate the files so that they are unafided togeather and is ready for development. Update `CHANGES.md` with the changes you made and the files you integrated.
+
+## Every pull request: Linux system requirements HTML
+
+Every time a pull request goes out, update `docs/linux-system-requirements.html` to match that build:
+plain HTML with no styling and no metadata (no doctype, `<head>`, `<meta>`, `<title>`, `<style>` or
+`style=`). See `CLAUDE.md` for the full checklist.
+
