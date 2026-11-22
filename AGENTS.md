@@ -138,3 +138,10 @@ and **no metadata** (no doctype, `<html>`, `<head>`, `<meta>`, `<title>`): start
 Work the requirements out from the actual Linux build (`readelf -d` for the linked libraries,
 `objdump -T` for the newest GLIBC/GLIBCXX versions). The full checklist is in `CLAUDE.md`.
 
+## Documentation style
+
+Any agent writing documentation must match the existing docs: read the neighbouring doc first and copy its
+shape (README features list, AGENTS.md component entries, one appended `## Title` section per change in
+CHANGES.md, numbered sections in design docs, plain HTML with no styling or metadata for HTML docs). The
+full checklist is in `CLAUDE.md`.
+

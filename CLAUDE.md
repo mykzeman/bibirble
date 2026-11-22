@@ -20,3 +20,23 @@ branch, and send the file to the user.
     binary's size) and memory.
 - Keep the sections: Computer, Linux version, Libraries to install (one install command per distro family),
   Running it, and What these requirements come from (the commit it was built from and the linked libraries).
+
+## Documentation: write it the same way as the existing docs
+
+Any agent writing or changing documentation must match how the existing docs are already written. Read the
+neighbouring doc first and copy its shape; don't invent a new format.
+
+- **Plain, short sentences** in everyday words. Say what the feature does for the player, then the file or
+  function that does it (`src/StoryWorldMap.h/cpp`), in backticks.
+- **README.md:** the project overview, layout tree, data format, features list (`- **Name**: what it does`)
+  and notes. Update the matching entry rather than adding a new section.
+- **AGENTS.md:** one entry per component (`- **Name** (`files`): what it owns`), the critical invariants
+  (things kept in sync in several places) and the build/data pipeline commands.
+- **CHANGES.md:** append one `## Title` section per change, with `-` bullets of what changed and why; never
+  rewrite older sections.
+- **docs/*.md** design docs (like `docs/STORY_MODE.md`): numbered `##` sections, **bold** key terms, and a
+  new `##` section at the end for a new part of the design.
+- **HTML docs** (like `docs/linux-system-requirements.html`): plain HTML with no styling and no metadata,
+  exactly as described in the section above.
+- Keep docs in sync with the code in the same commit, and keep Bibirble-web's docs matching when a change
+  touches both games (its own rules are in Bibirble-web's `CLAUDE.md`).
