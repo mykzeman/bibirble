@@ -207,6 +207,9 @@ bool StoryMap::ParseLevel(const json& j, const std::string& areaId, bool isBonus
         }
     }
     if (out.id.empty()) fail("level has no id");
+    out.region = j.value("region", "");
+    if (out.region.empty()) fail("level has no region (where it sits on the map)");
+    else if (!FindRegion(out.region)) fail("unknown region \"" + out.region + "\"");
 
     std::vector<std::string> refs;
     if (j.contains("pool") && j["pool"].is_string()) {
@@ -263,6 +266,7 @@ bool StoryMap::ParseLevel(const json& j, const std::string& areaId, bool isBonus
 
 bool StoryMap::LoadFromText(const std::string& text, const BibleData& bible) {
     m_areas.clear();
+    m_regions.clear();
     m_errors.clear();
     m_loaded = false;
 
@@ -281,6 +285,31 @@ bool StoryMap::LoadFromText(const std::string& text, const BibleData& bible) {
     const BookIndex bookIndex = BuildBookIndex(bible);
     g_loadIndex = &bookIndex;
     struct ClearIndex { ~ClearIndex() { g_loadIndex = nullptr; } } clearIndex;
+
+    // Places on the map picture; every level names one.
+    if (root.contains("regions") && root["regions"].is_array()) {
+        std::set<std::string> regionIds;
+        for (const auto& r : root["regions"]) {
+            StoryRegion region;
+            if (r.is_object()) {
+                region.id = r.value("id", "");
+                region.name = r.value("name", region.id);
+                region.x = r.value("x", -1.0);
+                region.y = r.value("y", -1.0);
+            }
+            if (region.id.empty()) {
+                m_errors.push_back("a region has no id");
+            } else if (!regionIds.insert(region.id).second) {
+                m_errors.push_back("duplicate region id \"" + region.id + "\"");
+            } else if (region.x < 0 || region.x > 100 || region.y < 0 || region.y > 100) {
+                m_errors.push_back("region \"" + region.id + "\" needs x and y between 0 and 100");
+            } else {
+                m_regions.push_back(region);
+            }
+        }
+    } else {
+        m_errors.push_back("story_map.json needs a \"regions\" list");
+    }
 
     GuessTiers defaultTiers;
     double hardScale = 1.25;
@@ -357,6 +386,11 @@ const StoryLevel* StoryMap::FindLevel(const std::string& key) const {
         for (const auto& l : area.levels) if (l.key == key) return &l;
         for (const auto& l : area.bonusLevels) if (l.key == key) return &l;
     }
+    return nullptr;
+}
+
+const StoryRegion* StoryMap::FindRegion(const std::string& id) const {
+    for (const auto& r : m_regions) if (r.id == id) return &r;
     return nullptr;
 }
 

@@ -9,6 +9,8 @@
 // Story Mode's map, embedded the same way (a story_map.json next to the exe
 // takes priority).
 STORY_MAP_JSON RCDATA "story_map.json"
+// The Story Mode map picture the levels are pinned on.
+STORY_MAP_PNG RCDATA "data/story_map.png"
 
 // English word list for Story Mode's fill-in-the-blank puzzles (the
 // public-domain ENABLE list).

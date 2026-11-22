@@ -1,6 +1,12 @@
 #include "StoryMapScreen.h"
+#include "EmbeddedData.h"
+#include "StoryWorldMap.h"
 #include "Theme.h"
 #include "WrappingText.h"
+
+#include <wx/mstream.h>
+
+#include <map>
 
 namespace {
 const char* kStar = "\xE2\x98\x85";        // ★
@@ -8,6 +14,7 @@ const char* kEmptyStar = "\xE2\x98\x86";   // ☆
 const char* kLock = "\xF0\x9F\x94\x92";    // 🔒
 const char* kCrystal = "\xF0\x9F\x94\xAE"; // 🔮
 const char* kBook = "\xF0\x9F\x93\x96";    // 📖
+const char* kPin = "\xF0\x9F\x93\x8D";     // 📍
 
 wxFont BoldFont(int size) {
     return wxFont(size, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
@@ -31,10 +38,24 @@ wxString StarString(int stars, int maxStars) {
 StoryMapScreen::StoryMapScreen(wxWindow* parent) : wxScrolledWindow(parent) {
     SetScrollRate(0, 10);
     SetBackgroundColour(Theme::Background());
+    std::string png;
+    if (ReadStoryMapImage(png)) {
+        if (!wxImage::FindHandler(wxBITMAP_TYPE_PNG)) wxImage::AddHandler(new wxPNGHandler);
+        wxMemoryInputStream stream(png.data(), png.size());
+        m_picture.LoadFile(stream, wxBITMAP_TYPE_PNG);
+    }
+}
+
+void StoryMapScreen::Rebuild() {
+    if (m_map && m_progress && m_bible) ShowMap(*m_map, *m_progress, *m_bible, m_allowMature);
 }
 
 void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress, const BibleData& bible,
                              bool allowMature) {
+    m_map = &map;
+    m_progress = &progress;
+    m_bible = &bible;
+    m_allowMature = allowMature;
     Freeze();
     DestroyChildren();
     wxBoxSizer* layout = new wxBoxSizer(wxVERTICAL);
@@ -96,22 +117,97 @@ void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress,
         }
     }
 
+    // The levels that are shown (locked bonus levels and a locked bonus area
+    // stay hidden), grouped by the region on the map where they happen.
+    struct Shown {
+        const StoryLevel* level;
+        wxString areaTitle;
+    };
+    std::map<std::string, std::vector<Shown>> byRegion;
+    std::vector<std::string> playOrder;  // levels in map order, to find where the player is up to
     for (const auto& area : map.Areas()) {
         if (area.bonusArea) {
             // Hidden completely until its first level unlocks.
             if (area.levels.empty() || !progress.IsUnlocked(area.levels.front().key)) continue;
         }
-        wxStaticText* areaTitle = new wxStaticText(this, wxID_ANY,
-            (area.bonusArea ? wxString::FromUTF8(kCrystal) + " " : wxString()) + wxString::FromUTF8(area.title));
-        areaTitle->SetFont(BoldFont(14));
-        areaTitle->SetForegroundColour(Theme::Accent());
-        layout->Add(areaTitle, 0, wxLEFT | wxRIGHT | wxTOP, 12);
-
-        for (const auto& lvl : area.levels) AddLevelRow(layout, lvl, progress, bible, allowMature, nextUp);
+        const wxString areaTitle = (area.bonusArea ? wxString::FromUTF8(kCrystal) + " " : wxString()) +
+                                   wxString::FromUTF8(area.title);
+        for (const auto& lvl : area.levels) {
+            byRegion[lvl.region].push_back({&lvl, areaTitle});
+            playOrder.push_back(lvl.key);
+        }
         for (const auto& lvl : area.bonusLevels) {
-            if (progress.IsUnlocked(lvl.key)) AddLevelRow(layout, lvl, progress, bible, allowMature, nextUp);
+            if (progress.IsUnlocked(lvl.key)) byRegion[lvl.region].push_back({&lvl, areaTitle});
         }
     }
+
+    // One pin per region with levels: gold when every level there is passed,
+    // orange when something there can be played, grey while it's all locked.
+    std::vector<StoryWorldMap::Pin> pins;
+    for (const auto& region : map.Regions()) {
+        auto it = byRegion.find(region.id);
+        if (it == byRegion.end()) continue;
+        bool anyOpen = false, allPassed = true;
+        for (const auto& shown : it->second) {
+            const LevelProgress* lp = progress.Get(shown.level->key);
+            const bool unlocked = progress.IsUnlocked(shown.level->key);
+            if (unlocked && shown.level->available) anyOpen = true;
+            if (!(lp && lp->passed)) allPassed = false;
+        }
+        StoryWorldMap::Pin pin;
+        pin.id = region.id;
+        pin.name = wxString::FromUTF8(region.name);
+        pin.x = region.x;
+        pin.y = region.y;
+        pin.levels = static_cast<int>(it->second.size());
+        pin.state = allPassed ? StoryWorldMap::PinState::Done
+                  : anyOpen ? StoryWorldMap::PinState::Open : StoryWorldMap::PinState::Locked;
+        pins.push_back(pin);
+    }
+
+    // Which region to show: the one picked, else where the attempt in
+    // progress is, else the first unlocked level not yet passed.
+    if (!byRegion.count(m_selectedRegion)) m_selectedRegion.clear();
+    if (m_selectedRegion.empty() && run.active) {
+        if (const StoryLevel* lvl = map.FindLevel(run.levelKey)) m_selectedRegion = lvl->region;
+    }
+    if (m_selectedRegion.empty()) {
+        for (const auto& key : playOrder) {
+            const StoryLevel* lvl = map.FindLevel(key);
+            const LevelProgress* lp = progress.Get(key);
+            if (lvl && lvl->available && progress.IsUnlocked(key) && !(lp && lp->passed)) {
+                m_selectedRegion = lvl->region;
+                break;
+            }
+        }
+    }
+    if (m_selectedRegion.empty() && !pins.empty()) m_selectedRegion = pins.front().id;
+
+    StoryWorldMap* worldMap = new StoryWorldMap(this, m_picture);
+    worldMap->SetPins(pins, m_selectedRegion);
+    worldMap->SetOnSelect([this](const std::string& id) {
+        m_selectedRegion = id;
+        // Rebuilding destroys the map panel, so not from inside its handler.
+        CallAfter([this]() { Rebuild(); });
+    });
+    layout->Add(worldMap, 0, wxEXPAND | wxLEFT | wxRIGHT, 8);
+
+    WrappingText* hint = new WrappingText(this, "Pick a place on the map to see its levels. Orange: levels to play. "
+                                                "Gold: all passed. Grey: still locked.");
+    hint->SetForegroundColour(wxColour(110, 100, 80));
+    layout->Add(hint, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
+
+    if (const StoryRegion* region = map.FindRegion(m_selectedRegion)) {
+        wxStaticText* regionTitle = new wxStaticText(this, wxID_ANY,
+            wxString::FromUTF8(kPin) + " " + wxString::FromUTF8(region->name));
+        regionTitle->SetFont(BoldFont(14));
+        regionTitle->SetForegroundColour(Theme::Accent());
+        layout->Add(regionTitle, 0, wxLEFT | wxRIGHT | wxTOP, 12);
+        for (const auto& shown : byRegion[m_selectedRegion]) {
+            AddLevelRow(layout, *shown.level, shown.areaTitle, progress, bible, allowMature, nextUp);
+        }
+    }
+    layout->AddSpacer(10);
 
     SetSizer(layout);
     FitInside();
@@ -119,13 +215,18 @@ void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress,
     Layout();
 }
 
-void StoryMapScreen::AddLevelRow(wxSizer* sizer, const StoryLevel& level, const StoryProgress& progress,
-                                 const BibleData& bible, bool allowMature, const std::set<std::string>& nextUp) {
+void StoryMapScreen::AddLevelRow(wxSizer* sizer, const StoryLevel& level, const wxString& areaTitle,
+                                 const StoryProgress& progress, const BibleData& bible, bool allowMature,
+                                 const std::set<std::string>& nextUp) {
     wxPanel* row = new wxPanel(this);
     const bool unlocked = progress.IsUnlocked(level.key);
     row->SetBackgroundColour(unlocked ? *wxWHITE : wxColour(225, 225, 225));
     wxBoxSizer* rs = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer* info = new wxBoxSizer(wxVERTICAL);
+    // Which part of the story the level belongs to ("Promises").
+    wxStaticText* area = new wxStaticText(row, wxID_ANY, areaTitle);
+    area->SetForegroundColour(wxColour(150, 120, 80));
+    info->Add(area, 0, wxBOTTOM, 1);
 
     const wxString name = (level.isBonus ? wxString::FromUTF8(kCrystal) + " " : wxString()) +
                           wxString::FromUTF8(level.title);

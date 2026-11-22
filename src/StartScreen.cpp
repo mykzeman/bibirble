@@ -136,6 +136,9 @@ void StartScreen::SetupUi() {
 
     addHeading("New in this update");
     addItems({
+        "Story map: Story Mode now opens on a map of the Bible lands, from "
+        "Rome to Persia. Every level sits where its story happens: tap a "
+        "place like Egypt, Sinai or Jerusalem to see its levels.",
         "Bible versions: pick from 32 public-domain Bibles in Settings, like "
         "the King James Version, Douay-Rheims, Young's Literal and the "
         "Septuagint. Story Mode works in every version, and Bibles with the "

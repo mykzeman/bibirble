@@ -72,15 +72,16 @@ void TestRealMap(const BibleData& bible, const std::string& dir) {
 }
 
 const char* kTestMap = R"({
+  "regions": [ { "id": "r", "name": "Somewhere", "x": 50, "y": 50 } ],
   "defaults": { "guessStars": { "3": 3, "2": 6, "1": 9 } },
   "areas": [
     { "id": "a", "levels": [
-        { "id": "one", "pool": "ruth 1:1-3", "minStars": 0 },
-        { "id": "two", "pool": ["ruth 1:4-6", "ruth 2:1"], "minStars": "2x" } ],
-      "bonusLevels": [ { "id": "b", "pool": "joel 1:1-3", "requiresStars": 5 } ] },
-    { "id": "n", "openFromStart": true, "levels": [ { "id": "one", "pool": "mark 1:1-3" } ] },
+        { "id": "one", "region": "r", "pool": "ruth 1:1-3", "minStars": 0 },
+        { "id": "two", "region": "r", "pool": ["ruth 1:4-6", "ruth 2:1"], "minStars": "2x" } ],
+      "bonusLevels": [ { "id": "b", "region": "r", "pool": "joel 1:1-3", "requiresStars": 5 } ] },
+    { "id": "n", "openFromStart": true, "levels": [ { "id": "one", "region": "r", "pool": "mark 1:1-3" } ] },
     { "id": "end", "bonusArea": true, "unlock": "perfect", "levels": [
-        { "id": "e1", "pool": "revelation 1:1-3" }, { "id": "e2", "pool": "revelation 2:1-3" } ] }
+        { "id": "e1", "region": "r", "pool": "revelation 1:1-3" }, { "id": "e2", "region": "r", "pool": "revelation 2:1-3" } ] }
   ]
 })";
 
@@ -210,6 +211,19 @@ void TestWordPuzzles(const BibleData& bible, const std::string& dir) {
     words.Load("Noah\nmoses\n");  // capitalised lines are names, so skipped
     CHECK(!words.Contains("noah") && words.Contains("moses"));
 
+    // Every level of the real map sits in a region on the map picture.
+    {
+        StoryMap real;
+        CHECK(real.LoadFromText(ReadFile(dir + "/story_map.json"), bible));
+        CHECK(real.Regions().size() >= 20);
+        const StoryLevel* sinai = real.FindLevel("promises.sinai");
+        CHECK(sinai && sinai->region == "sinai" && real.FindRegion("sinai"));
+        StoryMap noRegion;
+        CHECK(!noRegion.LoadFromText(R"({"regions":[{"id":"r","x":1,"y":1}],"areas":[{"id":"a","levels":[
+            {"id":"x","pool":"ruth"},{"id":"y","region":"nowhere","pool":"ruth"}]}]})", bible));
+        CHECK(noRegion.Errors().size() == 2);
+    }
+
     // Blanks in the real map parse, and map answers can be added as guesses.
     StoryMap map;
     CHECK(map.LoadFromText(ReadFile(dir + "/story_map.json"), bible));
@@ -222,9 +236,9 @@ void TestWordPuzzles(const BibleData& bible, const std::string& dir) {
 
     // Bad blanks and "between" lists are reported when the map loads.
     StoryMap bad;
-    CHECK(!bad.LoadFromText(R"({"areas":[{"id":"a","levels":[
-        {"id":"x","pool":"ruth","intro":"An {{ark"},
-        {"id":"y","pool":"ruth","between":["a","b","c"]}]}]})", bible));
+    CHECK(!bad.LoadFromText(R"({"regions":[{"id":"r","x":1,"y":1}],"areas":[{"id":"a","levels":[
+        {"id":"x","region": "r", "pool":"ruth","intro":"An {{ark"},
+        {"id":"y","region": "r", "pool":"ruth","between":["a","b","c"]}]}]})", bible));
     CHECK(bad.Errors().size() == 2);
 }
 
@@ -246,10 +260,10 @@ void TestStoryDone(const BibleData& bible) {
 
 void TestMapErrors(const BibleData& bible) {
     StoryMap map;
-    CHECK(!map.LoadFromText(R"({"areas":[{"id":"a","levels":[
-        {"id":"x","pool":"notabook 1"},
-        {"id":"y","pool":"ruth 1:1-2"},
-        {"id":"y","pool":"ruth","minStars":"lots"}]}]})", bible));
+    CHECK(!map.LoadFromText(R"({"regions":[{"id":"r","x":1,"y":1}],"areas":[{"id":"a","levels":[
+        {"id":"x","region": "r", "pool":"notabook 1"},
+        {"id":"y","region": "r", "pool":"ruth 1:1-2"},
+        {"id":"y","region": "r", "pool":"ruth","minStars":"lots"}]}]})", bible));
     const auto& e = map.Errors();
     auto has = [&](const std::string& s) {
         return std::any_of(e.begin(), e.end(), [&](const std::string& m) { return m.find(s) != std::string::npos; });

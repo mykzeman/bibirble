@@ -401,3 +401,14 @@ Details settled while building it:
 - Hard Mode unlocks per level at **4+ stars**, and every passed level has a **Retry** button.
 - The End Times unlock stays the **ultimate challenge**: all 7 stars (Perfect included) on every
   non-bonus level. That means every verse of every regular pool solved (~17,700 verses).
+
+## The map picture
+
+Story Mode opens on a picture of the Bible lands (`data/story_map.png`, Rome to Persia). `story_map.json`'s
+`regions` list places on it (`id`, `name`, and `x`/`y` as percentages of the picture's width and height),
+and every level names the `region` where its story happens: Egypt for Joseph and the plagues, Sinai for
+the Law, Moab for Deuteronomy and Ruth, Babylon for Daniel and Ezekiel, Persia for Esther, Asia Minor for
+Paul's journeys and the seven churches, Patmos for Revelation, and so on. Each region with levels gets a
+pin: orange when something there can be played, gold when every level there is passed, grey while it's all
+locked. Picking a pin lists that region's levels under the map; it opens on the region you're up to.
+`tools/check_story_map.py` checks every level has a known region.

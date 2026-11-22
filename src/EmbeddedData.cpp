@@ -32,6 +32,8 @@ extern "C" const char bibirble_story_start[];
 extern "C" const char bibirble_story_end[];
 extern "C" const char bibirble_words_start[];
 extern "C" const char bibirble_words_end[];
+extern "C" const char bibirble_storyimg_start[];
+extern "C" const char bibirble_storyimg_end[];
 #endif
 
 namespace {
@@ -164,6 +166,22 @@ bool ReadWordListText(std::string& out) {
     return ReadEmbeddedResource(out, L"WORD_LIST_TXT");
 #elif defined(BIBIRBLE_HAS_INCBIN)
     out.assign(bibirble_words_start, bibirble_words_end);
+    return !out.empty();
+#else
+    return false;
+#endif
+}
+
+bool ReadStoryMapImage(std::string& out) {
+    if (ReadFirstFile({"data/story_map.png", "../data/story_map.png", "../../data/story_map.png",
+                       "story_map.png"}, out)) {
+        return true;
+    }
+
+#ifdef _WIN32
+    return ReadEmbeddedResource(out, L"STORY_MAP_PNG");
+#elif defined(BIBIRBLE_HAS_INCBIN)
+    out.assign(bibirble_storyimg_start, bibirble_storyimg_end);
     return !out.empty();
 #else
     return false;

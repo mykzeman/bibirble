@@ -36,6 +36,7 @@ struct StoryLevel {
     std::string id;
     std::string areaId;
     std::string title;
+    std::string region;  // StoryRegion id: where on the map the level's story happens
     // Story text, which may hold fill-in-the-blank puzzles ({{answer|hint}}):
     // before verse 1, after verse 1 and after verse 2 ("between"), and after
     // the level is passed.
@@ -71,6 +72,16 @@ struct StoryArea {
     std::vector<StoryLevel> bonusLevels;
 };
 
+// A place on the Story map's picture (data/story_map.png) where levels sit:
+// "egypt", "jerusalem"... x and y are percentages of the picture's width and
+// height.
+struct StoryRegion {
+    std::string id;
+    std::string name;
+    double x = 0;
+    double y = 0;
+};
+
 class StoryMap {
 public:
     // Parses the map JSON and resolves every pool against the loaded Bible.
@@ -83,6 +94,8 @@ public:
     bool Load(const BibleData& bible);
 
     const std::vector<StoryArea>& Areas() const { return m_areas; }
+    const std::vector<StoryRegion>& Regions() const { return m_regions; }
+    const StoryRegion* FindRegion(const std::string& id) const;
     const StoryLevel* FindLevel(const std::string& key) const;
     const StoryArea* FindArea(const std::string& id) const;
     const std::vector<std::string>& Errors() const { return m_errors; }
@@ -102,6 +115,7 @@ private:
                     const BibleData& bible, StoryLevel& out);
 
     std::vector<StoryArea> m_areas;
+    std::vector<StoryRegion> m_regions;
     std::vector<std::string> m_errors;
     bool m_loaded = false;
 };
