@@ -140,6 +140,9 @@ void StartScreen::SetupUi() {
         "Rome to Persia. Every level sits where its story happens: tap a "
         "place like Egypt or Babylon, or zoom in on Israel. Places nobody "
         "can pin down, like the Garden of Eden, sit beside the map.",
+        "Tutorial: Story Mode's first level, In the Beginning, shows tips "
+        "step by step: pick a book, type the digits, and what your colours "
+        "mean. Enter now submits a guess too.",
         "Story book list: a Story level's book list only has the books from "
         "its part of the story, not all 66.",
         "Bible versions: pick from 32 public-domain Bibles in Settings, like "

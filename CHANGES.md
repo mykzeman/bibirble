@@ -247,3 +247,9 @@ Settings has a Bible version picker: World English Bible (default), King James V
 - Mount Sinai and the Red Sea crossing are back on the map at their traditional, approximate spots
   (`"approximate"`: dashed ring, "(approx.)" label); only the Garden of Eden and the Land of Uz stay off it.
 - The End Times area (`"allBooks": true`) offers every book in its book list.
+
+## Tutorial level
+
+- Story Mode's first level ("tutorial": true) shows a step-by-step tip bar: pick a book, type the digits,
+  submit, then what the player's own colours mean, how stars and passing work. "Skip tips" hides it.
+- Enter submits a guess (like the web version's Enter key).

@@ -223,6 +223,12 @@ void TestWordPuzzles(const BibleData& bible, const std::string& dir) {
         CHECK(!real.FindRegion("sinai")->offMap && real.FindRegion("sinai")->approximate);
         CHECK(!real.FindRegion("redsea")->offMap && real.FindRegion("redsea")->approximate);
         CHECK(real.FindArea("end-times")->allBooks && !real.FindArea("kings")->allBooks);
+        // The very first level is the tutorial, and only that one.
+        int tutorials = 0;
+        for (const auto& area : real.Areas()) {
+            for (const auto& l : area.levels) tutorials += l.tutorial ? 1 : 0;
+        }
+        CHECK(real.FindLevel("creation.eden")->tutorial && tutorials == 1);
         CHECK(!real.FindRegion("egypt")->offMap);
         CHECK(real.CloseUp().size > 0);
         CHECK(real.CloseUp().Contains(*real.FindRegion("jerusalem")));

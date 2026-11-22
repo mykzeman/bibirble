@@ -427,3 +427,11 @@ the region you're up to.
   draws on the whole Bible) offers every book.
 
 `tools/check_story_map.py` checks every level has a known region.
+
+## Tutorial
+
+The first level (`"tutorial": true` on `creation.eden`) is the tutorial. While it's played, a tip bar under the
+Story bar shows the next step from the game's state (`BibirbleWindow::UpdateTutorialTip`): read the verse and
+pick a book, type the chapter and verse digits, press Enter or Submit Answer, then what *this* guess's colours
+mean (book green/yellow/gray, how many digits were green or yellow), the number keys' colours and the 7 tries;
+verse 2 explains stars and passing, verse 3 unlocking. "Skip tips" hides it for the session.

@@ -37,6 +37,9 @@ struct StoryLevel {
     std::string areaId;
     std::string title;
     std::string region;  // StoryRegion id: where on the map the level's story happens
+    // A tutorial level (the first one): tips walk the player through their
+    // first verses step by step.
+    bool tutorial = false;
     // Story text, which may hold fill-in-the-blank puzzles ({{answer|hint}}):
     // before verse 1, after verse 1 and after verse 2 ("between"), and after
     // the level is passed.
