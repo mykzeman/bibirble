@@ -416,10 +416,14 @@ the region you're up to.
 - **Close-up:** the land around Israel is too crowded for one pin each, so `closeUp` names a square of the
   picture (`x`, `y`, `size` in percent, plus `pinX`/`pinY`). On the whole map, the regions inside it share
   one 🔍 pin; clicking it zooms in, where each place has its own named pin, and "Whole map" zooms out.
-- **Off the map:** places nobody can pin down (the Garden of Eden, the Land of Uz, Mount Sinai, where the
-  Red Sea was crossed) are `"offMap": true`: buttons under the map instead of a guessed spot.
+- **Off the map:** places nobody can pin down (the Garden of Eden, the Land of Uz) are `"offMap": true`:
+  buttons under the map instead of a guessed spot.
+- **Approximate:** places whose spot is only traditional (Mount Sinai at Jebel Musa in the south of the
+  Sinai peninsula; the Red Sea crossing at the north end of the Gulf of Suez) are `"approximate": true`:
+  pinned with a dashed ring and an "(approx.)" label.
 - **Book list:** while playing a level, the book dropdown offers the books of its story area (every level
   and bonus level in it: Kings offers Ruth to Chronicles and its prophets), not all 66+ books. Not just the
-  level's own pool, which would give the answer away.
+  level's own pool, which would give the answer away. An area with `"allBooks": true` (the End Times, which
+  draws on the whole Bible) offers every book.
 
 `tools/check_story_map.py` checks every level has a known region.

@@ -295,6 +295,7 @@ bool StoryMap::LoadFromText(const std::string& text, const BibleData& bible) {
                 region.id = r.value("id", "");
                 region.name = r.value("name", region.id);
                 region.offMap = r.value("offMap", false);
+                region.approximate = r.value("approximate", false);
                 region.x = r.value("x", region.offMap ? 0.0 : -1.0);
                 region.y = r.value("y", region.offMap ? 0.0 : -1.0);
             }
@@ -347,6 +348,7 @@ bool StoryMap::LoadFromText(const std::string& text, const BibleData& bible) {
         area.intro = a.value("intro", "");
         area.openFromStart = a.value("openFromStart", false);
         area.bonusArea = a.value("bonusArea", false);
+        area.allBooks = a.value("allBooks", false);
         if (area.id.empty()) {
             m_errors.push_back("an area has no id");
             continue;

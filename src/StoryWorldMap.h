@@ -26,6 +26,7 @@ public:
         int levels = 0;  // levels shown in this region
         PinState state = PinState::Locked;
         bool inCloseUp = false;
+        bool approximate = false;  // only a traditional spot: dashed ring, "(approx.)" label
     };
 
     struct CloseUp {

@@ -203,13 +203,21 @@ void StoryWorldMap::OnPaint(wxPaintEvent&) {
         return th;
     };
 
-    auto drawPin = [&](const wxPoint& c, double r, PinState state, int levels, bool selected, bool closeUp) {
+    auto drawPin = [&](const wxPoint& c, double r, PinState state, int levels, bool selected, bool closeUp,
+                       bool approximate = false) {
         gc->SetPen(*wxTRANSPARENT_PEN);
         gc->SetBrush(wxBrush(wxColour(0, 0, 0, 70)));
         gc->DrawEllipse(c.x - r + 1.5, c.y - r + 2, 2 * r, 2 * r);
         gc->SetBrush(wxBrush(PinColour(state)));
         gc->SetPen(wxPen(selected ? kInk : *wxWHITE, selected ? 3 : 2));
         gc->DrawEllipse(c.x - r, c.y - r, 2 * r, 2 * r);
+        if (approximate) {
+            // A dashed ring: the spot is only approximate.
+            wxPen dashed(selected ? kInk : wxColour(60, 45, 30), 2, wxPENSTYLE_SHORT_DASH);
+            gc->SetBrush(*wxTRANSPARENT_BRUSH);
+            gc->SetPen(dashed);
+            gc->DrawEllipse(c.x - r - 5, c.y - r - 5, 2 * r + 10, 2 * r + 10);
+        }
         if (closeUp) {
             // A second ring: this pin opens a close-up.
             gc->SetBrush(*wxTRANSPARENT_BRUSH);
@@ -264,10 +272,13 @@ void StoryWorldMap::OnPaint(wxPaintEvent&) {
         const bool selected = pin.id == m_selected;
         const bool hover = static_cast<int>(i) == m_hover;
         const double r = selected ? radius * 1.35 : (hover ? radius * 1.2 : radius);
-        drawPin(c, r, pin.state, pin.levels, selected, false);
+        drawPin(c, r, pin.state, pin.levels, selected, false, pin.approximate);
         // In the close-up there's room to name every place; on the whole map
         // only the selected or hovered one.
-        if (Zoomed() || selected || hover) drawLabel(pin.name, c.x, c.y + r + 5, selected || hover);
+        const wxString label = pin.approximate ? pin.name + " (approx.)" : pin.name;
+        if (Zoomed() || selected || hover) {
+            drawLabel(label, c.x, c.y + r + (pin.approximate ? 9 : 5), selected || hover);
+        }
     }
 
     if (Zoomed()) {
@@ -315,7 +326,8 @@ void StoryWorldMap::OnMotion(wxMouseEvent& event) {
         SetCursor(hit != -1 ? wxCursor(wxCURSOR_HAND) : wxNullCursor);
         if (hit >= 0) {
             const Pin& pin = m_pins[hit];
-            SetToolTip(wxString::Format("%s: %d %s", pin.name, pin.levels, pin.levels == 1 ? "level" : "levels"));
+            SetToolTip(wxString::Format("%s%s: %d %s", pin.name, pin.approximate ? " (approximate spot)" : "",
+                                        pin.levels, pin.levels == 1 ? "level" : "levels"));
         } else if (hit == kCloseUpPin) {
             SetToolTip("Zoom in to " + m_closeUp.name);
         } else {

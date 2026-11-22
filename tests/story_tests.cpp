@@ -219,7 +219,10 @@ void TestWordPuzzles(const BibleData& bible, const std::string& dir) {
         const StoryLevel* sinai = real.FindLevel("promises.sinai");
         CHECK(sinai && sinai->region == "sinai" && real.FindRegion("sinai"));
         // Unknown places sit off the map; the land around Israel has a close-up.
-        CHECK(real.FindRegion("eden")->offMap && real.FindRegion("sinai")->offMap);
+        CHECK(real.FindRegion("eden")->offMap && real.FindRegion("uz")->offMap);
+        CHECK(!real.FindRegion("sinai")->offMap && real.FindRegion("sinai")->approximate);
+        CHECK(!real.FindRegion("redsea")->offMap && real.FindRegion("redsea")->approximate);
+        CHECK(real.FindArea("end-times")->allBooks && !real.FindArea("kings")->allBooks);
         CHECK(!real.FindRegion("egypt")->offMap);
         CHECK(real.CloseUp().size > 0);
         CHECK(real.CloseUp().Contains(*real.FindRegion("jerusalem")));

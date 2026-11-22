@@ -68,21 +68,26 @@ struct StoryArea {
     std::string intro;
     bool openFromStart = false;
     bool bonusArea = false;     // hidden area, unlock: "perfect"
+    // The book dropdown offers every book, not just this area's (the End
+    // Times draws on the whole Bible).
+    bool allBooks = false;
     std::vector<StoryLevel> levels;
     std::vector<StoryLevel> bonusLevels;
 };
 
 // A place on the Story map's picture (data/story_map.png) where levels sit:
 // "egypt", "jerusalem"... x and y are percentages of the picture's width and
-// height. A place nobody can pin down (the Garden of Eden, the Land of Uz,
-// Mount Sinai, where the Red Sea was crossed) is "offMap": it's listed beside
-// the map instead of guessed onto it.
+// height. A place nobody can pin down (the Garden of Eden, the Land of Uz) is
+// "offMap": it's listed beside the map instead of guessed onto it. One whose
+// spot is only traditional (Mount Sinai, the Red Sea crossing) is
+// "approximate": pinned, but marked as approximate.
 struct StoryRegion {
     std::string id;
     std::string name;
     double x = 0;
     double y = 0;
     bool offMap = false;
+    bool approximate = false;
 };
 
 // The crowded land around Israel, shown zoomed in: a square of the picture

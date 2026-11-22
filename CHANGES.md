@@ -244,3 +244,6 @@ Settings has a Bible version picker: World English Bible (default), King James V
 - Places nobody can pin down (Garden of Eden, Land of Uz, Mount Sinai, the Red Sea crossing) are
   `"offMap"`: buttons under the map instead of guessed spots.
 - Story levels' book dropdown lists only the books of the level's story area (5-17 books instead of 66+).
+- Mount Sinai and the Red Sea crossing are back on the map at their traditional, approximate spots
+  (`"approximate"`: dashed ring, "(approx.)" label); only the Garden of Eden and the Land of Uz stay off it.
+- The End Times area (`"allBooks": true`) offers every book in its book list.

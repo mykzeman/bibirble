@@ -896,7 +896,7 @@ void BibirbleWindow::ContinueStoryRun() {
 std::vector<std::string> BibirbleWindow::StoryAreaBooks(const std::string& levelKey) const {
     const StoryLevel* level = m_storyMap.FindLevel(levelKey);
     const StoryArea* area = level ? m_storyMap.FindArea(level->areaId) : nullptr;
-    if (!area) return m_data.getAllBooks();
+    if (!area || area->allBooks) return m_data.getAllBooks();
     std::vector<int> indices;
     for (const auto* list : {&area->levels, &area->bonusLevels}) {
         for (const auto& l : *list) indices.insert(indices.end(), l.pool.begin(), l.pool.end());
@@ -912,7 +912,8 @@ void BibirbleWindow::StartStoryVerse() {
 
     // The book list holds the books of this level's story area (every level
     // and bonus level in it), so a Kings level offers Ruth to Chronicles and
-    // its prophets instead of all 66+ books. Not just the level's own pool:
+    // its prophets instead of all 66+ books. An "allBooks" area (the End
+    // Times) offers every book. Not just the level's own pool:
     // that would give the answer away.
     m_allBooks = StoryAreaBooks(run.levelKey);
     m_state.Reset(GameMode::Story, 0, run.hardMode, m_settingsScreen->GetBookHints(), verse);

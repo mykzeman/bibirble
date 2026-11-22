@@ -165,6 +165,7 @@ void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress,
         pin.state = allPassed ? StoryWorldMap::PinState::Done
                   : anyOpen ? StoryWorldMap::PinState::Open : StoryWorldMap::PinState::Locked;
         pin.inCloseUp = map.CloseUp().Contains(region);
+        pin.approximate = region.approximate;
         (region.offMap ? offMap : pins).push_back(pin);
     }
 
@@ -245,7 +246,8 @@ void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress,
 
     if (const StoryRegion* region = map.FindRegion(m_selectedRegion)) {
         wxStaticText* regionTitle = new wxStaticText(this, wxID_ANY,
-            wxString::FromUTF8(kPin) + " " + wxString::FromUTF8(region->name));
+            wxString::FromUTF8(kPin) + " " + wxString::FromUTF8(region->name) +
+            (region->approximate ? " (approximate spot)" : ""));
         regionTitle->SetFont(BoldFont(14));
         regionTitle->SetForegroundColour(Theme::Accent());
         layout->Add(regionTitle, 0, wxLEFT | wxRIGHT | wxTOP, 12);

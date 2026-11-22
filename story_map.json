@@ -97,13 +97,13 @@
             "id": "wilderness",
             "name": "Wilderness",
             "x": 45.6,
-            "y": 71.3
+            "y": 68.2
         },
         {
             "id": "egypt",
             "name": "Egypt",
-            "x": 38.5,
-            "y": 74.0
+            "x": 37.0,
+            "y": 76.5
         },
         {
             "id": "haran",
@@ -142,19 +142,23 @@
         {
             "id": "sinai",
             "name": "Mount Sinai",
-            "offMap": true
+            "x": 45.9,
+            "y": 73.1,
+            "approximate": true
         },
         {
             "id": "redsea",
             "name": "Red Sea crossing",
-            "offMap": true
+            "x": 43.7,
+            "y": 69.3,
+            "approximate": true
         }
     ],
     "closeUp": {
         "name": "Israel",
-        "x": 39.5,
-        "y": 53.0,
-        "size": 19,
+        "x": 38.5,
+        "y": 52.5,
+        "size": 23,
         "pinX": 48.6,
         "pinY": 63.0
     },
@@ -1102,6 +1106,7 @@
             "title": "The End Times",
             "bonusArea": true,
             "unlock": "perfect",
+            "allBooks": true,
             "note": "All future / end-time prophecy. Hidden until every non-bonus level has all 7 stars.",
             "levels": [
                 {
