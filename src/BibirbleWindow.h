@@ -11,6 +11,7 @@
 #include "StoryMapScreen.h"
 #include "StoryProgress.h"
 #include "StoryScreen.h"
+#include "WrappingText.h"
 
 #include <map>
 #include <random>
@@ -62,8 +63,13 @@ private:
     void OnStoryPlay(const std::string& levelKey, bool hardMode);
     void ContinueStoryRun();
     void StartStoryVerse();
+    // The books a Story level's book list offers: those of its story area.
+    std::vector<std::string> StoryAreaBooks(const std::string& levelKey) const;
     void HandleStoryVerseEnd(bool won);
     void UpdateStoryHud();
+    // The tutorial level's tip bar: shows the next step (pick a book, type
+    // the digits, submit, what your colours mean...) from the game's state.
+    void UpdateTutorialTip();
     void SaveStory();
     // Loads a Bible version (falling back to the World English Bible) and
     // rebuilds Story Mode's pools and progress for it.
@@ -101,6 +107,9 @@ private:
     std::mt19937 m_rng{std::random_device{}()};  // Story draws are not seeded
     wxPanel* m_storyHud = nullptr;
     wxStaticText* m_storyHudText = nullptr;
+    wxPanel* m_tutorialBar = nullptr;          // tips on the tutorial level
+    WrappingText* m_tutorialText = nullptr;
+    bool m_tutorialSkipped = false;            // "Skip tips" for this session
 
     wxBoxSizer* m_gameLayout = nullptr;   // verse/rows column + keyboard; vertical or horizontal
     wxPanel* m_keyboardPanel = nullptr;

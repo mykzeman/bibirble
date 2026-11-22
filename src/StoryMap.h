@@ -36,6 +36,13 @@ struct StoryLevel {
     std::string id;
     std::string areaId;
     std::string title;
+    std::string region;  // StoryRegion id: where on the map the level's story happens
+    // A tutorial level (the first one): tips walk the player through their
+    // first verses step by step.
+    bool tutorial = false;
+    // Always the same verses in the same order (the pool's first 3, in Bible
+    // order), so the tutorial plays exactly the same every time.
+    bool fixedOrder = false;
     // Story text, which may hold fill-in-the-blank puzzles ({{answer|hint}}):
     // before verse 1, after verse 1 and after verse 2 ("between"), and after
     // the level is passed.
@@ -67,8 +74,39 @@ struct StoryArea {
     std::string intro;
     bool openFromStart = false;
     bool bonusArea = false;     // hidden area, unlock: "perfect"
+    // The book dropdown offers every book, not just this area's (the End
+    // Times draws on the whole Bible).
+    bool allBooks = false;
     std::vector<StoryLevel> levels;
     std::vector<StoryLevel> bonusLevels;
+};
+
+// A place on the Story map's picture (data/story_map.png) where levels sit:
+// "egypt", "jerusalem"... x and y are percentages of the picture's width and
+// height. A place nobody can pin down (the Garden of Eden, the Land of Uz) is
+// "offMap": it's listed beside the map instead of guessed onto it. One whose
+// spot is only traditional (Mount Sinai, the Red Sea crossing) is
+// "approximate": pinned, but marked as approximate.
+struct StoryRegion {
+    std::string id;
+    std::string name;
+    double x = 0;
+    double y = 0;
+    bool offMap = false;
+    bool approximate = false;
+};
+
+// The crowded land around Israel, shown zoomed in: a square of the picture
+// (x, y = its top-left corner, size = its width and height, all percentages).
+// On the whole map its regions share one pin at pinX, pinY; clicking it zooms
+// in, where each region gets its own pin.
+struct StoryCloseUp {
+    std::string name;
+    double x = 0, y = 0, size = 0;
+    double pinX = 0, pinY = 0;
+    bool Contains(const StoryRegion& r) const {
+        return size > 0 && !r.offMap && r.x >= x && r.x <= x + size && r.y >= y && r.y <= y + size;
+    }
 };
 
 class StoryMap {
@@ -83,6 +121,9 @@ public:
     bool Load(const BibleData& bible);
 
     const std::vector<StoryArea>& Areas() const { return m_areas; }
+    const std::vector<StoryRegion>& Regions() const { return m_regions; }
+    const StoryCloseUp& CloseUp() const { return m_closeUp; }
+    const StoryRegion* FindRegion(const std::string& id) const;
     const StoryLevel* FindLevel(const std::string& key) const;
     const StoryArea* FindArea(const std::string& id) const;
     const std::vector<std::string>& Errors() const { return m_errors; }
@@ -102,6 +143,8 @@ private:
                     const BibleData& bible, StoryLevel& out);
 
     std::vector<StoryArea> m_areas;
+    std::vector<StoryRegion> m_regions;
+    StoryCloseUp m_closeUp;
     std::vector<std::string> m_errors;
     bool m_loaded = false;
 };

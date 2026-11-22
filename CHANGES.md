@@ -226,3 +226,31 @@ Settings has a Bible version picker: World English Bible (default), King James V
 - Story Mode in partial Bibles: a level without 3 verses in that version shows "Not in this Bible".
 - Like the web version: hard mode's yellow book means the same author (`BibleData::getBookAuthor`), book
   hints work in hard mode, and the share text is spoiler-free ("Bibirble Daily 2026-11-23 KJV 4/7*" + grid).
+
+## Story Mode map picture
+
+- Story Mode opens on a map of the Bible lands (`data/story_map.png`, embedded). `story_map.json` gains
+  `regions` (24 places, from Rome to Persia) and a `region` for every level, set to where its story happens.
+- `StoryWorldMap` draws the picture scaled to the window (at most ~60% of its height) with a pin per region
+  (orange: playable, gold: all passed, grey: locked; the number of levels inside). Clicking a pin lists that
+  region's levels underneath, each showing its story area; it opens on the region you're up to.
+- `StoryMap` and `check_story_map.py` check every level has a known region; tests cover it.
+
+## Story map: sharper picture, Israel close-up, places off the map, shorter book lists
+
+- A sharper map picture (1400 x 752), with its white border made see-through; pins moved to match.
+- The crowded land around Israel has a close-up (`closeUp` in story_map.json): one 🔍 pin on the whole map,
+  zoomed in each place gets its own named pin; "Whole map" zooms back out.
+- Places nobody can pin down (Garden of Eden, Land of Uz, Mount Sinai, the Red Sea crossing) are
+  `"offMap"`: buttons under the map instead of guessed spots.
+- Story levels' book dropdown lists only the books of the level's story area (5-17 books instead of 66+).
+- Mount Sinai and the Red Sea crossing are back on the map at their traditional, approximate spots
+  (`"approximate"`: dashed ring, "(approx.)" label); only the Garden of Eden and the Land of Uz stay off it.
+- The End Times area (`"allBooks": true`) offers every book in its book list.
+
+## Tutorial level
+
+- Story Mode's first level ("tutorial": true) shows a step-by-step tip bar: pick a book, type the digits,
+  submit, then what the player's own colours mean, how stars and passing work. "Skip tips" hides it.
+- Enter submits a guess (like the web version's Enter key).
+- The tutorial is predictable: always Genesis 1:1, 1:16 and 2:7, in that order (`"fixedOrder": true`).

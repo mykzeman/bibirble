@@ -109,6 +109,15 @@ def check(map_path, bible_path, preview):
 
     errors = []
     unavailable = []
+    region_ids = set()
+    for r in story.get("regions", []):
+        if not r.get("id") or r["id"] in region_ids:
+            errors.append(f"region {r.get('id')!r}: missing or duplicate id")
+        elif not r.get("offMap") and not (0 <= r.get("x", -1) <= 100 and 0 <= r.get("y", -1) <= 100):
+            errors.append(f"region {r['id']!r}: x and y must be 0-100 (percent of data/story_map.png)")
+        region_ids.add(r.get("id"))
+    if not region_ids:
+        errors.append("story_map.json needs a \"regions\" list (places on data/story_map.png)")
     area_ids = set()
     for area in story["areas"]:
         if area["id"] in area_ids:
@@ -120,6 +129,8 @@ def check(map_path, bible_path, preview):
             if lvl["id"] in level_ids:
                 errors.append(f"{key}: duplicate level id")
             level_ids.add(lvl["id"])
+            if lvl.get("region") not in region_ids:
+                errors.append(f"{key}: region {lvl.get('region')!r} isn't in \"regions\"")
             refs = lvl["pool"] if isinstance(lvl["pool"], list) else [lvl["pool"]]
             pool = set()
             try:

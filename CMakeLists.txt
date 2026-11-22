@@ -63,6 +63,8 @@ set(SOURCES
     src/StoryProgress.h
     src/StoryMapScreen.cpp
     src/StoryMapScreen.h
+    src/StoryWorldMap.cpp
+    src/StoryWorldMap.h
     src/StoryScreen.cpp
     src/StoryScreen.h
     src/WordPuzzle.cpp
@@ -102,6 +104,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     list(APPEND BIBIRBLE_BLOBS
         "icon|${BIBIRBLE_ICON_FILE}"
         "story|${BIBIRBLE_STORY_FILE}"
+        "storyimg|${CMAKE_CURRENT_SOURCE_DIR}/data/story_map.png"
         "words|${BIBIRBLE_WORDS_FILE}")
     set(BIBIRBLE_BLOB_CPP "${CMAKE_CURRENT_BINARY_DIR}/EmbeddedDataBlob.cpp")
     set(BIBIRBLE_BLOB_ASM "")

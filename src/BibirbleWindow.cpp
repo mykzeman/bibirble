@@ -173,6 +173,23 @@ void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
     gameLayout->Add(m_storyHud, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
     gameLayout->Show(m_storyHud, false);
 
+    // Tutorial tips (the first Story level): what to do next, step by step.
+    m_tutorialBar = new wxPanel(m_gamePanel);
+    m_tutorialBar->SetBackgroundColour(wxColour(255, 248, 220));
+    wxBoxSizer* tipLayout = new wxBoxSizer(wxHORIZONTAL);
+    m_tutorialText = new WrappingText(m_tutorialBar, "");
+    m_tutorialText->SetFont(wxFont(11, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+    tipLayout->Add(m_tutorialText, 1, wxALL | wxALIGN_CENTER_VERTICAL, 8);
+    wxButton* skipTips = new wxButton(m_tutorialBar, wxID_ANY, "Skip tips");
+    skipTips->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+        m_tutorialSkipped = true;
+        UpdateTutorialTip();
+    });
+    tipLayout->Add(skipTips, 0, wxALL | wxALIGN_CENTER_VERTICAL, 6);
+    m_tutorialBar->SetSizer(tipLayout);
+    gameLayout->Add(m_tutorialBar, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
+    gameLayout->Show(m_tutorialBar, false);
+
     // Reveal Panel
     m_revealPanel = new WrappingText(m_gamePanel, "");
     m_revealPanel->SetBackgroundColour(*wxWHITE);
@@ -197,6 +214,24 @@ void BibirbleWindow::SetupGamePanel(wxBoxSizer* parentLayout) {
         GameRow* row = new GameRow(scrollArea, books);
         m_rowsSizer->Add(row, 0, wxEXPAND | wxALL, 5);
         m_rows.push_back(row);
+    }
+
+    // Enter submits the guess, like the web version's Enter key.
+    Bind(wxEVT_CHAR_HOOK, [this](wxKeyEvent& e) {
+        const int key = e.GetKeyCode();
+        if ((key == WXK_RETURN || key == WXK_NUMPAD_ENTER) && m_gamePanel->IsShown() && !m_state.gameOver &&
+            m_submitBtn && m_submitBtn->IsEnabled()) {
+            wxCommandEvent submit(wxEVT_BUTTON, wxID_OK);
+            OnSubmit(submit);
+            return;
+        }
+        e.Skip();
+    });
+
+    // The tutorial's tip follows what the player does in the rows.
+    for (auto* row : m_rows) {
+        row->Bind(wxEVT_COMBOBOX, [this](wxCommandEvent& e) { e.Skip(); CallAfter([this]() { UpdateTutorialTip(); }); });
+        row->Bind(wxEVT_TEXT, [this](wxCommandEvent& e) { e.Skip(); CallAfter([this]() { UpdateTutorialTip(); }); });
     }
 
     // Track focus on digit inputs so virtual keyboard can restore focus
@@ -363,6 +398,7 @@ void BibirbleWindow::ShowOnly(wxWindow* screen) {
     if (m_storyHud->GetContainingSizer()) {
         m_storyHud->GetContainingSizer()->Show(m_storyHud, m_state.mode == GameMode::Story);
     }
+    UpdateTutorialTip();  // only on the tutorial level
     if (screen == m_gamePanel) ApplyGameOrientation();
     m_gamePanel->Layout();
     m_centralPanel->Layout();
@@ -685,6 +721,7 @@ void BibirbleWindow::OnSubmit(wxCommandEvent& event) {
             m_story.Run().currentGuesses = m_state.history;
             SaveStory();
         }
+        UpdateTutorialTip();
     }
 }
 
@@ -893,14 +930,29 @@ void BibirbleWindow::ContinueStoryRun() {
     ShowOnly(m_storyScreen);
 }
 
+std::vector<std::string> BibirbleWindow::StoryAreaBooks(const std::string& levelKey) const {
+    const StoryLevel* level = m_storyMap.FindLevel(levelKey);
+    const StoryArea* area = level ? m_storyMap.FindArea(level->areaId) : nullptr;
+    if (!area || area->allBooks) return m_data.getAllBooks();
+    std::vector<int> indices;
+    for (const auto* list : {&area->levels, &area->bonusLevels}) {
+        for (const auto& l : *list) indices.insert(indices.end(), l.pool.begin(), l.pool.end());
+    }
+    std::vector<std::string> books = m_data.getBooks(indices);
+    return books.empty() ? m_data.getAllBooks() : books;
+}
+
 void BibirbleWindow::StartStoryVerse() {
     const StoryRun& run = m_story.Run();
     if (!run.active) return;
     const Verse verse = m_data.getVerseAtIndex(run.verses[run.solvedCount]);
 
-    // Every book is offered: limiting the list to the level's pool would give
-    // the answer away.
-    m_allBooks = m_data.getAllBooks();
+    // The book list holds the books of this level's story area (every level
+    // and bonus level in it), so a Kings level offers Ruth to Chronicles and
+    // its prophets instead of all 66+ books. An "allBooks" area (the End
+    // Times) offers every book. Not just the level's own pool:
+    // that would give the answer away.
+    m_allBooks = StoryAreaBooks(run.levelKey);
     m_state.Reset(GameMode::Story, 0, run.hardMode, m_settingsScreen->GetBookHints(), verse);
     m_settingsScreen->SetCurrentSeedDisplay("none");
     ResetGameUi();
@@ -929,7 +981,77 @@ void BibirbleWindow::StartStoryVerse() {
     UpdateDigitKeyColours();
     UpdateRevealText();
     UpdateStoryHud();
+    UpdateTutorialTip();
     ShowGamePanel();
+}
+
+void BibirbleWindow::UpdateTutorialTip() {
+    if (!m_tutorialBar) return;
+    const StoryRun& run = m_story.Run();
+    const StoryLevel* level = m_state.mode == GameMode::Story && run.active ? m_storyMap.FindLevel(run.levelKey)
+                                                                            : nullptr;
+    const bool show = level && level->tutorial && !m_tutorialSkipped && !m_state.gameOver;
+    wxSizer* sizer = m_tutorialBar->GetContainingSizer();
+    if (!show) {
+        if (sizer && sizer->IsShown(m_tutorialBar)) {
+            sizer->Show(m_tutorialBar, false);
+            m_gamePanel->Layout();
+        }
+        return;
+    }
+
+    auto colourName = [](GuessColor c) {
+        return c == GuessColor::Green ? "green" : c == GuessColor::Yellow ? "yellow" : "gray";
+    };
+    std::string tip;
+    if (run.solvedCount == 1 && m_state.history.empty()) {
+        tip = "\xE2\xAD\x90 Verse 2 of 3! Solve all 3 verses to pass the level. The fewer guesses you use, the "
+              "more stars you earn (up to 3), plus bonus stars for things like solving a verse first try.";
+    } else if (run.solvedCount == 2 && m_state.history.empty()) {
+        tip = "\xF0\x9F\x8F\x81 Last verse! Pass the level to unlock the next place on the map. Your stars add up "
+              "to open new places, and 4 stars on a level unlock its Hard Mode.";
+    } else if (m_state.history.empty()) {
+        GameRow* row = m_state.currentStage >= 0 && m_state.currentStage < (int)m_rows.size()
+            ? m_rows[m_state.currentStage] : nullptr;
+        const bool hasBook = row && !row->getBook().empty();
+        int digits = 0;
+        if (row) for (const auto& d : row->getDigits()) if (!d.empty()) ++digits;
+        if (!hasBook) {
+            tip = "\xF0\x9F\x91\x8B Welcome! The white box shows the first words of a Bible verse. Guess where "
+                  "it's from: start by picking its book from the list in the first row. (In Story Mode the list "
+                  "only has the books from this part of the story.)";
+        } else if (digits < 4) {
+            tip = "\xF0\x9F\x94\xA2 Now type the chapter and verse with the number keys: two digits each, so "
+                  "chapter 1 verse 3 is 0 1 : 0 3. Del rubs a digit out.";
+        } else {
+            tip = "\xE2\x8F\x8E Press Enter (or Submit Answer, under the rows) to check your guess!";
+        }
+    } else {
+        const GuessRecord& last = m_state.history.back();
+        int greens = 0, yellows = 0;
+        for (GuessColor c : last.digitColors) {
+            if (c == GuessColor::Green) ++greens;
+            else if (c == GuessColor::Yellow) ++yellows;
+        }
+        std::string book = std::string("Your book is ") + colourName(last.bookColor) + ": ";
+        if (last.bookColor == GuessColor::Green) book += "that's the right book!";
+        else if (last.bookColor == GuessColor::Yellow) book += m_state.hardMode
+            ? "wrong book, but the same writer." : "wrong book, but the right area of the Bible.";
+        else book += "wrong book, and a different area of the Bible.";
+        tip = "\xF0\x9F\x8E\xA8 " + book + " Digits: green is right and in the right place (you got " +
+              std::to_string(greens) + "), yellow is in the answer but somewhere else (you got " +
+              std::to_string(yellows) + "), gray isn't in it.";
+        if (m_state.history.size() >= 2) {
+            tip += " The number keys keep each digit's best colour, and every guess shows more of the verse. "
+                   "You have 7 tries.";
+        } else {
+            tip += " More of the verse shows after each guess, so look again!";
+        }
+    }
+    m_tutorialText->SetLabel(wxString::FromUTF8(tip));
+    if (sizer && !sizer->IsShown(m_tutorialBar)) sizer->Show(m_tutorialBar, true);
+    m_tutorialBar->Layout();
+    m_gamePanel->Layout();
 }
 
 void BibirbleWindow::UpdateStoryHud() {

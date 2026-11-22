@@ -401,3 +401,39 @@ Details settled while building it:
 - Hard Mode unlocks per level at **4+ stars**, and every passed level has a **Retry** button.
 - The End Times unlock stays the **ultimate challenge**: all 7 stars (Perfect included) on every
   non-bonus level. That means every verse of every regular pool solved (~17,700 verses).
+
+## The map picture
+
+Story Mode opens on a picture of the Bible lands (`data/story_map.png`, Rome to Persia; the white around
+its torn edges is see-through). `story_map.json`'s `regions` list places on it (`id`, `name`, and `x`/`y`
+as percentages of the picture's width and height), and every level names the `region` where its story
+happens: Egypt for Joseph and the plagues, Moab for Deuteronomy and Ruth, Babylon for Daniel and Ezekiel,
+Persia for Esther, Asia Minor for Paul's journeys and the seven churches, Patmos for Revelation, and so on.
+Each region with levels gets a pin: orange when something there can be played, gold when every level there
+is passed, grey while it's all locked. Picking a pin lists that region's levels under the map; it opens on
+the region you're up to.
+
+- **Close-up:** the land around Israel is too crowded for one pin each, so `closeUp` names a square of the
+  picture (`x`, `y`, `size` in percent, plus `pinX`/`pinY`). On the whole map, the regions inside it share
+  one 🔍 pin; clicking it zooms in, where each place has its own named pin, and "Whole map" zooms out.
+- **Off the map:** places nobody can pin down (the Garden of Eden, the Land of Uz) are `"offMap": true`:
+  buttons under the map instead of a guessed spot.
+- **Approximate:** places whose spot is only traditional (Mount Sinai at Jebel Musa in the south of the
+  Sinai peninsula; the Red Sea crossing at the north end of the Gulf of Suez) are `"approximate": true`:
+  pinned with a dashed ring and an "(approx.)" label.
+- **Book list:** while playing a level, the book dropdown offers the books of its story area (every level
+  and bonus level in it: Kings offers Ruth to Chronicles and its prophets), not all 66+ books. Not just the
+  level's own pool, which would give the answer away. An area with `"allBooks": true` (the End Times, which
+  draws on the whole Bible) offers every book.
+
+`tools/check_story_map.py` checks every level has a known region.
+
+## Tutorial
+
+The first level (`"tutorial": true` on `creation.eden`) is the tutorial. It's predictable: its pool is exactly
+Genesis 1:1, 1:16 and 2:7 with `"fixedOrder": true`, so every player gets those verses in that order, each one
+right after the story text it matches (creation, the sun and moon, God forming man from the dust). While it's played, a tip bar under the
+Story bar shows the next step from the game's state (`BibirbleWindow::UpdateTutorialTip`): read the verse and
+pick a book, type the chapter and verse digits, press Enter or Submit Answer, then what *this* guess's colours
+mean (book green/yellow/gray, how many digits were green or yellow), the number keys' colours and the 7 tries;
+verse 2 explains stars and passing, verse 3 unlocking. "Skip tips" hides it for the session.

@@ -10,10 +10,12 @@
 #include "StoryMap.h"
 #include "StoryProgress.h"
 
-// Story Mode's map: every area in order with its levels, best stars, Play /
-// Retry / Continue buttons and a per-level Hard Mode toggle (unlocked at 4+
-// stars). Locked bonus levels and a locked bonus area are not shown at all.
-// Rebuilt from scratch by ShowMap() whenever progress changes.
+// Story Mode's map: the Bible lands picture (StoryWorldMap) with a pin on every
+// region that has levels, and under it the selected region's levels with their
+// area, best stars, Play / Retry / Continue buttons and a per-level Hard Mode
+// toggle (unlocked at 4+ stars). Locked bonus levels and a locked bonus area
+// are not shown at all. Rebuilt from scratch by ShowMap() whenever progress
+// changes or another region is picked.
 class StoryMapScreen : public wxScrolledWindow {
 public:
     using BackCallback = std::function<void()>;
@@ -27,8 +29,21 @@ public:
     void ShowMap(const StoryMap& map, const StoryProgress& progress, const BibleData& bible, bool allowMature);
 
 private:
-    void AddLevelRow(wxSizer* sizer, const StoryLevel& level, const StoryProgress& progress,
-                     const BibleData& bible, bool allowMature, const std::set<std::string>& nextUp);
+    void Rebuild();
+    void AddLevelRow(wxSizer* sizer, const StoryLevel& level, const wxString& areaTitle,
+                     const StoryProgress& progress, const BibleData& bible, bool allowMature,
+                     const std::set<std::string>& nextUp);
+
+    // What the last ShowMap() was given (owned by BibirbleWindow), so picking
+    // a region can rebuild the screen.
+    const StoryMap* m_map = nullptr;
+    const StoryProgress* m_progress = nullptr;
+    const BibleData* m_bible = nullptr;
+    bool m_allowMature = false;
+    std::string m_selectedRegion;  // "" = pick one (where you're up to)
+    bool m_zoomed = false;         // showing the close-up around Israel
+    bool m_zoomDecided = false;    // false until the first map (then the player's choice)
+    wxImage m_picture;             // data/story_map.png
 
     BackCallback m_onBack;
     PlayCallback m_onPlay;

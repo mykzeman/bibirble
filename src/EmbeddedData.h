@@ -26,3 +26,7 @@ bool ReadStoryMapText(std::string& out);
 // The English word list for story puzzles (data/words.txt: the public-domain
 // ENABLE list). A copy on disk wins, like the others.
 bool ReadWordListText(std::string& out);
+
+// The Story Mode map picture (data/story_map.png: the Bible lands, from Rome
+// to Persia) that the levels' regions are pinned on. A copy on disk wins.
+bool ReadStoryMapImage(std::string& out);
