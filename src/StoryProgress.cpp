@@ -269,6 +269,16 @@ void StoryProgress::StartRun(const StoryLevel& level, const BibleData& bible, bo
     }
 
     std::vector<int> pool = PlayablePool(level, bible, allowMature);
+    if (level.fixedOrder) {
+        // The tutorial: the same verses in the same order every time.
+        std::vector<int> verses(pool.begin(), pool.begin() + std::min<size_t>(pool.size(), kVersesPerLevel));
+        m_run = StoryRun{};
+        m_run.active = true;
+        m_run.levelKey = level.key;
+        m_run.verses = verses;
+        m_run.hardMode = hardMode;
+        return;
+    }
     const LevelProgress* p = Get(level.key);
     const int keep = (p && p->failedVerse >= 0 &&
                       std::find(pool.begin(), pool.end(), p->failedVerse) != pool.end())

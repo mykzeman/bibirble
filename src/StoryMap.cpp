@@ -209,6 +209,7 @@ bool StoryMap::ParseLevel(const json& j, const std::string& areaId, bool isBonus
     if (out.id.empty()) fail("level has no id");
     out.region = j.value("region", "");
     out.tutorial = j.value("tutorial", false);
+    out.fixedOrder = j.value("fixedOrder", false);
     if (out.region.empty()) fail("level has no region (where it sits on the map)");
     else if (!FindRegion(out.region)) fail("unknown region \"" + out.region + "\"");
 

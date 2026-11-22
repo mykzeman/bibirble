@@ -40,6 +40,9 @@ struct StoryLevel {
     // A tutorial level (the first one): tips walk the player through their
     // first verses step by step.
     bool tutorial = false;
+    // Always the same verses in the same order (the pool's first 3, in Bible
+    // order), so the tutorial plays exactly the same every time.
+    bool fixedOrder = false;
     // Story text, which may hold fill-in-the-blank puzzles ({{answer|hint}}):
     // before verse 1, after verse 1 and after verse 2 ("between"), and after
     // the level is passed.

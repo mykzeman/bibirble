@@ -253,3 +253,4 @@ Settings has a Bible version picker: World English Bible (default), King James V
 - Story Mode's first level ("tutorial": true) shows a step-by-step tip bar: pick a book, type the digits,
   submit, then what the player's own colours mean, how stars and passing work. "Skip tips" hides it.
 - Enter submits a guess (like the web version's Enter key).
+- The tutorial is predictable: always Genesis 1:1, 1:16 and 2:7, in that order (`"fixedOrder": true`).

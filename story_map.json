@@ -172,7 +172,12 @@
                     "title": "In the Beginning",
                     "region": "eden",
                     "tutorial": true,
-                    "pool": "genesis 1-2",
+                    "pool": [
+                        "genesis 1:1",
+                        "genesis 1:16",
+                        "genesis 2:7"
+                    ],
+                    "fixedOrder": true,
                     "minStars": 0,
                     "intro": "Before anything was, God was. He spoke, and {{light|The very first thing God made, on day one}} broke through the dark.",
                     "between": [

@@ -229,6 +229,22 @@ void TestWordPuzzles(const BibleData& bible, const std::string& dir) {
             for (const auto& l : area.levels) tutorials += l.tutorial ? 1 : 0;
         }
         CHECK(real.FindLevel("creation.eden")->tutorial && tutorials == 1);
+        // The tutorial is predictable: Genesis 1:1, 1:16, 2:7, in that order, every time.
+        const StoryLevel* eden = real.FindLevel("creation.eden");
+        CHECK(eden->fixedOrder);
+        for (unsigned seed : {1u, 2u, 99u}) {
+            std::mt19937 rng(seed);
+            StoryProgress p;
+            p.UpdateUnlocks(real);
+            p.StartRun(*eden, bible, false, false, rng);
+            const auto& v = p.Run().verses;
+            CHECK(v.size() == 3);
+            if (v.size() == 3) {
+                CHECK(VerseKey(bible.getVerseAtIndex(v[0])) == "genesis 1:1");
+                CHECK(VerseKey(bible.getVerseAtIndex(v[1])) == "genesis 1:16");
+                CHECK(VerseKey(bible.getVerseAtIndex(v[2])) == "genesis 2:7");
+            }
+        }
         CHECK(!real.FindRegion("egypt")->offMap);
         CHECK(real.CloseUp().size > 0);
         CHECK(real.CloseUp().Contains(*real.FindRegion("jerusalem")));

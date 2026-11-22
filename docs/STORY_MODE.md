@@ -430,7 +430,9 @@ the region you're up to.
 
 ## Tutorial
 
-The first level (`"tutorial": true` on `creation.eden`) is the tutorial. While it's played, a tip bar under the
+The first level (`"tutorial": true` on `creation.eden`) is the tutorial. It's predictable: its pool is exactly
+Genesis 1:1, 1:16 and 2:7 with `"fixedOrder": true`, so every player gets those verses in that order, each one
+right after the story text it matches (creation, the sun and moon, God forming man from the dust). While it's played, a tip bar under the
 Story bar shows the next step from the game's state (`BibirbleWindow::UpdateTutorialTip`): read the verse and
 pick a book, type the chapter and verse digits, press Enter or Submit Answer, then what *this* guess's colours
 mean (book green/yellow/gray, how many digits were green or yellow), the number keys' colours and the 7 tries;
