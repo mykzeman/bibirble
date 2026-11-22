@@ -235,3 +235,12 @@ Settings has a Bible version picker: World English Bible (default), King James V
   (orange: playable, gold: all passed, grey: locked; the number of levels inside). Clicking a pin lists that
   region's levels underneath, each showing its story area; it opens on the region you're up to.
 - `StoryMap` and `check_story_map.py` check every level has a known region; tests cover it.
+
+## Story map: sharper picture, Israel close-up, places off the map, shorter book lists
+
+- A sharper map picture (1400 x 752), with its white border made see-through; pins moved to match.
+- The crowded land around Israel has a close-up (`closeUp` in story_map.json): one 🔍 pin on the whole map,
+  zoomed in each place gets its own named pin; "Whole map" zooms back out.
+- Places nobody can pin down (Garden of Eden, Land of Uz, Mount Sinai, the Red Sea crossing) are
+  `"offMap"`: buttons under the map instead of guessed spots.
+- Story levels' book dropdown lists only the books of the level's story area (5-17 books instead of 66+).

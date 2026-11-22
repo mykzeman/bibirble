@@ -294,8 +294,9 @@ bool StoryMap::LoadFromText(const std::string& text, const BibleData& bible) {
             if (r.is_object()) {
                 region.id = r.value("id", "");
                 region.name = r.value("name", region.id);
-                region.x = r.value("x", -1.0);
-                region.y = r.value("y", -1.0);
+                region.offMap = r.value("offMap", false);
+                region.x = r.value("x", region.offMap ? 0.0 : -1.0);
+                region.y = r.value("y", region.offMap ? 0.0 : -1.0);
             }
             if (region.id.empty()) {
                 m_errors.push_back("a region has no id");
@@ -309,6 +310,21 @@ bool StoryMap::LoadFromText(const std::string& text, const BibleData& bible) {
         }
     } else {
         m_errors.push_back("story_map.json needs a \"regions\" list");
+    }
+    m_closeUp = StoryCloseUp{};
+    if (root.contains("closeUp") && root["closeUp"].is_object()) {
+        const json& c = root["closeUp"];
+        m_closeUp.name = c.value("name", "Close-up");
+        m_closeUp.x = c.value("x", 0.0);
+        m_closeUp.y = c.value("y", 0.0);
+        m_closeUp.size = c.value("size", 0.0);
+        m_closeUp.pinX = c.value("pinX", m_closeUp.x + m_closeUp.size / 2);
+        m_closeUp.pinY = c.value("pinY", m_closeUp.y + m_closeUp.size / 2);
+        if (m_closeUp.size <= 0 || m_closeUp.x < 0 || m_closeUp.y < 0 ||
+            m_closeUp.x + m_closeUp.size > 100 || m_closeUp.y + m_closeUp.size > 100) {
+            m_errors.push_back("closeUp needs x, y and size inside the picture (percentages)");
+            m_closeUp = StoryCloseUp{};
+        }
     }
 
     GuessTiers defaultTiers;

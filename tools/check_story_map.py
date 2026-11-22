@@ -113,7 +113,7 @@ def check(map_path, bible_path, preview):
     for r in story.get("regions", []):
         if not r.get("id") or r["id"] in region_ids:
             errors.append(f"region {r.get('id')!r}: missing or duplicate id")
-        elif not (0 <= r.get("x", -1) <= 100 and 0 <= r.get("y", -1) <= 100):
+        elif not r.get("offMap") and not (0 <= r.get("x", -1) <= 100 and 0 <= r.get("y", -1) <= 100):
             errors.append(f"region {r['id']!r}: x and y must be 0-100 (percent of data/story_map.png)")
         region_ids.add(r.get("id"))
     if not region_ids:

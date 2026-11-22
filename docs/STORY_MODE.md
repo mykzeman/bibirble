@@ -404,11 +404,22 @@ Details settled while building it:
 
 ## The map picture
 
-Story Mode opens on a picture of the Bible lands (`data/story_map.png`, Rome to Persia). `story_map.json`'s
-`regions` list places on it (`id`, `name`, and `x`/`y` as percentages of the picture's width and height),
-and every level names the `region` where its story happens: Egypt for Joseph and the plagues, Sinai for
-the Law, Moab for Deuteronomy and Ruth, Babylon for Daniel and Ezekiel, Persia for Esther, Asia Minor for
-Paul's journeys and the seven churches, Patmos for Revelation, and so on. Each region with levels gets a
-pin: orange when something there can be played, gold when every level there is passed, grey while it's all
-locked. Picking a pin lists that region's levels under the map; it opens on the region you're up to.
+Story Mode opens on a picture of the Bible lands (`data/story_map.png`, Rome to Persia; the white around
+its torn edges is see-through). `story_map.json`'s `regions` list places on it (`id`, `name`, and `x`/`y`
+as percentages of the picture's width and height), and every level names the `region` where its story
+happens: Egypt for Joseph and the plagues, Moab for Deuteronomy and Ruth, Babylon for Daniel and Ezekiel,
+Persia for Esther, Asia Minor for Paul's journeys and the seven churches, Patmos for Revelation, and so on.
+Each region with levels gets a pin: orange when something there can be played, gold when every level there
+is passed, grey while it's all locked. Picking a pin lists that region's levels under the map; it opens on
+the region you're up to.
+
+- **Close-up:** the land around Israel is too crowded for one pin each, so `closeUp` names a square of the
+  picture (`x`, `y`, `size` in percent, plus `pinX`/`pinY`). On the whole map, the regions inside it share
+  one 🔍 pin; clicking it zooms in, where each place has its own named pin, and "Whole map" zooms out.
+- **Off the map:** places nobody can pin down (the Garden of Eden, the Land of Uz, Mount Sinai, where the
+  Red Sea was crossed) are `"offMap": true`: buttons under the map instead of a guessed spot.
+- **Book list:** while playing a level, the book dropdown offers the books of its story area (every level
+  and bonus level in it: Kings offers Ruth to Chronicles and its prophets), not all 66+ books. Not just the
+  level's own pool, which would give the answer away.
+
 `tools/check_story_map.py` checks every level has a known region.

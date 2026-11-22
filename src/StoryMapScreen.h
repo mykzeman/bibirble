@@ -41,6 +41,8 @@ private:
     const BibleData* m_bible = nullptr;
     bool m_allowMature = false;
     std::string m_selectedRegion;  // "" = pick one (where you're up to)
+    bool m_zoomed = false;         // showing the close-up around Israel
+    bool m_zoomDecided = false;    // false until the first map (then the player's choice)
     wxImage m_picture;             // data/story_map.png
 
     BackCallback m_onBack;

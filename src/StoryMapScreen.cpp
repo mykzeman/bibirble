@@ -5,6 +5,7 @@
 #include "WrappingText.h"
 
 #include <wx/mstream.h>
+#include <wx/wrapsizer.h>
 
 #include <map>
 
@@ -144,6 +145,7 @@ void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress,
     // One pin per region with levels: gold when every level there is passed,
     // orange when something there can be played, grey while it's all locked.
     std::vector<StoryWorldMap::Pin> pins;
+    std::vector<StoryWorldMap::Pin> offMap;  // places nobody can pin down
     for (const auto& region : map.Regions()) {
         auto it = byRegion.find(region.id);
         if (it == byRegion.end()) continue;
@@ -162,7 +164,8 @@ void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress,
         pin.levels = static_cast<int>(it->second.size());
         pin.state = allPassed ? StoryWorldMap::PinState::Done
                   : anyOpen ? StoryWorldMap::PinState::Open : StoryWorldMap::PinState::Locked;
-        pins.push_back(pin);
+        pin.inCloseUp = map.CloseUp().Contains(region);
+        (region.offMap ? offMap : pins).push_back(pin);
     }
 
     // Which region to show: the one picked, else where the attempt in
@@ -183,8 +186,24 @@ void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress,
     }
     if (m_selectedRegion.empty() && !pins.empty()) m_selectedRegion = pins.front().id;
 
+    // The first time, open zoomed in if you're up to a place around Israel.
+    const StoryRegion* selectedRegion = map.FindRegion(m_selectedRegion);
+    if (!m_zoomDecided) {
+        m_zoomed = selectedRegion && map.CloseUp().Contains(*selectedRegion);
+        m_zoomDecided = true;
+    }
+
     StoryWorldMap* worldMap = new StoryWorldMap(this, m_picture);
+    StoryWorldMap::CloseUp closeUp;
+    closeUp.name = wxString::FromUTF8(map.CloseUp().name);
+    closeUp.x = map.CloseUp().x;
+    closeUp.y = map.CloseUp().y;
+    closeUp.size = map.CloseUp().size;
+    closeUp.pinX = map.CloseUp().pinX;
+    closeUp.pinY = map.CloseUp().pinY;
+    worldMap->SetCloseUp(closeUp, m_zoomed);
     worldMap->SetPins(pins, m_selectedRegion);
+    worldMap->SetOnZoom([this](bool zoomed) { m_zoomed = zoomed; });
     worldMap->SetOnSelect([this](const std::string& id) {
         m_selectedRegion = id;
         // Rebuilding destroys the map panel, so not from inside its handler.
@@ -192,8 +211,35 @@ void StoryMapScreen::ShowMap(const StoryMap& map, const StoryProgress& progress,
     });
     layout->Add(worldMap, 0, wxEXPAND | wxLEFT | wxRIGHT, 8);
 
-    WrappingText* hint = new WrappingText(this, "Pick a place on the map to see its levels. Orange: levels to play. "
-                                                "Gold: all passed. Grey: still locked.");
+    // Places nobody can pin down sit beside the map, not guessed onto it.
+    if (!offMap.empty()) {
+        wxWrapSizer* off = new wxWrapSizer(wxHORIZONTAL);
+        wxStaticText* offTitle = new wxStaticText(this, wxID_ANY, "Off the map (place unknown):");
+        offTitle->SetForegroundColour(wxColour(110, 100, 80));
+        off->Add(offTitle, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
+        for (const auto& place : offMap) {
+            const bool selected = place.id == m_selectedRegion;
+            wxButton* b = new wxButton(this, wxID_ANY, wxString::Format("%s (%d)", place.name, place.levels),
+                                       wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
+            const wxColour colour = place.state == StoryWorldMap::PinState::Done ? wxColour(222, 170, 20)
+                                  : place.state == StoryWorldMap::PinState::Open ? Theme::Accent()
+                                  : wxColour(150, 150, 150);
+            b->SetBackgroundColour(selected ? colour.ChangeLightness(75) : colour);
+            b->SetForegroundColour(*wxWHITE);
+            b->SetFont(BoldFont(selected ? 11 : 10));
+            const std::string id = place.id;
+            b->Bind(wxEVT_BUTTON, [this, id](wxCommandEvent&) {
+                m_selectedRegion = id;
+                CallAfter([this]() { Rebuild(); });
+            });
+            off->Add(b, 0, wxALL, 3);
+        }
+        layout->Add(off, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
+    }
+
+    WrappingText* hint = new WrappingText(this, wxString::FromUTF8(
+        "Pick a place to see its levels; the \xF0\x9F\x94\x8D Israel pin zooms in. Orange: levels to play. "
+        "Gold: all passed. Grey: still locked."));
     hint->SetForegroundColour(wxColour(110, 100, 80));
     layout->Add(hint, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
 

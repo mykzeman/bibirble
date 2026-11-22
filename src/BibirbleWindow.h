@@ -62,6 +62,8 @@ private:
     void OnStoryPlay(const std::string& levelKey, bool hardMode);
     void ContinueStoryRun();
     void StartStoryVerse();
+    // The books a Story level's book list offers: those of its story area.
+    std::vector<std::string> StoryAreaBooks(const std::string& levelKey) const;
     void HandleStoryVerseEnd(bool won);
     void UpdateStoryHud();
     void SaveStory();

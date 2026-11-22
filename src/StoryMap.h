@@ -74,12 +74,28 @@ struct StoryArea {
 
 // A place on the Story map's picture (data/story_map.png) where levels sit:
 // "egypt", "jerusalem"... x and y are percentages of the picture's width and
-// height.
+// height. A place nobody can pin down (the Garden of Eden, the Land of Uz,
+// Mount Sinai, where the Red Sea was crossed) is "offMap": it's listed beside
+// the map instead of guessed onto it.
 struct StoryRegion {
     std::string id;
     std::string name;
     double x = 0;
     double y = 0;
+    bool offMap = false;
+};
+
+// The crowded land around Israel, shown zoomed in: a square of the picture
+// (x, y = its top-left corner, size = its width and height, all percentages).
+// On the whole map its regions share one pin at pinX, pinY; clicking it zooms
+// in, where each region gets its own pin.
+struct StoryCloseUp {
+    std::string name;
+    double x = 0, y = 0, size = 0;
+    double pinX = 0, pinY = 0;
+    bool Contains(const StoryRegion& r) const {
+        return size > 0 && !r.offMap && r.x >= x && r.x <= x + size && r.y >= y && r.y <= y + size;
+    }
 };
 
 class StoryMap {
@@ -95,6 +111,7 @@ public:
 
     const std::vector<StoryArea>& Areas() const { return m_areas; }
     const std::vector<StoryRegion>& Regions() const { return m_regions; }
+    const StoryCloseUp& CloseUp() const { return m_closeUp; }
     const StoryRegion* FindRegion(const std::string& id) const;
     const StoryLevel* FindLevel(const std::string& key) const;
     const StoryArea* FindArea(const std::string& id) const;
@@ -116,6 +133,7 @@ private:
 
     std::vector<StoryArea> m_areas;
     std::vector<StoryRegion> m_regions;
+    StoryCloseUp m_closeUp;
     std::vector<std::string> m_errors;
     bool m_loaded = false;
 };
